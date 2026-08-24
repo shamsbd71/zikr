@@ -1,0 +1,37 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Derive version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Build app bundle
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          INSTALL: "0"
+        run: ./build.sh
+
+      - name: Zip app bundle
+        run: |
+          cd dist
+          /usr/bin/ditto -c -k --sequesterRsrc --keepParent Zikr.app "Zikr-${{ steps.version.outputs.version }}.zip"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Zikr ${{ github.ref_name }}"
+          generate_release_notes: true
+          files: dist/Zikr-${{ steps.version.outputs.version }}.zip
