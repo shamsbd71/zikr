@@ -55,7 +55,7 @@ final class FlashOverlayController {
             self?.dismiss()
         }
         dismissWorkItem = workItem
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.8, execute: workItem)
+        DispatchQueue.main.asyncAfter(deadline: .now() + AppSettings.shared.flashDurationSeconds, execute: workItem)
     }
 
     private func dismiss() {

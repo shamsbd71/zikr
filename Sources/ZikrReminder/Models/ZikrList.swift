@@ -25,10 +25,7 @@ enum ZikrList {
         Zikr(id: 18, arabic: "سُبْحَانَ رَبِّيَ الْأَعْلَى", transliteration: "Subhana Rabbiyal A'la", translation: "Glory be to my Lord, the Most High"),
         Zikr(id: 19, arabic: "رَبِّ زِدْنِي عِلْمًا", transliteration: "Rabbi zidni ilma", translation: "My Lord, increase me in knowledge"),
         Zikr(id: 20, arabic: "تَوَكَّلْتُ عَلَى اللَّهِ", transliteration: "Tawakkaltu 'alallah", translation: "I place my trust in Allah"),
-        Zikr(id: 21, arabic: "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ", transliteration: "Inna lillahi wa inna ilayhi raji'un", translation: "To Allah we belong and to Him we shall return"),
-        Zikr(id: 22, arabic: "بِسْمِ اللَّهِ", transliteration: "Bismillah", translation: "In the name of Allah"),
-        Zikr(id: 23, arabic: "مَا شَاءَ اللَّهُ", transliteration: "Ma sha Allah", translation: "As Allah has willed"),
-        Zikr(id: 24, arabic: "جَزَاكَ اللَّهُ خَيْرًا", transliteration: "Jazakallahu Khairan", translation: "May Allah reward you with good"),
+        Zikr(id: 22, arabic: "بِسْمِ اللَّهِ", transliteration: "Bismillah", translation: "In the name of Allah")
     ]
 
     static func random() -> Zikr {

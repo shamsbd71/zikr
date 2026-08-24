@@ -16,6 +16,7 @@ final class AppSettings: ObservableObject {
         static let displayStyle = "displayStyle"
         static let speakAloud = "speakAloud"
         static let launchAtLogin = "launchAtLogin"
+        static let flashDurationSeconds = "flashDurationSeconds"
     }
 
     @Published var isEnabled: Bool {
@@ -55,6 +56,11 @@ final class AppSettings: ObservableObject {
         }
     }
 
+    /// How long the full-screen flash stays visible before fading out.
+    @Published var flashDurationSeconds: Double {
+        didSet { defaults.set(flashDurationSeconds, forKey: Key.flashDurationSeconds) }
+    }
+
     private init() {
         defaults.register(defaults: [
             Key.isEnabled: true,
@@ -63,6 +69,7 @@ final class AppSettings: ObservableObject {
             Key.displayStyle: DisplayStyle.notification.rawValue,
             Key.speakAloud: true,
             Key.launchAtLogin: false,
+            Key.flashDurationSeconds: 2.0,
         ])
 
         isEnabled = defaults.bool(forKey: Key.isEnabled)
@@ -71,5 +78,6 @@ final class AppSettings: ObservableObject {
         displayStyle = DisplayStyle(rawValue: defaults.string(forKey: Key.displayStyle) ?? "") ?? .notification
         speakAloud = defaults.bool(forKey: Key.speakAloud)
         launchAtLogin = LaunchAtLogin.isEnabled
+        flashDurationSeconds = defaults.double(forKey: Key.flashDurationSeconds)
     }
 }

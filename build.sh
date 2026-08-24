@@ -35,6 +35,10 @@ mkdir -p "$APP_DIR/Contents/MacOS" "$APP_DIR/Contents/Resources"
 cp "$BUILD_DIR/ZikrReminder" "$APP_DIR/Contents/MacOS/$APP_NAME"
 cp Resources/AppIcon.icns "$APP_DIR/Contents/Resources/AppIcon.icns"
 
+if [ -d "Resources/Audio" ]; then
+  cp -R "Resources/Audio" "$APP_DIR/Contents/Resources/Audio"
+fi
+
 cat > "$APP_DIR/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">

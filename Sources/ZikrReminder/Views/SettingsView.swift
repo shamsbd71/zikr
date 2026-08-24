@@ -37,6 +37,17 @@ struct SettingsView: View {
                 }
                 .pickerStyle(.segmented)
 
+                if settings.displayStyle == .fullScreen {
+                    HStack {
+                        Text("Visible for")
+                        Spacer()
+                        Text("\(settings.flashDurationSeconds, specifier: "%.1f")s")
+                            .foregroundStyle(.secondary)
+                            .monospacedDigit()
+                    }
+                    Slider(value: $settings.flashDurationSeconds, in: 1...8, step: 0.5)
+                }
+
                 Toggle("Speak zikr aloud", isOn: $settings.speakAloud)
             }
 
