@@ -100,7 +100,7 @@ let taglineAttrs: [NSAttributedString.Key: Any] = [
     .font: NSFont.systemFont(ofSize: 34, weight: .regular),
     .foregroundColor: NSColor(calibratedWhite: 0.80, alpha: 1),
 ]
-let tagline = NSAttributedString(string: "A quiet dhikr reminder for your Mac", attributes: taglineAttrs)
+let tagline = NSAttributedString(string: "It remembers Allah for you. You just listen.", attributes: taglineAttrs)
 tagline.draw(at: CGPoint(x: textX, y: height * 0.40))
 
 let subAttrs: [NSAttributedString.Key: Any] = [
