@@ -15,6 +15,17 @@ final class UnlockGreeter {
     )
 
     private init() {
+        // sessionDidBecomeActiveNotification only reliably fires for fast
+        // user switching, not a plain lock/unlock. loginwindow posts this
+        // distributed notification on actual screen unlock instead — the
+        // technique most menu bar utilities rely on for this.
+        DistributedNotificationCenter.default().addObserver(
+            self,
+            selector: #selector(speak),
+            name: Notification.Name("com.apple.screenIsUnlocked"),
+            object: nil
+        )
+
         NSWorkspace.shared.notificationCenter.addObserver(
             self,
             selector: #selector(speak),
