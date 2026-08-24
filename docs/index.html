@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zikr — Dhikr Reminder App for macOS Menu Bar</title>
+<meta name="description" content="Zikr is a free, open-source macOS menu bar app that reminds you to say Subhanallah, Alhamdulillah, Allahu Akbar, and more at random intervals throughout the day — spoken aloud, minimal, private, no accounts or ads.">
+<link rel="canonical" href="https://shamsbd71.github.io/zikr/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Zikr — Dhikr Reminder App for macOS Menu Bar">
+<meta property="og:description" content="A free, open-source macOS menu bar app that reminds you to say Subhanallah, Alhamdulillah, Allahu Akbar, and more — spoken aloud, minimal, private.">
+<meta property="og:url" content="https://shamsbd71.github.io/zikr/">
+<meta property="og:image" content="https://shamsbd71.github.io/zikr/og-banner.jpg">
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1260">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Zikr — Dhikr Reminder App for macOS Menu Bar">
+<meta name="twitter:description" content="A free, open-source macOS menu bar app that reminds you to say Subhanallah, Alhamdulillah, Allahu Akbar, and more — spoken aloud, minimal, private.">
+<meta name="twitter:image" content="https://shamsbd71.github.io/zikr/og-banner.jpg">
+
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0d3a34">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Zikr",
+  "operatingSystem": "macOS 14+",
+  "applicationCategory": "LifestyleApplication",
+  "description": "A free, open-source macOS menu bar app that reminds you to say Subhanallah, Alhamdulillah, Allahu Akbar, and more at random intervals throughout the day — spoken aloud, minimal, private.",
+  "url": "https://shamsbd71.github.io/zikr/",
+  "downloadUrl": "https://github.com/shamsbd71/zikr/releases/latest",
+  "softwareHelp": "https://github.com/shamsbd71/zikr",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "shamsbd71",
+    "url": "https://github.com/shamsbd71"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Zikr free?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Zikr is free and open source under the MIT license. There are no accounts, subscriptions, or in-app purchases." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Zikr need an internet connection?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No, once installed it runs entirely offline. It only reaches the network if you click Check for Updates." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Zikr play Adhan or show prayer times?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. Zikr is intentionally scoped to one thing only: random dhikr reminders. It does not include Adhan, prayer times, Qibla, or any other feature." }
+    },
+    {
+      "@type": "Question",
+      "name": "Which zikr phrases are included?",
+      "acceptedAnswer": { "@type": "Answer", "text": "A curated set of general, anytime adhkar from the well-known Hisnul Muslim (Fortress of the Muslim) collection, including SubhanAllah, Alhamdulillah, Allahu Akbar, La ilaha illallah, Astaghfirullah, and others." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Zikr collect any data?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. There is no analytics, telemetry, or account system. Settings are stored locally on your Mac." }
+    }
+  ]
+}
+</script>
+
+<style>
+  :root {
+    --bg: #0a2320;
+    --bg-panel: #0f2f2a;
+    --teal: #12463d;
+    --teal-light: #1a5c50;
+    --gold: #e8c477;
+    --gold-bright: #f4d58d;
+    --text: #eef3f1;
+    --text-dim: #9fb3ae;
+    --border: rgba(232, 196, 119, 0.18);
+    --arabic-font: "Traditional Arabic", "Geeza Pro", "Al Bayan", "Noto Naskh Arabic", serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--gold-bright); }
+
+  .wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  header.hero {
+    padding: 88px 0 72px;
+    background:
+      radial-gradient(60% 55% at 18% 30%, rgba(26, 92, 80, 0.55), transparent 70%),
+      linear-gradient(160deg, #0d3a34 0%, #081d1a 100%);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-inner {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+  }
+
+  .crescent {
+    flex: 0 0 auto;
+    width: 148px;
+    height: 148px;
+  }
+
+  .hero-copy h1 {
+    font-size: 44px;
+    line-height: 1.12;
+    margin: 0 0 14px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-copy p.tagline {
+    font-size: 19px;
+    color: var(--text-dim);
+    margin: 0 0 28px;
+    max-width: 46ch;
+  }
+
+  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    border: 1px solid transparent;
+  }
+
+  .btn-primary {
+    background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color: #1a1305;
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--border);
+  }
+
+  section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+
+  h2 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--gold);
+    margin: 0 0 32px;
+    font-weight: 700;
+  }
+
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+
+  .feature h3 {
+    font-size: 17px;
+    margin: 0 0 8px;
+  }
+
+  .feature p {
+    margin: 0;
+    color: var(--text-dim);
+    font-size: 14.5px;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+
+  .step .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    color: var(--gold-bright);
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .step h3 { font-size: 16px; margin: 0 0 6px; }
+  .step p { margin: 0; color: var(--text-dim); font-size: 14.5px; }
+
+  .zikr-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .zikr-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+
+  .zikr-card .arabic {
+    font-family: var(--arabic-font);
+    font-size: 24px;
+    color: var(--gold-bright);
+    direction: rtl;
+    margin-bottom: 4px;
+  }
+
+  .zikr-card .translit { font-weight: 600; font-size: 14.5px; }
+  .zikr-card .meaning { color: var(--text-dim); font-size: 13px; margin-top: 2px; }
+
+  .about p { color: var(--text-dim); max-width: 68ch; }
+
+  details {
+    border-bottom: 1px solid var(--border);
+    padding: 18px 0;
+  }
+  details:first-of-type { border-top: 1px solid var(--border); }
+
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15.5px;
+    list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "＋ "; color: var(--gold); }
+  details[open] summary::before { content: "－ "; }
+
+  details p { color: var(--text-dim); margin: 12px 0 0; font-size: 14.5px; }
+
+  footer {
+    padding: 40px 0 60px;
+    color: var(--text-dim);
+    font-size: 13.5px;
+  }
+
+  footer a { color: var(--text-dim); text-decoration: underline; }
+
+  @media (max-width: 720px) {
+    .hero-inner { flex-direction: column; align-items: flex-start; gap: 28px; }
+    .hero-copy h1 { font-size: 32px; }
+    .features, .steps, .zikr-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-inner">
+    <img class="crescent" src="favicon-512.png" width="148" height="148" alt="Zikr app icon: a crescent moon and star">
+    <div class="hero-copy">
+      <h1>A quiet dhikr reminder, right in your Mac's menu bar.</h1>
+      <p class="tagline">Zikr speaks a short remembrance of Allah aloud at random moments through your day — Subhanallah, Alhamdulillah, Allahu Akbar, and more. No accounts, no ads, no clutter.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://github.com/shamsbd71/zikr/releases/latest">Download for macOS</a>
+        <a class="btn btn-secondary" href="https://github.com/shamsbd71/zikr">View source on GitHub</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="features" aria-labelledby="features-heading">
+    <h2 id="features-heading">Features</h2>
+    <div class="features">
+      <div class="feature">
+        <h3>Random reminders</h3>
+        <p>Set a min/max minute range and Zikr fires at a random moment inside it — never predictable, never nagging.</p>
+      </div>
+      <div class="feature">
+        <h3>Spoken aloud</h3>
+        <p>Each phrase is pronounced in Arabic using the built-in macOS voice, not just chimed or flashed silently.</p>
+      </div>
+      <div class="feature">
+        <h3>Notification or flash</h3>
+        <p>Show it as a normal macOS notification, or a soft full-screen flash that fades after a duration you choose.</p>
+      </div>
+      <div class="feature">
+        <h3>Launch at login</h3>
+        <p>Optional, using Apple's current SMAppService API — no LaunchAgent files, no background scripts.</p>
+      </div>
+      <div class="feature">
+        <h3>Self-updating</h3>
+        <p>"Check for Updates…" pulls the latest GitHub release and installs it in place. No third-party updater.</p>
+      </div>
+      <div class="feature">
+        <h3>Private &amp; light</h3>
+        <p>No accounts, no analytics, no network calls except an update check you trigger yourself. Tiny memory footprint.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="how-it-works" aria-labelledby="how-heading">
+    <h2 id="how-heading">How it works</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="num">1</span>
+        <h3>Install</h3>
+        <p>Download the latest release, unzip, and drag Zikr into Applications.</p>
+      </div>
+      <div class="step">
+        <span class="num">2</span>
+        <h3>Set your interval</h3>
+        <p>Open Settings from the menu bar icon and pick how often you'd like to be reminded.</p>
+      </div>
+      <div class="step">
+        <span class="num">3</span>
+        <h3>Let it run</h3>
+        <p>Zikr lives quietly in the menu bar and speaks a remembrance at a random moment — that's the whole app.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="zikr-list" aria-labelledby="zikr-heading">
+    <h2 id="zikr-heading">A sample of what it says</h2>
+    <div class="zikr-grid">
+      <div class="zikr-card">
+        <div class="arabic">سُبْحَانَ اللَّهِ</div>
+        <div class="translit">SubhanAllah</div>
+        <div class="meaning">Glory be to Allah</div>
+      </div>
+      <div class="zikr-card">
+        <div class="arabic">الْحَمْدُ لِلَّهِ</div>
+        <div class="translit">Alhamdulillah</div>
+        <div class="meaning">All praise is due to Allah</div>
+      </div>
+      <div class="zikr-card">
+        <div class="arabic">اللَّهُ أَكْبَرُ</div>
+        <div class="translit">Allahu Akbar</div>
+        <div class="meaning">Allah is the Greatest</div>
+      </div>
+      <div class="zikr-card">
+        <div class="arabic">لَا إِلَٰهَ إِلَّا اللَّهُ</div>
+        <div class="translit">La ilaha illallah</div>
+        <div class="meaning">There is no god but Allah</div>
+      </div>
+    </div>
+    <p style="color:var(--text-dim); font-size: 14.5px; margin-top: 18px;">
+      Plus 17 more general adhkar from the Hisnul Muslim (Fortress of the Muslim) collection — see the
+      <a href="https://github.com/shamsbd71/zikr/blob/main/Sources/ZikrReminder/Models/ZikrList.swift">full list on GitHub</a>.
+    </p>
+  </section>
+
+  <section id="about" class="about" aria-labelledby="about-heading">
+    <h2 id="about-heading">What is dhikr?</h2>
+    <p>
+      Dhikr (ذِكْر, "remembrance") is the Islamic practice of remembering God through short phrases of praise and
+      glorification — said quietly throughout the day rather than confined to formal prayer. Zikr brings that habit
+      into a Mac's normal rhythm: a brief, spoken reminder at an unpredictable moment, then it steps out of the way
+      again.
+    </p>
+  </section>
+
+  <section id="faq" aria-labelledby="faq-heading">
+    <h2 id="faq-heading">FAQ</h2>
+
+    <details>
+      <summary>Is Zikr free?</summary>
+      <p>Yes. Zikr is free and open source under the MIT license. There are no accounts, subscriptions, or in-app purchases.</p>
+    </details>
+    <details>
+      <summary>Does Zikr need an internet connection?</summary>
+      <p>No, once installed it runs entirely offline. It only reaches the network if you click Check for Updates.</p>
+    </details>
+    <details>
+      <summary>Does Zikr play Adhan or show prayer times?</summary>
+      <p>No. Zikr is intentionally scoped to one thing only: random dhikr reminders. It does not include Adhan, prayer times, Qibla, or any other feature.</p>
+    </details>
+    <details>
+      <summary>Which zikr phrases are included?</summary>
+      <p>A curated set of general, anytime adhkar from the well-known Hisnul Muslim (Fortress of the Muslim) collection, including SubhanAllah, Alhamdulillah, Allahu Akbar, La ilaha illallah, Astaghfirullah, and others.</p>
+    </details>
+    <details>
+      <summary>Does Zikr collect any data?</summary>
+      <p>No. There is no analytics, telemetry, or account system. Settings are stored locally on your Mac.</p>
+    </details>
+    <details>
+      <summary>macOS says it can't verify the developer — is that normal?</summary>
+      <p>Yes. Zikr is signed ad-hoc (no paid Apple Developer account behind a hobby project), so the first launch needs an override: right-click the app → Open, or allow it in System Settings → Privacy &amp; Security. You only need to do this once.</p>
+    </details>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>
+      Zikr is free and open source under the <a href="https://github.com/shamsbd71/zikr/blob/main/LICENSE">MIT license</a>.
+      Source, issues, and releases on <a href="https://github.com/shamsbd71/zikr">GitHub</a>.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>

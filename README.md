@@ -2,7 +2,7 @@
 
 A minimal macOS menu bar app that surfaces a short dhikr (Subhanallah, Alhamdulillah, Allahu Akbar, La ilaha illallah, and 17 others from the general Hisnul Muslim collection) at random intervals throughout the day.
 
-Repo: https://github.com/shamsbd71/zikr
+Repo: https://github.com/shamsbd71/zikr · Site: https://shamsbd71.github.io/zikr/ · License: [MIT](LICENSE)
 
 ## What it does
 
@@ -52,7 +52,17 @@ Sources/ZikrReminder/
   Views/                      — menu dropdown, settings form, flash overlay content
   Support/                    — AppSettings (UserDefaults-backed), DisplayStyle enum
 Sources/IconGen/               — standalone tool that renders AppIcon
+Sources/BannerGen/             — standalone tool that renders docs/og-banner (social preview image)
 Resources/                     — generated icon assets (icon_1024.png, AppIcon.icns) — gitignored, rebuilt by build.sh
+docs/                          — GitHub Pages site (https://shamsbd71.github.io/zikr/)
 .github/workflows/release.yml  — tag-triggered build + GitHub Release publish
 build.sh                       — build, icon regen, .app bundling, ad-hoc signing, install
+```
+
+To regenerate the site's social preview image after changing `Sources/BannerGen/main.swift`:
+
+```sh
+swift run BannerGen docs/og-banner.png
+sips -s format jpeg -s formatOptions 82 docs/og-banner.png --out docs/og-banner.jpg
+rm docs/og-banner.png
 ```

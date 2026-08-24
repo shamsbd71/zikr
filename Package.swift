@@ -12,6 +12,10 @@ let package = Package(
         .executableTarget(
             name: "IconGen",
             path: "Sources/IconGen"
+        ),
+        .executableTarget(
+            name: "BannerGen",
+            path: "Sources/BannerGen"
         )
     ]
 )
