@@ -14,6 +14,7 @@ echo "==> Building release binary"
 swift build -c release --product ZikrReminder
 
 echo "==> Generating app icon"
+mkdir -p Resources
 swift run -c release IconGen Resources/icon_1024.png >/dev/null
 
 ICONSET="Resources/AppIcon.iconset"
