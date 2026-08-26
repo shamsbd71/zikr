@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Zikr
+Comment=A quiet dhikr reminder for your desktop
+Exec=zikr
+Icon=zikr
+Terminal=false
+Categories=Utility;
+NoDisplay=false

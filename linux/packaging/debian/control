@@ -1,0 +1,12 @@
+Package: zikr
+Version: __VERSION__
+Section: utils
+Priority: optional
+Architecture: all
+Depends: python3 (>= 3.8), python3-gi, gir1.2-glib-2.0, gir1.2-notify-0.7, gir1.2-ayatanaappindicator3-0.1 | gir1.2-appindicator3-0.1, speech-dispatcher | espeak-ng
+Maintainer: shamsbd71 <https://github.com/shamsbd71>
+Homepage: https://github.com/shamsbd71/zikr
+Description: A quiet dhikr reminder for your desktop
+ Zikr speaks a short remembrance of Allah aloud at random moments
+ throughout the day - Subhanallah, Alhamdulillah, Allahu Akbar, and
+ others. Lives in the system tray. No accounts, no ads, no tracking.

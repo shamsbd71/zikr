@@ -1,6 +1,6 @@
 # Zikr
 
-A minimal macOS menu bar app that surfaces a short dhikr (Subhanallah, Alhamdulillah, Allahu Akbar, La ilaha illallah, and 17 others from the general Hisnul Muslim collection) at random intervals throughout the day.
+A minimal system-tray app that surfaces a short dhikr (Subhanallah, Alhamdulillah, Allahu Akbar, La ilaha illallah, and 17 others from the general Hisnul Muslim collection) at random intervals throughout the day. Native builds for **macOS** (this README) and **[Linux](linux/README.md)** (Python/GTK — see that README for why it's a separate implementation, not a recompile).
 
 Repo: https://github.com/shamsbd71/zikr · Site: https://shamsbd71.github.io/zikr/ · License: [MIT](LICENSE)
 
@@ -33,14 +33,14 @@ Requires macOS 14+ and the Swift toolchain (Xcode Command Line Tools are enough 
 
 ## Releasing
 
-Push a tag matching `vX.Y.Z` and `.github/workflows/release.yml` builds the app on a macOS runner, zips it, and publishes a GitHub Release with the zip attached:
+Push a tag matching `vX.Y.Z` and `.github/workflows/release.yml` builds both platforms in parallel — the macOS app on a macOS runner, the Linux `.deb` on an Ubuntu runner (with a headless smoke test before packaging) — and publishes one GitHub Release with both assets attached:
 
 ```sh
-git tag v1.0.1
-git push origin v1.0.1
+git tag v1.1.1
+git push origin v1.1.1
 ```
 
-The in-app updater compares its own `CFBundleShortVersionString` against the latest release tag, so the version in that tag is what users will be offered.
+The macOS in-app updater compares its own `CFBundleShortVersionString` against the latest release tag, so the version in that tag is what users will be offered. Linux has no self-updater by design — see [linux/README.md](linux/README.md).
 
 ## Project layout
 
@@ -55,8 +55,9 @@ Sources/IconGen/               — standalone tool that renders AppIcon
 Sources/BannerGen/             — standalone tool that renders docs/og-banner (social preview image)
 Resources/                     — generated icon assets (icon_1024.png, AppIcon.icns) — gitignored, rebuilt by build.sh
 docs/                          — GitHub Pages site (https://shamsbd71.github.io/zikr/)
-.github/workflows/release.yml  — tag-triggered build + GitHub Release publish
-build.sh                       — build, icon regen, .app bundling, ad-hoc signing, install
+linux/                          — Linux build (Python/GTK) — see linux/README.md
+.github/workflows/release.yml  — tag-triggered build + GitHub Release publish (both platforms)
+build.sh                       — macOS build, icon regen, .app bundling, ad-hoc signing, install
 ```
 
 To regenerate the site's social preview image after changing `Sources/BannerGen/main.swift`:

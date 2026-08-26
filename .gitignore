@@ -3,3 +3,6 @@ dist/
 Resources/icon_1024.png
 Resources/AppIcon.icns
 .DS_Store
+__pycache__/
+*.pyc
+linux/.venv/

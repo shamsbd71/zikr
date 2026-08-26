@@ -1,0 +1,54 @@
+"""Drives the app: one GLib timer that fires at a random interval, shows a
+random zikr, then reschedules itself. Mirrors ReminderScheduler.swift —
+no polling, no retained history.
+"""
+import random
+
+from gi.repository import GLib
+
+from . import flash, notifications, speech
+from .zikr_data import random_zikr
+
+
+class Scheduler:
+    def __init__(self, settings):
+        self.settings = settings
+        self._source_id = None
+
+    def start(self):
+        if self.settings.enabled:
+            self._schedule_next()
+
+    def stop(self):
+        if self._source_id:
+            GLib.source_remove(self._source_id)
+            self._source_id = None
+
+    def on_settings_changed(self):
+        self.stop()
+        if self.settings.enabled:
+            self._schedule_next()
+
+    def fire_now(self):
+        self._show(random_zikr())
+
+    def _schedule_next(self):
+        self.stop()
+        lo = max(1, self.settings.min_interval_minutes) * 60
+        hi = max(lo, self.settings.max_interval_minutes * 60)
+        delay_seconds = random.uniform(lo, hi)
+        self._source_id = GLib.timeout_add(int(delay_seconds * 1000), self._fire)
+
+    def _fire(self):
+        self._show(random_zikr())
+        if self.settings.enabled:
+            self._schedule_next()
+        return False
+
+    def _show(self, zikr):
+        if self.settings.speak_aloud:
+            speech.speak(zikr)
+        if self.settings.display_style == "flash":
+            flash.present(zikr, self.settings.flash_duration_seconds)
+        else:
+            notifications.deliver(zikr)
