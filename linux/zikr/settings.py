@@ -50,13 +50,22 @@ class Settings:
         raise AttributeError(name)
 
     def __setattr__(self, name, value):
-        if name in DEFAULTS:
-            self._data[name] = value
-            self.save()
-            if name == "launch_at_login":
-                _set_autostart(value)
-        else:
+        if name not in DEFAULTS:
             super().__setattr__(name, value)
+            return
+
+        self._data[name] = value
+        # Keep min <= max, mirroring the macOS build's AppSettings, which
+        # pushes the other bound along rather than silently accepting an
+        # inverted range.
+        if name == "min_interval_minutes" and value > self._data["max_interval_minutes"]:
+            self._data["max_interval_minutes"] = value
+        elif name == "max_interval_minutes" and value < self._data["min_interval_minutes"]:
+            self._data["min_interval_minutes"] = value
+
+        self.save()
+        if name == "launch_at_login":
+            _set_autostart(value)
 
 
 def _zikr_command():

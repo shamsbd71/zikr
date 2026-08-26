@@ -9,7 +9,11 @@ permissions:
   contents: write
 
 jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+
   build-macos:
+    needs: test
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
@@ -37,6 +41,7 @@ jobs:
           files: dist/Zikr-${{ steps.version.outputs.version }}.zip
 
   build-linux:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -52,22 +57,6 @@ jobs:
             python3-gi gir1.2-glib-2.0 gir1.2-notify-0.7 \
             gir1.2-ayatanaappindicator3-0.1 \
             speech-dispatcher xvfb dpkg-dev
-
-      - name: Smoke test (headless import + construct app)
-        run: |
-          cd linux
-          xvfb-run -a python3 -c "
-          import gi
-          gi.require_version('Gtk', '3.0')
-          from zikr.app import ZikrApp
-          from zikr.zikr_data import ALL, random_zikr
-          assert len(ALL) > 0, 'zikr list is empty'
-          z = random_zikr()
-          assert 'arabic' in z and 'transliteration' in z and 'translation' in z
-          app = ZikrApp()
-          app.scheduler.stop()
-          print('Smoke test OK —', len(ALL), 'zikr loaded, tray app constructed')
-          "
 
       - name: Build .deb
         env:

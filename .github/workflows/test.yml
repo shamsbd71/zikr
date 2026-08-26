@@ -1,0 +1,93 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch: {}
+  workflow_call: {}
+
+jobs:
+  test-macos:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build (unsigned test build, not installed)
+        env:
+          VERSION: "0.0.0-test"
+          INSTALL: "0"
+        run: ./build.sh
+
+      - name: Verify universal binary (arm64 + x86_64)
+        run: |
+          ARCHES="$(lipo -info dist/Zikr.app/Contents/MacOS/Zikr)"
+          echo "$ARCHES"
+          echo "$ARCHES" | grep -q "arm64" || { echo "::error::missing arm64 slice"; exit 1; }
+          echo "$ARCHES" | grep -q "x86_64" || { echo "::error::missing x86_64 slice"; exit 1; }
+
+      - name: Verify ad-hoc code signature
+        run: codesign --verify --deep --strict dist/Zikr.app
+
+      - name: Verify Info.plist essentials
+        run: |
+          BUNDLE_ID="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' dist/Zikr.app/Contents/Info.plist)"
+          [ "$BUNDLE_ID" = "com.abu.ZikrReminder" ] || { echo "::error::unexpected bundle id: $BUNDLE_ID"; exit 1; }
+          UI_ELEMENT="$(/usr/libexec/PlistBuddy -c 'Print :LSUIElement' dist/Zikr.app/Contents/Info.plist)"
+          [ "$UI_ELEMENT" = "true" ] || { echo "::error::LSUIElement should be true (menu-bar-only app)"; exit 1; }
+
+      - name: Launch smoke test
+        run: |
+          xattr -cr dist/Zikr.app
+          open dist/Zikr.app
+          sleep 4
+          if ! pgrep -f "dist/Zikr.app/Contents/MacOS/Zikr" >/dev/null; then
+            echo "::error::app did not stay running after launch"
+            exit 1
+          fi
+          echo "app launched and is running"
+          pkill -f "dist/Zikr.app/Contents/MacOS/Zikr"
+
+  test-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build & runtime dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            python3-gi gir1.2-glib-2.0 gir1.2-notify-0.7 \
+            gir1.2-ayatanaappindicator3-0.1 \
+            speech-dispatcher xvfb dpkg-dev
+
+      - name: Unit tests
+        run: |
+          cd linux
+          xvfb-run -a env XDG_CONFIG_HOME="$(mktemp -d)" python3 -m unittest discover -s tests -v
+
+      - name: Smoke test (headless import + construct app)
+        run: |
+          cd linux
+          xvfb-run -a python3 -c "
+          import gi
+          gi.require_version('Gtk', '3.0')
+          from zikr.app import ZikrApp
+          from zikr.zikr_data import ALL, random_zikr
+          assert len(ALL) > 0, 'zikr list is empty'
+          z = random_zikr()
+          assert 'arabic' in z and 'transliteration' in z and 'translation' in z
+          app = ZikrApp()
+          app.scheduler.stop()
+          print('Smoke test OK —', len(ALL), 'zikr loaded, tray app constructed')
+          "
+
+      - name: Build .deb (test version)
+        env:
+          VERSION: "0.0.0-test"
+        run: linux/packaging/build_deb.sh
+
+      - name: Validate package metadata
+        run: |
+          dpkg -I dist/zikr_0.0.0-test_all.deb
+          dpkg -c dist/zikr_0.0.0-test_all.deb

@@ -50,6 +50,9 @@ def show(settings, on_changed):
 
     def on_min(spin):
         settings.min_interval_minutes = int(spin.get_value())
+        # Settings clamps max up if it's now below min — reflect that here.
+        if max_spin.get_value() != settings.max_interval_minutes:
+            max_spin.set_value(settings.max_interval_minutes)
         on_changed()
 
     min_spin.connect("value-changed", on_min)
@@ -63,6 +66,9 @@ def show(settings, on_changed):
 
     def on_max(spin):
         settings.max_interval_minutes = int(spin.get_value())
+        # Settings clamps min down if it's now above max — reflect that here.
+        if min_spin.get_value() != settings.min_interval_minutes:
+            min_spin.set_value(settings.min_interval_minutes)
         on_changed()
 
     max_spin.connect("value-changed", on_max)
