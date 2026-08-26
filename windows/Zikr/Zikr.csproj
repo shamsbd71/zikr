@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <!-- AnyCPU + .NET Framework's built-in CLR runs natively on both
+         x64 and ARM64 Windows with a single build - no per-architecture
+         binaries needed (unlike the macOS build, which learned this
+         lesson the hard way and now ships a lipo'd universal binary). -->
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RootNamespace>Zikr</RootNamespace>
+    <AssemblyName>Zikr</AssemblyName>
+    <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
+    <Nullable>disable</Nullable>
+    <LangVersion>7.3</LangVersion>
+    <Version>1.0.0</Version>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Speech" />
+    <!-- JavaScriptSerializer for our flat JSON needs (settings, zikr
+         list) - built into the Framework, avoids a NuGet dependency
+         just for JSON parsing. -->
+    <Reference Include="System.Web.Extensions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\zikr.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\icon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

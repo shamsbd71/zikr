@@ -91,3 +91,44 @@ jobs:
         run: |
           dpkg -I dist/zikr_0.0.0-test_all.deb
           dpkg -c dist/zikr_0.0.0-test_all.deb
+
+  test-windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: dotnet build windows/Zikr/Zikr.csproj -c Release
+
+      - name: Unit tests
+        run: dotnet test windows/Zikr.Tests/Zikr.Tests.csproj -c Release --logger "console;verbosity=detailed"
+
+      - name: Launch smoke test
+        run: |
+          $exe = "windows\Zikr\bin\Release\net48\Zikr.exe"
+          if (-not (Test-Path $exe)) { throw "build output not found: $exe" }
+          Start-Process -FilePath $exe
+          Start-Sleep -Seconds 4
+          $proc = Get-Process -Name Zikr -ErrorAction SilentlyContinue
+          if (-not $proc) { throw "app did not stay running after launch" }
+          Write-Host "app launched and is running (pid $($proc.Id))"
+          Stop-Process -Name Zikr -Force
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y --no-progress
+
+      - name: Build installer (test version)
+        run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          & $iscc /DMyAppVersion=0.0.0-test windows\packaging\ZikrSetup.iss
+
+      - name: Verify installer output
+        run: |
+          $exe = "dist\ZikrSetup-0.0.0-test.exe"
+          if (-not (Test-Path $exe)) { throw "installer not found: $exe" }
+          $size = (Get-Item $exe).Length
+          Write-Host "installer size: $size bytes"
+          if ($size -lt 100000) { throw "installer suspiciously small ($size bytes)" }

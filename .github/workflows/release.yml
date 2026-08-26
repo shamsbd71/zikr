@@ -74,3 +74,36 @@ jobs:
           name: "Zikr ${{ github.ref_name }}"
           generate_release_notes: true
           files: dist/zikr_${{ steps.version.outputs.version }}_all.deb
+
+  build-windows:
+    needs: test
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Derive version from tag
+        id: version
+        run: |
+          $ver = $env:GITHUB_REF_NAME -replace '^v', ''
+          "version=$ver" >> $env:GITHUB_OUTPUT
+
+      - name: Build
+        run: dotnet build windows/Zikr/Zikr.csproj -c Release
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y --no-progress
+
+      - name: Build installer
+        run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          & $iscc /DMyAppVersion=${{ steps.version.outputs.version }} windows\packaging\ZikrSetup.iss
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Zikr ${{ github.ref_name }}"
+          generate_release_notes: true
+          files: dist/ZikrSetup-${{ steps.version.outputs.version }}.exe
