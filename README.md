@@ -29,7 +29,7 @@ Repo: https://github.com/shamsbd71/zikr · Site: https://shamsbd71.github.io/zik
 
 This compiles a release binary via Swift Package Manager, regenerates the icon, assembles `dist/Zikr.app`, ad-hoc code-signs it, and installs it to `~/Applications/Zikr.app`. Open it from there (or `open ~/Applications/Zikr.app`).
 
-Requires macOS 14+ and the Swift toolchain (Xcode Command Line Tools are enough — no full Xcode needed).
+Requires macOS 14+ and the Swift toolchain (Xcode Command Line Tools are enough — no full Xcode needed). The built binary is universal (arm64 + Intel x86_64) — `build.sh` compiles both slices separately and combines them with `lipo`, since xcbuild-based multi-arch builds need full Xcode. This is also why older releases failed to open on Intel Macs with an "unsupported Mac" error: the binary was arm64-only.
 
 ## Releasing
 

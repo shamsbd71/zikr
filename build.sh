@@ -4,14 +4,21 @@ cd "$(dirname "$0")"
 
 APP_NAME="Zikr"
 BUNDLE_ID="com.abu.ZikrReminder"
-BUILD_DIR=".build/release"
 APP_DIR="dist/${APP_NAME}.app"
 INSTALL_DIR="${HOME}/Applications"
 VERSION="${VERSION:-1.0}"
 INSTALL="${INSTALL:-1}"
 
-echo "==> Building release binary"
-swift build -c release --product ZikrReminder
+echo "==> Building release binary (universal: arm64 + x86_64)"
+swift build -c release --product ZikrReminder --arch arm64
+swift build -c release --product ZikrReminder --arch x86_64
+mkdir -p .build/universal
+lipo -create \
+  ".build/arm64-apple-macosx/release/ZikrReminder" \
+  ".build/x86_64-apple-macosx/release/ZikrReminder" \
+  -output ".build/universal/ZikrReminder"
+lipo -info ".build/universal/ZikrReminder"
+BUILD_DIR=".build/universal"
 
 echo "==> Generating app icon"
 mkdir -p Resources
