@@ -68,7 +68,9 @@ final class ReminderScheduler {
     }
 
     private func fire() {
-        show(ZikrList.random())
+        if !(settings.pauseDuringCalls && MicrophoneMonitor.isInUse) {
+            show(ZikrList.random())
+        }
         if settings.isEnabled {
             scheduleNext()
         }

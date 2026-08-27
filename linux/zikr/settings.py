@@ -23,6 +23,7 @@ DEFAULTS = {
     "speak_aloud": True,
     "flash_duration_seconds": 2.0,
     "launch_at_login": False,
+    "pause_during_calls": True,
 }
 
 

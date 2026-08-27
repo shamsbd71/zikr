@@ -53,6 +53,7 @@ struct SettingsView: View {
 
             Section("System") {
                 Toggle("Launch at login", isOn: $settings.launchAtLogin)
+                Toggle("Pause during calls (mic in use)", isOn: $settings.pauseDuringCalls)
             }
 
             Section {

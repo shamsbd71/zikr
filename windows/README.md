@@ -10,10 +10,11 @@ Framework 4.8 + WinForms, built on actual Windows desktop standards:
 | AVSpeechSynthesizer         | speech-dispatcher / espeak-ng                   | `System.Speech.Synthesis` (SAPI5)     |
 | SMAppService (login item)  | XDG autostart entry                             | `HKCU\...\Run` registry value          |
 | UserDefaults                | JSON under `$XDG_CONFIG_HOME/zikr/`             | JSON under `%APPDATA%\Zikr\`           |
+| CoreAudio `DeviceIsRunningSomewhere` (mic-in-use check) | `pactl`/ALSA proc status | `CapabilityAccessManager\ConsentStore\microphone` registry ledger |
 
 Same 21-phrase zikr list, same settings (interval range, notification vs.
 full-screen flash with adjustable duration, speak-aloud toggle, launch at
-login), same bundled-audio-overrides-voice convention.
+login, pause during calls), same bundled-audio-overrides-voice convention.
 
 ## Why .NET Framework 4.8, not modern .NET
 

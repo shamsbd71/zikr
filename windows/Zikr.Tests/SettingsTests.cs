@@ -38,6 +38,7 @@ namespace Zikr.Tests
             Assert.AreEqual(20, s.MinIntervalMinutes);
             Assert.AreEqual(45, s.MaxIntervalMinutes);
             Assert.AreEqual("notification", s.DisplayStyle);
+            Assert.IsTrue(s.PauseDuringCalls);
         }
 
         [TestMethod]

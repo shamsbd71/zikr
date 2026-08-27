@@ -11,10 +11,12 @@ the actual Linux desktop standards:
 | AVSpeechSynthesizer         | speech-dispatcher, falling back to espeak-ng directly |
 | SMAppService (login item)  | XDG autostart (`~/.config/autostart/zikr.desktop`) |
 | UserDefaults                | JSON file under `$XDG_CONFIG_HOME/zikr/`       |
+| CoreAudio `DeviceIsRunningSomewhere` (mic-in-use check) | `pactl list short source-outputs`, falling back to ALSA's `/proc/asound/card*/pcm*c/sub*/status` |
 
 Same 21-phrase zikr list, same settings (interval range, notification vs.
 full-screen flash with adjustable duration, speak-aloud toggle, launch at
-login), same bundled-audio-overrides-system-voice behavior.
+login, pause during calls), same bundled-audio-overrides-system-voice
+behavior.
 
 **One real difference: no in-place self-updater.** The macOS build
 replaces its own `.app` bundle because that's a well-established, safe

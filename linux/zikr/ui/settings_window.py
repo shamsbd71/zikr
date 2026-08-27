@@ -134,6 +134,15 @@ def show(settings, on_changed):
     login_row.connect("toggled", on_login)
     root.pack_start(login_row, False, False, 0)
 
+    calls_row = Gtk.CheckButton(label="Pause during calls (mic in use)")
+    calls_row.set_active(settings.pause_during_calls)
+
+    def on_calls(btn):
+        settings.pause_during_calls = btn.get_active()
+
+    calls_row.connect("toggled", on_calls)
+    root.pack_start(calls_row, False, False, 0)
+
     root.pack_start(Gtk.Separator(), False, False, 0)
 
     test_btn = Gtk.Button(label="Test Zikr (Speak + Flash)")

@@ -24,6 +24,7 @@ namespace Zikr
         private Panel _durationRow;
         private CheckBox _speakBox;
         private CheckBox _loginBox;
+        private CheckBox _callsBox;
 
         public static void Show(Settings settings, Action onChanged)
         {
@@ -47,7 +48,7 @@ namespace Zikr
             MaximizeBox = false;
             MinimizeBox = false;
             StartPosition = FormStartPosition.CenterScreen;
-            ClientSize = new Size(380, 400);
+            ClientSize = new Size(380, 428);
             Padding = new Padding(18);
 
             var layout = new FlowLayoutPanel
@@ -117,6 +118,10 @@ namespace Zikr
             _loginBox = new CheckBox { Text = "Launch at login", Checked = _settings.LaunchAtLogin, AutoSize = true };
             _loginBox.CheckedChanged += (s, e) => { _settings.LaunchAtLogin = _loginBox.Checked; };
             layout.Controls.Add(_loginBox);
+
+            _callsBox = new CheckBox { Text = "Pause during calls (mic in use)", Checked = _settings.PauseDuringCalls, AutoSize = true };
+            _callsBox.CheckedChanged += (s, e) => { _settings.PauseDuringCalls = _callsBox.Checked; _settings.Save(); _onChanged?.Invoke(); };
+            layout.Controls.Add(_callsBox);
 
             layout.Controls.Add(Section(""));
 

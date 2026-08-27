@@ -4,6 +4,17 @@ All notable changes to Zikr are documented here. Dates are release dates
 (Asia/Dhaka). See [releases](https://github.com/shamsbd71/zikr/releases)
 for downloadable assets per version.
 
+## [Unreleased]
+
+### Added
+- "Pause during calls (mic in use)" setting (on by default) — skips a
+  scheduled reminder rather than talking over a meeting, by checking
+  whether any app has the microphone open: CoreAudio's
+  `DeviceIsRunningSomewhere` on macOS, `pactl`/ALSA proc status on
+  Linux, and the `CapabilityAccessManager\ConsentStore\microphone`
+  registry ledger on Windows. Manual "Test Zikr" always bypasses the
+  check, same as it already bypasses the display-style setting.
+
 ## [1.3.0] — 2026-08-26
 
 ### Added
