@@ -326,6 +326,7 @@
 
   footer { padding: 36px 0 56px; color: var(--ink-dim); font-size: 13.5px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
   footer a { color: var(--ink-dim); text-decoration: underline; }
+  .footer-version { margin: 8px 0 0; opacity: 0.72; }
 
   :focus-visible { outline: 2px solid var(--terracotta); outline-offset: 2px; }
 
@@ -493,6 +494,7 @@
 <footer>
   <div class="wrap">
     <p data-i18n-html="footerText"></p>
+    <p class="footer-version" data-i18n-html="footerVersion"></p>
   </div>
 </footer>
 
@@ -550,7 +552,8 @@
       q5: "Does Zikr collect any data?", a5: "No. There is no analytics, telemetry, or account system. Settings are stored locally on your device.",
       q6: "macOS says it can't verify the developer — is that normal?", a6: "Yes. Zikr is signed ad-hoc (no paid Apple Developer account behind a hobby project), so the first launch needs an override: right-click the app → Open, or allow it in System Settings → Privacy & Security. You only need to do this once.",
 
-      footerText: "Zikr is free and open source under the <a href=\"https://github.com/shamsbd71/zikr/blob/main/LICENSE\">MIT license</a>. Source, issues, and releases on <a href=\"https://github.com/shamsbd71/zikr\">GitHub</a>."
+      footerText: "Zikr is free and open source under the <a href=\"https://github.com/shamsbd71/zikr/blob/main/LICENSE\">MIT license</a>. Source, issues, and releases on <a href=\"https://github.com/shamsbd71/zikr\">GitHub</a>.",
+      footerVersion: "Current version: <a href=\"https://github.com/shamsbd71/zikr/releases/tag/v1.3.0\">v1.3.0</a> (Aug 26, 2026) — macOS, Linux, and Windows. <a href=\"https://github.com/shamsbd71/zikr/blob/main/CHANGELOG.md\">Full changelog</a>."
     },
 
     bn: {
@@ -604,7 +607,8 @@
       q5: "Zikr কি কোনো তথ্য সংগ্রহ করে?", a5: "না। কোনো অ্যানালিটিক্স, টেলিমেট্রি বা অ্যাকাউন্ট সিস্টেম নেই। সেটিংস আপনার ডিভাইসে স্থানীয়ভাবে সংরক্ষিত হয়।",
       q6: "macOS বলছে ডেভেলপার যাচাই করা যায়নি — এটা কি স্বাভাবিক?", a6: "হ্যাঁ। Zikr অ্যাড-হক সাইন করা (একটি শখের প্রজেক্টের পেছনে পেইড Apple Developer অ্যাকাউন্ট নেই), তাই প্রথমবার চালু করতে একটি অনুমতি দিতে হয়: অ্যাপে রাইট-ক্লিক করে Open চাপুন, অথবা System Settings → Privacy & Security থেকে অনুমতি দিন। এটি শুধু একবারই করতে হবে।",
 
-      footerText: "Zikr ফ্রি এবং <a href=\"https://github.com/shamsbd71/zikr/blob/main/LICENSE\">MIT লাইসেন্সের</a> অধীনে ওপেন সোর্স। সোর্স, ইস্যু এবং রিলিজ <a href=\"https://github.com/shamsbd71/zikr\">GitHub-এ</a>।"
+      footerText: "Zikr ফ্রি এবং <a href=\"https://github.com/shamsbd71/zikr/blob/main/LICENSE\">MIT লাইসেন্সের</a> অধীনে ওপেন সোর্স। সোর্স, ইস্যু এবং রিলিজ <a href=\"https://github.com/shamsbd71/zikr\">GitHub-এ</a>।",
+      footerVersion: "বর্তমান ভার্সন: <a href=\"https://github.com/shamsbd71/zikr/releases/tag/v1.3.0\">v1.3.0</a> (২৬ আগস্ট, ২০২৬) — macOS, Linux এবং Windows। <a href=\"https://github.com/shamsbd71/zikr/blob/main/CHANGELOG.md\">সম্পূর্ণ চেঞ্জলগ</a>।"
     },
 
     ar: {
@@ -658,7 +662,8 @@
       q5: "هل يجمع Zikr أي بيانات؟", a5: "لا. لا تحليلات ولا تتبّع ولا نظام حسابات. تُحفظ الإعدادات محليًا على جهازك فقط.",
       q6: "يقول macOS إنه لا يمكن التحقق من المطوّر — هل هذا طبيعي؟", a6: "نعم. Zikr موقّع توقيعًا ذاتيًا (adhoc) إذ لا يوجد حساب Apple Developer مدفوع خلف مشروع شخصي، لذا يحتاج التشغيل الأول إلى تجاوز: انقر بزر الفأرة الأيمن على التطبيق ثم Open، أو اسمح به من System Settings → Privacy & Security. تفعل هذا مرة واحدة فقط.",
 
-      footerText: "Zikr مجاني ومفتوح المصدر برخصة <a href=\"https://github.com/shamsbd71/zikr/blob/main/LICENSE\">MIT</a>. الشيفرة المصدرية والمشكلات والإصدارات على <a href=\"https://github.com/shamsbd71/zikr\">GitHub</a>."
+      footerText: "Zikr مجاني ومفتوح المصدر برخصة <a href=\"https://github.com/shamsbd71/zikr/blob/main/LICENSE\">MIT</a>. الشيفرة المصدرية والمشكلات والإصدارات على <a href=\"https://github.com/shamsbd71/zikr\">GitHub</a>.",
+      footerVersion: "الإصدار الحالي: <a href=\"https://github.com/shamsbd71/zikr/releases/tag/v1.3.0\">v1.3.0</a> (٢٦ أغسطس ٢٠٢٦) — macOS وLinux وWindows. <a href=\"https://github.com/shamsbd71/zikr/blob/main/CHANGELOG.md\">سجل التغييرات الكامل</a>."
     }
   };
 
