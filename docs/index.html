@@ -3,20 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Zikr — It Remembers Allah For You | macOS & Linux Tray App</title>
-<meta name="description" content="Zikr is a free, open-source tray app for macOS and Linux (Windows coming soon) that speaks a remembrance of Allah aloud at random moments — Subhanallah, Alhamdulillah, Allahu Akbar, and more. You don't do anything. It does the reminding; you just listen.">
+<title>Zikr — It Remembers Allah For You | macOS, Linux & Windows Tray App</title>
+<meta name="description" content="Zikr is a free, open-source tray app for macOS, Linux, and Windows that speaks a remembrance of Allah aloud at random moments — Subhanallah, Alhamdulillah, Allahu Akbar, and more. You don't do anything. It does the reminding; you just listen.">
 <link rel="canonical" href="https://shamsbd71.github.io/zikr/">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="Zikr — It Remembers Allah For You">
-<meta property="og:description" content="A free, open-source tray app for macOS and Linux that speaks a remembrance of Allah aloud at random moments. No taps, no counting — you just listen.">
+<meta property="og:description" content="A free, open-source tray app for macOS, Linux, and Windows that speaks a remembrance of Allah aloud at random moments. No taps, no counting — you just listen.">
 <meta property="og:url" content="https://shamsbd71.github.io/zikr/">
 <meta property="og:image" content="https://shamsbd71.github.io/zikr/og-banner.jpg">
 <meta property="og:image:width" content="2400">
 <meta property="og:image:height" content="1260">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Zikr — It Remembers Allah For You">
-<meta name="twitter:description" content="A free, open-source tray app for macOS and Linux that speaks a remembrance of Allah aloud at random moments. No taps, no counting — you just listen.">
+<meta name="twitter:description" content="A free, open-source tray app for macOS, Linux, and Windows that speaks a remembrance of Allah aloud at random moments. No taps, no counting — you just listen.">
 <meta name="twitter:image" content="https://shamsbd71.github.io/zikr/og-banner.jpg">
 
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -32,9 +32,9 @@
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "Zikr",
-  "operatingSystem": "macOS 14+, Linux",
+  "operatingSystem": "macOS 14+, Linux, Windows 10+",
   "applicationCategory": "LifestyleApplication",
-  "description": "A free, open-source tray app for macOS and Linux (Windows in progress) that speaks a remembrance of Allah aloud at random moments throughout the day. It asks nothing of the user — no taps, no counting, no habit tracking. You just listen.",
+  "description": "A free, open-source tray app for macOS, Linux, and Windows that speaks a remembrance of Allah aloud at random moments throughout the day. It asks nothing of the user — no taps, no counting, no habit tracking. You just listen.",
   "url": "https://shamsbd71.github.io/zikr/",
   "downloadUrl": "https://github.com/shamsbd71/zikr/releases/latest",
   "softwareHelp": "https://github.com/shamsbd71/zikr",
@@ -49,7 +49,7 @@
   "@type": "FAQPage",
   "mainEntity": [
     { "@type": "Question", "name": "Do I have to do anything?", "acceptedAnswer": { "@type": "Answer", "text": "No. Unlike a habit tracker or wird app, Zikr never asks you to open it, tap it, or count. It speaks on its own — you just hear it." } },
-    { "@type": "Question", "name": "What platforms does Zikr support?", "acceptedAnswer": { "@type": "Answer", "text": "macOS 14+ (Intel and Apple Silicon) and most major Linux distributions (a .deb for Debian/Ubuntu/Mint/Pop!_OS, a user-local installer for others). Windows support is in progress." } },
+    { "@type": "Question", "name": "What platforms does Zikr support?", "acceptedAnswer": { "@type": "Answer", "text": "macOS 14+ (Intel and Apple Silicon), most major Linux distributions (a .deb for Debian/Ubuntu/Mint/Pop!_OS, a user-local installer for others), and Windows 10 and 11." } },
     { "@type": "Question", "name": "Is Zikr free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Zikr is free and open source under the MIT license. There are no accounts, subscriptions, or in-app purchases." } },
     { "@type": "Question", "name": "Does Zikr need an internet connection?", "acceptedAnswer": { "@type": "Answer", "text": "No, once installed it runs entirely offline. It only reaches the network if you click Check for Updates." } },
     { "@type": "Question", "name": "Does Zikr play Adhan or show prayer times?", "acceptedAnswer": { "@type": "Answer", "text": "No. Zikr is intentionally scoped to one thing only: random dhikr reminders. It does not include Adhan, prayer times, Qibla, or any other feature." } },
@@ -204,7 +204,6 @@
   }
   .platform-row a { color: rgba(255,255,255,0.92); text-decoration: underline; }
   .platform-row a:hover { color: var(--gold-bright); }
-  .platform-row .platform-soon { color: rgba(255,255,255,0.5); }
   .platform-row span[aria-hidden] { margin: 0 4px; color: rgba(255,255,255,0.4); }
   .btn {
     display: inline-flex;
@@ -372,7 +371,7 @@
         <span aria-hidden="true">·</span>
         <a href="https://github.com/shamsbd71/zikr/releases/latest">Linux</a>
         <span aria-hidden="true">·</span>
-        <span class="platform-soon" data-i18n="platformWindowsSoon"></span>
+        <a href="https://github.com/shamsbd71/zikr/releases/latest">Windows 10+</a>
       </p>
     </div>
   </div>
@@ -507,10 +506,10 @@
       ctaDownload: "Download for macOS",
       ctaDownloadMac: "Download for macOS",
       ctaDownloadLinux: "Download for Linux",
+      ctaDownloadWindows: "Download for Windows",
       ctaDownloadGeneric: "Download",
       ctaSource: "View source on GitHub",
       platformsLabel: "Available for:",
-      platformWindowsSoon: "Windows (in progress)",
 
       sigTitle: "Not another app to manage",
       sigNoTitle: "What most reminder apps ask of you",
@@ -543,7 +542,7 @@
 
       faqTitle: "FAQ",
       q0: "Do I have to do anything?", a0: "No. Unlike a habit tracker or wird app, Zikr never asks you to open it, tap it, or count. It speaks on its own — you just hear it.",
-      qPlatform: "What platforms does Zikr support?", aPlatform: "macOS 14+ (Intel and Apple Silicon) and most major Linux distributions today — a .deb for Debian/Ubuntu/Mint/Pop!_OS, plus a user-local installer for others. Windows support is in progress.",
+      qPlatform: "What platforms does Zikr support?", aPlatform: "macOS 14+ (Intel and Apple Silicon), most major Linux distributions — a .deb for Debian/Ubuntu/Mint/Pop!_OS, plus a user-local installer for others — and Windows 10 and 11.",
       q1: "Is Zikr free?", a1: "Yes. Zikr is free and open source under the MIT license. There are no accounts, subscriptions, or in-app purchases.",
       q2: "Does Zikr need an internet connection?", a2: "No, once installed it runs entirely offline. It only reaches the network if you click Check for Updates.",
       q3: "Does Zikr play Adhan or show prayer times?", a3: "No. Zikr is intentionally scoped to one thing only: random dhikr reminders. It does not include Adhan, prayer times, Qibla, or any other feature.",
@@ -561,10 +560,10 @@
       ctaDownload: "macOS-এর জন্য ডাউনলোড করুন",
       ctaDownloadMac: "macOS-এর জন্য ডাউনলোড করুন",
       ctaDownloadLinux: "Linux-এর জন্য ডাউনলোড করুন",
+      ctaDownloadWindows: "Windows-এর জন্য ডাউনলোড করুন",
       ctaDownloadGeneric: "ডাউনলোড করুন",
       ctaSource: "GitHub-এ সোর্স দেখুন",
       platformsLabel: "উপলব্ধ:",
-      platformWindowsSoon: "Windows (কাজ চলছে)",
 
       sigTitle: "পরিচালনা করার মতো আরেকটি অ্যাপ নয়",
       sigNoTitle: "বেশিরভাগ রিমাইন্ডার অ্যাপ আপনার কাছে যা চায়",
@@ -597,7 +596,7 @@
 
       faqTitle: "সচরাচর জিজ্ঞাসা",
       q0: "আমাকে কি কিছু করতে হয়?", a0: "না। অভ্যাস-ট্র্যাকার বা ওয়াজিফা অ্যাপের মতো নয়, Zikr কখনো আপনাকে এটি খুলতে, ট্যাপ করতে বা গুনতে বলে না। এটি নিজে থেকেই বলে; আপনি শুধু শোনেন।",
-      qPlatform: "Zikr কোন কোন প্ল্যাটফর্মে চলে?", aPlatform: "বর্তমানে macOS 14+ (Intel এবং Apple Silicon) এবং বেশিরভাগ প্রধান Linux ডিস্ট্রিবিউশনে — Debian/Ubuntu/Mint/Pop!_OS-এর জন্য একটি .deb, এবং অন্যদের জন্য একটি ইউজার-লোকাল ইনস্টলার। Windows সাপোর্টের কাজ চলছে।",
+      qPlatform: "Zikr কোন কোন প্ল্যাটফর্মে চলে?", aPlatform: "macOS 14+ (Intel এবং Apple Silicon), বেশিরভাগ প্রধান Linux ডিস্ট্রিবিউশন — Debian/Ubuntu/Mint/Pop!_OS-এর জন্য একটি .deb, এবং অন্যদের জন্য একটি ইউজার-লোকাল ইনস্টলার — এবং Windows 10 ও 11।",
       q1: "Zikr কি ফ্রি?", a1: "হ্যাঁ। Zikr ফ্রি এবং MIT লাইসেন্সের অধীনে ওপেন সোর্স। কোনো অ্যাকাউন্ট, সাবস্ক্রিপশন বা ইন-অ্যাপ পারচেজ নেই।",
       q2: "Zikr-এর কি ইন্টারনেট সংযোগ প্রয়োজন?", a2: "না, একবার ইনস্টল করার পর এটি সম্পূর্ণ অফলাইনে চলে। আপনি নিজে Check for Updates-এ ক্লিক করলে তবেই এটি নেটওয়ার্কে যায়।",
       q3: "Zikr কি আজান বাজায় বা নামাজের সময় দেখায়?", a3: "না। Zikr ইচ্ছাকৃতভাবে একটি বিষয়ে সীমাবদ্ধ: এলোমেলো জিকির স্মরণ করানো। এতে আজান, নামাজের সময়, কিবলা বা অন্য কোনো ফিচার নেই।",
@@ -615,10 +614,10 @@
       ctaDownload: "تنزيل لنظام macOS",
       ctaDownloadMac: "تنزيل لنظام macOS",
       ctaDownloadLinux: "تنزيل لنظام Linux",
+      ctaDownloadWindows: "تنزيل لنظام Windows",
       ctaDownloadGeneric: "تنزيل",
       ctaSource: "عرض الشيفرة المصدرية على GitHub",
       platformsLabel: "متوفر لـ:",
-      platformWindowsSoon: "Windows (قيد التطوير)",
 
       sigTitle: "ليس تطبيقًا آخر لإدارته",
       sigNoTitle: "ما تطلبه منك معظم تطبيقات التذكير",
@@ -651,7 +650,7 @@
 
       faqTitle: "الأسئلة الشائعة",
       q0: "هل يتوجب عليّ فعل أي شيء؟", a0: "لا. خلافًا لتطبيقات متابعة العادات أو الأوراد، لا يطلب منك Zikr أبدًا فتحه أو النقر عليه أو العدّ. هو يتحدث من تلقاء نفسه؛ وأنت تستمع فقط.",
-      qPlatform: "ما هي الأنظمة التي يدعمها Zikr؟", aPlatform: "حاليًا macOS 14+ (إنتل وApple Silicon) ومعظم توزيعات Linux الرئيسية — حزمة .deb لـ Debian/Ubuntu/Mint/Pop!_OS، ومثبّت محلي للمستخدم لبقية التوزيعات. دعم Windows قيد التطوير.",
+      qPlatform: "ما هي الأنظمة التي يدعمها Zikr؟", aPlatform: "macOS 14+ (إنتل وApple Silicon)، ومعظم توزيعات Linux الرئيسية — حزمة .deb لـ Debian/Ubuntu/Mint/Pop!_OS، ومثبّت محلي للمستخدم لبقية التوزيعات — بالإضافة إلى Windows 10 و 11.",
       q1: "هل Zikr مجاني؟", a1: "نعم. Zikr مجاني ومفتوح المصدر برخصة MIT. لا حسابات ولا اشتراكات ولا مشتريات داخل التطبيق.",
       q2: "هل يحتاج Zikr إلى اتصال بالإنترنت؟", a2: "لا، بعد التثبيت يعمل بلا اتصال بالكامل. لا يتصل بالشبكة إلا إذا نقرت بنفسك على Check for Updates.",
       q3: "هل يشغّل Zikr الأذان أو يعرض مواقيت الصلاة؟", a3: "لا. صُمم Zikr عمدًا ليقوم بأمر واحد فقط: تذكيرات ذكر عشوائية. لا يتضمن أذانًا ولا مواقيت صلاة ولا قبلة ولا أي ميزة أخرى.",
@@ -667,6 +666,7 @@
 
   function detectPlatform() {
     var ua = (navigator.userAgent || "") + " " + (navigator.platform || "");
+    if (/Win/i.test(ua)) return "windows";
     if (/Mac|iPhone|iPad|iPod/i.test(ua)) return "mac";
     if (/Linux|X11/i.test(ua) && !/Android/i.test(ua)) return "linux";
     return "other";
@@ -698,7 +698,7 @@
       btn.classList.toggle("active", btn.getAttribute("data-lang") === lang);
     });
 
-    var ctaKey = { mac: "ctaDownloadMac", linux: "ctaDownloadLinux" }[detectPlatform()] || "ctaDownloadGeneric";
+    var ctaKey = { mac: "ctaDownloadMac", linux: "ctaDownloadLinux", windows: "ctaDownloadWindows" }[detectPlatform()] || "ctaDownloadGeneric";
     var ctaEl = document.getElementById("cta-download");
     if (ctaEl && dict[ctaKey] != null) ctaEl.textContent = dict[ctaKey];
 
