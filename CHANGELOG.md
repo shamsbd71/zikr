@@ -4,6 +4,26 @@ All notable changes to Zikr are documented here. Dates are release dates
 (Asia/Dhaka). See [releases](https://github.com/shamsbd71/zikr/releases)
 for downloadable assets per version.
 
+## [Unreleased]
+
+### Fixed
+- Android: reminders would almost never actually fire ("no zikr in
+  duration"). Root cause, confirmed by reproducing it on an emulator:
+  the WorkManager job scheduled correctly and looked healthy in
+  `dumpsys jobscheduler`, but never got dispatched once Android froze
+  the app's process in the background. Replaced with
+  `AlarmManager.setExactAndAllowWhileIdle` (the standard mechanism
+  every alarm/reminder app uses, since it's specifically allowed to
+  wake a frozen/idle process), falling back to an inexact-but-still
+  -Doze-aware alarm if the user hasn't granted the "Alarms & reminders"
+  permission — the Settings screen now shows a banner to request it.
+  Verified end-to-end: backgrounded the app, waited for the alarm, and
+  confirmed the notification actually posted.
+- Android: the Min/Max interval Slider made it nearly impossible to
+  land on a precise low value (e.g. "1 minute") for testing — a few
+  pixels of drag covered dozens of minutes. Replaced with a −/number/+
+  stepper that also accepts direct numeric keyboard entry.
+
 ## [1.6.0] — 2026-08-30
 
 ### Added
