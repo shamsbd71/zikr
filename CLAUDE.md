@@ -1,0 +1,152 @@
+# Zikr — instructions for Claude
+
+## What this is
+
+A tray/menu-bar app that speaks a random dhikr (Islamic remembrance
+phrase — SubhanAllah, Alhamdulillah, Allahu Akbar, etc.) aloud at
+random intervals throughout the day. The entire product philosophy is
+**the user does nothing**: no taps, no counting, no habit-tracker
+streak. It just speaks, on its own schedule, and gets out of the way.
+Don't add features that require the user to open the app or interact
+with it — that would contradict the core pitch (see the site's "what
+most reminder apps ask of you" vs. "what Zikr asks of you" panel).
+
+Native builds for three platforms, each a separate, deliberately
+non-shared implementation (not a port via a cross-platform toolkit):
+
+| | macOS | Linux | Windows |
+|---|---|---|---|
+| Language/UI | Swift/SwiftUI+AppKit | Python 3 + GTK3 | C#/.NET Framework 4.8 + WinForms |
+| Path | `Sources/ZikrReminder/` | `linux/zikr/` | `windows/Zikr/` |
+| Tests | none (see below) | `linux/tests/` | `windows/Zikr.Tests/` |
+
+**Why separate implementations, not a shared cross-platform layer**:
+every subsystem (tray icon, notifications, TTS, autostart, config
+storage, mic-in-use detection, update checking) is built on that
+platform's actual native API, chosen deliberately each time rather than
+reaching for an abstraction library. See `linux/README.md` and
+`windows/README.md` for the full mapping table and rationale per
+subsystem.
+
+**Cross-platform parity is a hard expectation.** A feature added to one
+platform (a new setting, a new menu item, a new background check)
+should be added to all three unless there's a documented, deliberate
+reason not to (e.g. only macOS self-installs updates in place — Linux
+and Windows intentionally don't, because installs vary too much across
+distros/package managers to safely overwrite). When in doubt, mirror
+the architecture: same setting key (translated to each platform's
+naming convention — `camelCase` on macOS, `snake_case` on Linux/JSON,
+`PascalCase` on Windows), same default value, same menu item wording,
+same UI section placement.
+
+## Repo layout
+
+```
+Sources/ZikrReminder/     macOS app (Swift Package Manager, no Xcode project)
+linux/zikr/                Linux app (Python/GTK3)
+windows/Zikr/               Windows app (C#/.NET Framework 4.8/WinForms)
+windows/Zikr.Tests/          Windows MSTest suite
+docs/                        GitHub Pages site (docs/index.html - trilingual EN/BN/AR)
+.github/workflows/          test.yml (CI, all 3 platforms) + release.yml (tag-triggered)
+CHANGELOG.md                 Keep-a-Changelog-style, one entry per release
+DESIGN.md                    Site design system reference - read before touching docs/index.html
+```
+
+macOS has no Xcode project — build via `./build.sh` (Swift Package
+Manager, universal arm64+x86_64 binary via `lipo`, since xcbuild-based
+multi-arch builds need full Xcode which isn't installed on the dev
+machine).
+
+## Release process
+
+1. Land changes via a feature branch + PR (not direct pushes to
+   `main`) — CI (`test.yml`, all 3 platforms) must be green before
+   merging.
+2. Add an entry to `CHANGELOG.md` under `## [Unreleased]` as part of
+   the PR (or right after merging, before tagging) — what changed and
+   why, one bullet list per category (Added/Fixed/Changed).
+3. On merge, rename that `[Unreleased]` section to `## [X.Y.Z] — date`
+   (date format `YYYY-MM-DD`, Asia/Dhaka), bump the version footer in
+   `docs/index.html` (three languages — search for the previous
+   version string), commit directly to `main`.
+4. Tag `vX.Y.Z` and push the tag — `release.yml` re-runs the full test
+   gate, then builds and publishes all three platform installers as one
+   GitHub Release.
+5. Verify the release actually built (`gh run watch <run-id>`) — don't
+   assume success from the tag push alone.
+
+Version bump convention: patch for fixes, minor for a new
+feature/setting, same as this project has followed so far (no major
+version bump has happened yet - still pre-1.0-in-spirit despite the
+`v1.x` tags).
+
+## Testing philosophy
+
+**Never trust "should work."** This dev machine is macOS-only with no
+`dotnet` or `gi`/GTK available, so Linux and Windows changes cannot be
+compiled or run locally — always verify via the real CI runner
+(`gh run watch`) before considering a cross-platform change done, and
+read the actual CI logs rather than assuming a green checkmark means
+what you think it means. When something can be verified locally (macOS
+build, Linux pure-Python logic without `gi`, C# syntax by careful
+manual review), do that first, but don't skip the CI verification step
+just because the parts you *could* check passed.
+
+Pure logic (interval math, settings clamping, version comparison,
+changelog parsing, registry-ledger parsing) is factored into small
+testable functions on all three platforms specifically so it doesn't
+require the full native toolchain to exercise — prefer this pattern for
+new logic over embedding it directly in UI/platform-glue code.
+
+## Known gotchas learned the hard way
+
+- **macOS universal binary**: `build.sh` compiles arm64 and x86_64
+  separately and `lipo`s them together — an arm64-only binary shipped
+  once and broke installs on Intel Macs ("unsupported Mac" error).
+- **Windows version stamping**: the `.csproj`'s `<Version>` doesn't
+  update itself — CI passes `-p:Version=X.Y.Z` at build time
+  (`test.yml`/`release.yml`). If you add a new Windows build/test step,
+  make sure it also gets a `-p:Version=...` if the version needs to be
+  meaningful (e.g. anything read via
+  `AssemblyInformationalVersionAttribute`).
+- **Linux version stamping**: `zikr/__version__` in the repo source is
+  a static placeholder — `linux/packaging/build_deb.sh` `sed`-patches
+  the *packaged copy* to the real `$VERSION` at build time. Never hand
+  -edit the repo source's `__version__` expecting it to match a
+  release; it drifted stale for several releases before this was
+  caught.
+- **WinForms + background threads**: don't capture
+  `SynchronizationContext.Current` in a field initializer to marshal
+  background work back to the UI thread — field initializers run
+  before `Application.Run` installs the sync context, so it captures
+  `null`. Use a handle-forced `Control` + `BeginInvoke` instead (see
+  `TrayApp.cs`'s `_uiMarshal`) for any tray-only `ApplicationContext`
+  app with no main form.
+- **GitHub Actions queued-forever ≠ broken workflow**: if a run sits
+  queued with zero jobs started for an extended period, check
+  githubstatus.com before assuming the YAML is wrong — this has
+  happened at least once due to a platform-wide Actions outage.
+
+## i18n (GitHub Pages site)
+
+`docs/index.html` supports English, Bangla, and Arabic via a
+`STRINGS` dict keyed by language in the trailing `<script>` block, with
+`data-i18n`/`data-i18n-html` attributes on elements. **Any copy change
+must be made in all three languages together** — don't add an
+English-only string and leave BN/AR stale. Arabic also flips
+`dir="rtl"` on `<html>`; check new layout in Arabic before shipping.
+See `DESIGN.md` for the full design system (palette, type, layout
+concept, icon style, motion rules) before making visual changes.
+
+## What NOT to do
+
+- Don't add anything that asks the user to open the app, tap something,
+  track a streak, or check in — contradicts the core pitch.
+- Don't add Adhan, prayer times, Qibla, or other Islamic-app features
+  beyond dhikr reminders — scope is intentionally narrow (see the
+  site's FAQ, "Does Zikr play Adhan or show prayer times?").
+- Don't add a cross-platform abstraction library for tray/notifications
+  /TTS/etc. — the whole point is native-per-platform.
+- Don't bundle third-party reciter audio without a verified open
+  license — see the note in `README.md`'s Design notes section about
+  why no audio is bundled today.
