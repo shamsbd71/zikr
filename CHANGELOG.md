@@ -4,7 +4,7 @@ All notable changes to Zikr are documented here. Dates are release dates
 (Asia/Dhaka). See [releases](https://github.com/shamsbd71/zikr/releases)
 for downloadable assets per version.
 
-## [Unreleased]
+## [1.6.0] — 2026-08-30
 
 ### Added
 - Native Android build (Kotlin/Jetpack Compose) — Phase 1 only: ambient
