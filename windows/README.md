@@ -33,7 +33,11 @@ correctly every release.
 Same decision as Linux, for the same reason: installs vary (Inno Setup to
 `Program Files`, a future winget/choco package, a portable extraction),
 so silently overwriting arbitrary files isn't a sound default across all
-of them. "Check for Updates…" opens the GitHub releases page instead.
+of them. "Check for Updates…" (and an automatic check on launch and
+every 24 hours) shows the same Skip / Remind Later / Download dialog as
+the other builds, with the changelog inline — "Download Update" just
+opens the GitHub releases page instead of installing. "What's New…"
+shows the changelog on its own, update available or not.
 
 ## Install
 

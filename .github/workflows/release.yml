@@ -91,7 +91,7 @@ jobs:
           "version=$ver" >> $env:GITHUB_OUTPUT
 
       - name: Build
-        run: dotnet build windows/Zikr/Zikr.csproj -c Release
+        run: dotnet build windows/Zikr/Zikr.csproj -c Release -p:Version=${{ steps.version.outputs.version }}
 
       - name: Install Inno Setup
         run: choco install innosetup -y --no-progress

@@ -36,6 +36,12 @@ namespace Zikr
         /// browser tab - so Zikr never talks over a meeting.</summary>
         public bool PauseDuringCalls { get; set; } = true;
 
+        /// <summary>Version dismissed via "Skip This Version" in the
+        /// update dialog - the automatic background check won't
+        /// re-prompt for it, though a manual "Check for Updates…" still
+        /// will. Empty means none.</summary>
+        public string SkippedUpdateVersion { get; set; } = "";
+
         private bool _launchAtLogin;
         public bool LaunchAtLogin
         {
@@ -96,6 +102,7 @@ namespace Zikr
                 if (data.TryGetValue("speak_aloud", out var v5)) SpeakAloud = Convert.ToBoolean(v5);
                 if (data.TryGetValue("flash_duration_seconds", out var v6)) FlashDurationSeconds = Convert.ToDouble(v6);
                 if (data.TryGetValue("pause_during_calls", out var v7)) PauseDuringCalls = Convert.ToBoolean(v7);
+                if (data.TryGetValue("skipped_update_version", out var v8)) SkippedUpdateVersion = Convert.ToString(v8);
             }
             catch (Exception)
             {
@@ -115,6 +122,7 @@ namespace Zikr
                 ["speak_aloud"] = SpeakAloud,
                 ["flash_duration_seconds"] = FlashDurationSeconds,
                 ["pause_during_calls"] = PauseDuringCalls,
+                ["skipped_update_version"] = SkippedUpdateVersion,
             };
             var serializer = new JavaScriptSerializer();
             File.WriteAllText(_configFile, serializer.Serialize(data), System.Text.Encoding.UTF8);

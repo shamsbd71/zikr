@@ -54,6 +54,7 @@ struct SettingsView: View {
             Section("System") {
                 Toggle("Launch at login", isOn: $settings.launchAtLogin)
                 Toggle("Pause during calls (mic in use)", isOn: $settings.pauseDuringCalls)
+                Toggle("Automatically download and install updates", isOn: $settings.autoInstallUpdates)
             }
 
             Section {
