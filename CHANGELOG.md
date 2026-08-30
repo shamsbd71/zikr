@@ -4,6 +4,27 @@ All notable changes to Zikr are documented here. Dates are release dates
 (Asia/Dhaka). See [releases](https://github.com/shamsbd71/zikr/releases)
 for downloadable assets per version.
 
+## [Unreleased]
+
+### Added
+- Proper "a new version is available" dialog (Skip This Version / Remind
+  Me Later / Install or Download Update), replacing the old
+  check-then-silently-swap "Check for Updates" flow. Checks run
+  automatically on launch and every 24 hours, in addition to the manual
+  menu item. On macOS this can install itself in place if you turn on
+  "Automatically download and install updates"; Linux and Windows still
+  intentionally don't self-install (installs vary too much across
+  distros/package managers to safely overwrite in place) — the dialog
+  there opens the release download instead.
+- "What's New…" menu item on all three platforms, showing the app's
+  changelog in-app (fetched from this file) — no more digging through
+  GitHub to see what changed.
+- Fixed two version-reporting bugs surfaced while building the above:
+  the Windows build's `<Version>` was never bumped from `1.0.0` at
+  release time, and the Linux build's `__version__` was stuck at
+  `1.1.0` since that release — both now stamp the real version at build
+  time, so "you have vX" in the update dialog is finally accurate.
+
 ## [1.4.0] — 2026-08-30
 
 ### Added

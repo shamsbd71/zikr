@@ -20,6 +20,8 @@ os.environ.setdefault("XDG_CONFIG_HOME", tempfile.mkdtemp(prefix="zikr-test-conf
 from zikr.zikr_data import ALL, random_zikr  # noqa: E402
 from zikr.scheduler import pick_delay_seconds  # noqa: E402
 from zikr.mic_monitor import _parse_alsa_status, _parse_pactl_source_outputs  # noqa: E402
+from zikr.update_checker import compare_versions  # noqa: E402
+from zikr.changelog import parse as parse_changelog  # noqa: E402
 
 
 class TestZikrData(unittest.TestCase):
@@ -90,6 +92,7 @@ class TestSettings(unittest.TestCase):
         self.assertEqual(s.max_interval_minutes, 45)
         self.assertEqual(s.display_style, "notification")
         self.assertTrue(s.pause_during_calls)
+        self.assertEqual(s.skipped_update_version, "")
 
     def test_round_trips_through_disk(self):
         s = self.settings_mod.Settings()
@@ -150,6 +153,49 @@ class TestMicMonitorParsing(unittest.TestCase):
     def test_alsa_other_states_mean_idle(self):
         self.assertFalse(_parse_alsa_status("state: CLOSED\n"))
         self.assertFalse(_parse_alsa_status(""))
+
+
+class TestVersionCompare(unittest.TestCase):
+    def test_newer_is_greater(self):
+        self.assertEqual(compare_versions("1.4.0", "1.3.0"), 1)
+
+    def test_older_is_lesser(self):
+        self.assertEqual(compare_versions("1.2.0", "1.3.0"), -1)
+
+    def test_equal_versions(self):
+        self.assertEqual(compare_versions("1.3.0", "1.3.0"), 0)
+
+    def test_different_lengths_compare_correctly(self):
+        self.assertEqual(compare_versions("1.4", "1.4.0"), 0)
+        self.assertEqual(compare_versions("1.4.1", "1.4"), 1)
+
+
+class TestChangelogParsing(unittest.TestCase):
+    SAMPLE = (
+        "# Changelog\n\n"
+        "## [Unreleased]\n\n"
+        "### Added\n"
+        "- something not released\n\n"
+        "## [1.4.0] — 2026-08-30\n\n"
+        "### Added\n"
+        "- pause during calls\n\n"
+        "## [1.3.0] — 2026-08-27\n\n"
+        "### Added\n"
+        "- windows build\n"
+    )
+
+    def test_skips_unreleased_section(self):
+        versions = [e["version"] for e in parse_changelog(self.SAMPLE)]
+        self.assertNotIn("Unreleased", versions)
+
+    def test_parses_version_and_date(self):
+        entries = parse_changelog(self.SAMPLE)
+        self.assertEqual(entries[0]["version"], "1.4.0")
+        self.assertEqual(entries[0]["date"], "2026-08-30")
+        self.assertIn("pause during calls", entries[0]["body"])
+
+    def test_parses_all_released_versions(self):
+        self.assertEqual(len(parse_changelog(self.SAMPLE)), 2)
 
 
 class TestIconAndAssets(unittest.TestCase):

@@ -101,7 +101,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build
-        run: dotnet build windows/Zikr/Zikr.csproj -c Release
+        run: dotnet build windows/Zikr/Zikr.csproj -c Release -p:Version=0.0.0-test
 
       - name: Unit tests
         run: dotnet test windows/Zikr.Tests/Zikr.Tests.csproj -c Release --logger "console;verbosity=detailed"

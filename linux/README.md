@@ -23,8 +23,12 @@ replaces its own `.app` bundle because that's a well-established, safe
 pattern for a single signed bundle. Linux installs are far more varied
 (apt-installed dist-packages, a `~/.local` user install, someone's own
 venv...) — silently overwriting arbitrary files across those isn't a
-sound default. "Check for Updates…" opens the GitHub releases page
-instead, so you grab the new `.deb` (or re-run `install.sh`) yourself.
+sound default. "Check for Updates…" (and an automatic check on launch
+and every 24 hours) still shows the same Skip / Remind Later / Download
+dialog as the other builds, with the changelog inline — "Download
+Update" just opens the GitHub releases page instead of installing, so
+you grab the new `.deb` (or re-run `install.sh`) yourself. "What's
+New…" shows the changelog on its own, update available or not.
 
 ## Install
 

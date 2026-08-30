@@ -8,14 +8,13 @@ Tray backend picks the best available option at import time:
      XFCE/MATE/KDE and any GNOME session without the AppIndicator
      extension installed)
 """
-import subprocess
-import webbrowser
+import threading
 from pathlib import Path
 
 import gi
 
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk  # noqa: E402
+from gi.repository import Gtk, GLib  # noqa: E402
 
 _INDICATOR_BACKEND = None
 try:
@@ -30,16 +29,16 @@ except (ImportError, ValueError):
     except (ImportError, ValueError):
         AppIndicator3 = None
 
-from . import scheduler as scheduler_mod
+from . import __version__ as CURRENT_VERSION
+from . import changelog, scheduler as scheduler_mod, update_checker
 from .settings import Settings
-from .ui import settings_window
+from .ui import settings_window, update_dialog
 
 _BUNDLED_ICON = Path(__file__).resolve().parent / "data" / "icon.png"
 # Prefer a themed icon name (resolves via the icon theme, respects
 # light/dark variants some themes provide); fall back to the bundled PNG's
 # absolute path, which always works regardless of icon theme/cache state.
 ICON_NAME = "zikr" if Path("/usr/share/icons/hicolor/256x256/apps/zikr.png").exists() else str(_BUNDLED_ICON)
-RELEASES_URL = "https://github.com/shamsbd71/zikr/releases/latest"
 
 
 class ZikrApp:
@@ -48,6 +47,8 @@ class ZikrApp:
         self.scheduler = scheduler_mod.Scheduler(self.settings)
         self._build_tray()
         self.scheduler.start()
+        GLib.timeout_add_seconds(5, self._startup_update_check)
+        GLib.timeout_add_seconds(24 * 60 * 60, self._periodic_update_check)
 
     def run(self):
         Gtk.main()
@@ -72,8 +73,12 @@ class ZikrApp:
         settings_item.connect("activate", lambda *_: settings_window.show(self.settings, self._on_settings_changed))
         menu.append(settings_item)
 
+        whatsnew_item = Gtk.MenuItem(label="What's New…")
+        whatsnew_item.connect("activate", lambda *_: self._show_whats_new())
+        menu.append(whatsnew_item)
+
         update_item = Gtk.MenuItem(label="Check for Updates…")
-        update_item.connect("activate", lambda *_: self._check_for_updates())
+        update_item.connect("activate", lambda *_: self._check_for_updates(force=True))
         menu.append(update_item)
 
         menu.append(Gtk.SeparatorMenuItem())
@@ -113,8 +118,60 @@ class ZikrApp:
     def _on_settings_changed(self):
         self.scheduler.on_settings_changed()
 
-    def _check_for_updates(self):
-        try:
-            webbrowser.open(RELEASES_URL)
-        except Exception:
-            subprocess.Popen(["xdg-open", RELEASES_URL])
+    # ---- updates ----
+
+    def _startup_update_check(self):
+        self._check_for_updates(force=False)
+        return False  # one-shot
+
+    def _periodic_update_check(self):
+        self._check_for_updates(force=False)
+        return True  # keep repeating
+
+    def _check_for_updates(self, force):
+        def worker():
+            result = update_checker.check_for_update(CURRENT_VERSION)
+            GLib.idle_add(self._handle_update_result, result, force)
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def _handle_update_result(self, result, force):
+        status = result["status"]
+
+        if status == "error":
+            if force:
+                update_dialog.show_message("Zikr Update", result["message"])
+            return False
+
+        if status == "up_to_date":
+            if force:
+                update_dialog.show_message("Zikr Update", f"You're up to date (v{CURRENT_VERSION}).")
+            return False
+
+        version = result["version"]
+        if not force and version == self.settings.skipped_update_version:
+            return False
+
+        def worker():
+            entries = changelog.fetch()
+            body = next((e["body"] for e in entries if e["version"] == version), "")
+            GLib.idle_add(self._show_update_dialog, version, body)
+
+        threading.Thread(target=worker, daemon=True).start()
+        return False
+
+    def _show_update_dialog(self, version, body):
+        def on_skip():
+            self.settings.skipped_update_version = version
+
+        update_dialog.show_update_available(
+            current_version=CURRENT_VERSION, new_version=version, changelog_body=body, on_skip=on_skip,
+        )
+        return False
+
+    def _show_whats_new(self):
+        def worker():
+            entries = changelog.fetch()
+            GLib.idle_add(update_dialog.show_whats_new, entries)
+
+        threading.Thread(target=worker, daemon=True).start()

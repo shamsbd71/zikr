@@ -5,6 +5,7 @@ struct ZikrReminderApp: App {
     init() {
         ReminderScheduler.shared.start()
         UnlockGreeter.shared.start()
+        UpdateScheduler.shared.start()
     }
 
     var body: some Scene {

@@ -37,6 +37,11 @@ chmod 755 "$PKG_ROOT/DEBIAN/postinst"
 # --- python package ---
 cp -R zikr "$PKG_ROOT/usr/lib/python3/dist-packages/zikr"
 find "$PKG_ROOT/usr/lib/python3/dist-packages/zikr" -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+# Stamp the real version into the packaged copy only (never the repo
+# source) so the running app knows its own version for the update
+# checker's "you have X" comparison - was previously left hardcoded and
+# went stale across several releases.
+sed -i "s/^__version__ = .*/__version__ = \"${VERSION}\"/" "$PKG_ROOT/usr/lib/python3/dist-packages/zikr/__init__.py"
 
 # --- launcher shim ---
 cat > "$PKG_ROOT/usr/bin/zikr" <<'SHIM'

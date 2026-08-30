@@ -1,14 +1,26 @@
 import AppKit
 
 /// Checks GitHub Releases for a newer tag than the running app's
-/// CFBundleShortVersionString, and if found, downloads the release zip,
-/// swaps it into place over the currently-running .app, and relaunches.
+/// CFBundleShortVersionString. Checking and installing are separate
+/// steps — UpdateFlow decides whether to ask first (the normal case) or
+/// install silently (only when the user opted into automatic installs).
 /// No third-party updater framework — just URLSession + /usr/bin/ditto.
 enum UpdateChecker {
     static let repo = "shamsbd71/zikr"
     private static let apiURL = URL(string: "https://api.github.com/repos/\(repo)/releases/latest")!
 
-    static func checkAndUpdate(completion: @escaping (String) -> Void) {
+    struct UpdateInfo {
+        let version: String
+        let downloadURL: URL
+    }
+
+    enum CheckResult {
+        case upToDate(String)
+        case available(UpdateInfo)
+        case error(String)
+    }
+
+    static func checkForUpdate(completion: @escaping (CheckResult) -> Void) {
         var request = URLRequest(url: apiURL)
         request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
 
@@ -22,24 +34,25 @@ enum UpdateChecker {
                 let downloadURLString = zipAsset["browser_download_url"] as? String,
                 let downloadURL = URL(string: downloadURLString)
             else {
-                DispatchQueue.main.async { completion("Couldn't check for updates. Try again later.") }
+                DispatchQueue.main.async { completion(.error("Couldn't check for updates. Try again later.")) }
                 return
             }
 
             let latestVersion = tag.hasPrefix("v") ? String(tag.dropFirst()) : tag
             let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0"
 
-            guard latestVersion.compare(currentVersion, options: .numeric) == .orderedDescending else {
-                DispatchQueue.main.async { completion("You're up to date (v\(currentVersion)).") }
-                return
+            DispatchQueue.main.async {
+                if latestVersion.compare(currentVersion, options: .numeric) == .orderedDescending {
+                    completion(.available(UpdateInfo(version: latestVersion, downloadURL: downloadURL)))
+                } else {
+                    completion(.upToDate(currentVersion))
+                }
             }
-
-            downloadAndInstall(from: downloadURL, version: latestVersion, completion: completion)
         }.resume()
     }
 
-    private static func downloadAndInstall(from url: URL, version: String, completion: @escaping (String) -> Void) {
-        URLSession.shared.downloadTask(with: url) { tempURL, _, error in
+    static func downloadAndInstall(_ info: UpdateInfo, completion: @escaping (String) -> Void) {
+        URLSession.shared.downloadTask(with: info.downloadURL) { tempURL, _, error in
             guard let tempURL, error == nil else {
                 DispatchQueue.main.async { completion("Download failed. Try again later.") }
                 return
@@ -75,7 +88,7 @@ enum UpdateChecker {
                 try? fm.removeItem(at: workDir)
 
                 DispatchQueue.main.async {
-                    completion("Updated to v\(version). Relaunching…")
+                    completion("Updated to v\(info.version). Relaunching…")
                     relaunch(at: installedURL)
                 }
             } catch {

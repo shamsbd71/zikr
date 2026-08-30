@@ -20,14 +20,14 @@ struct MenuContentView: View {
         }
         .keyboardShortcut(",")
 
+        Button("What's New…") {
+            NSApp.activate(ignoringOtherApps: true)
+            WhatsNewController.shared.present()
+        }
+
         Button("Check for Updates…") {
             NSApp.activate(ignoringOtherApps: true)
-            UpdateChecker.checkAndUpdate { message in
-                let alert = NSAlert()
-                alert.messageText = "Zikr Update"
-                alert.informativeText = message
-                alert.runModal()
-            }
+            UpdateFlow.checkManually()
         }
 
         Divider()

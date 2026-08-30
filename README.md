@@ -12,7 +12,7 @@ Repo: https://github.com/shamsbd71/zikr · Site: https://shamsbd71.github.io/zik
 - Says "Bismillah" once at launch (covers login, if "Launch at login" is on) and again every time the screen is unlocked.
 - Optional "Launch at login" via `SMAppService` (Apple's current login-item API — no LaunchAgent plist needed).
 - Optional "Pause during calls (mic in use)" — skips a reminder rather than talking over a meeting, by checking whether any app (this one or another, e.g. Zoom or a browser tab) currently has the microphone open.
-- "Check for Updates…" in the menu — pulls the latest GitHub release and self-updates in place.
+- "Check for Updates…" and "What's New…" in the menu — checks run automatically on launch and every 24 hours too. The update dialog shows the changelog inline and installs itself in place (or opt into "Automatically download and install updates" to skip the dialog entirely).
 - Settings, on/off, interval, style, and voice toggle are the only options. Nothing else — no azan, no prayer times, no accounts.
 
 ## Design notes
@@ -20,7 +20,7 @@ Repo: https://github.com/shamsbd71/zikr · Site: https://shamsbd71.github.io/zik
 - **Audio**: zikr is spoken aloud with `AVSpeechSynthesizer` using the Arabic system voice ("Majed", installed on every Mac), so it's pronounced rather than just chimed. Falls back to reading the transliteration in English if no Arabic voice is present. To use a real reciter's audio instead, drop a clip at `Resources/Audio/<id>.mp3` (id matches the `Zikr.id` in `ZikrList.swift`; `.m4a`/`.caf`/`.wav`/`.aiff` also work) — `build.sh` bundles the folder automatically and `ZikrSpeaker` prefers it over the system voice. We didn't bundle any ourselves: the well-known Hisnul Muslim recordings we found (Internet Archive, IslamHouse) are full multi-dua CD tracks with no clear per-phrase reuse license, not something to include without a verified license.
 - **Icon**: `Sources/IconGen` draws the app icon as vector shapes (Core Graphics) — a crescent + star on a teal/gold squircle — rather than a raster asset pulled from somewhere. Re-run it any time to tweak colors/geometry.
 - **Memory footprint**: the whole app is one `Timer`, a 24-item struct array, and a couple of small views. No polling loops, no persistent windows, no database.
-- **Self-update**: no third-party updater framework. "Check for Updates…" hits the GitHub Releases API directly, downloads the release zip, clears its quarantine flag (it's our own ad-hoc-signed build, not a third-party download), swaps it over the running `.app`, and relaunches.
+- **Self-update**: no third-party updater framework. `UpdateChecker` hits the GitHub Releases API directly; `UpdateFlow` decides whether to ask first (the normal case, via a Sparkle-style dialog showing what's new) or install silently (only if you opted into automatic installs). Installing downloads the release zip, clears its quarantine flag (it's our own ad-hoc-signed build, not a third-party download), swaps it over the running `.app`, and relaunches. `UpdateScheduler` runs the check once shortly after launch and then every 24 hours.
 
 ## Build & install
 
@@ -41,7 +41,7 @@ git tag v1.1.1
 git push origin v1.1.1
 ```
 
-The macOS in-app updater compares its own `CFBundleShortVersionString` against the latest release tag, so the version in that tag is what users will be offered. Linux has no self-updater by design — see [linux/README.md](linux/README.md).
+The macOS in-app updater compares its own `CFBundleShortVersionString` against the latest release tag, so the version in that tag is what users will be offered. Linux and Windows show the same update dialog but never install in place by design — see [linux/README.md](linux/README.md) and [windows/README.md](windows/README.md).
 
 ## Project layout
 

@@ -18,6 +18,8 @@ final class AppSettings: ObservableObject {
         static let launchAtLogin = "launchAtLogin"
         static let flashDurationSeconds = "flashDurationSeconds"
         static let pauseDuringCalls = "pauseDuringCalls"
+        static let autoInstallUpdates = "autoInstallUpdates"
+        static let skippedUpdateVersion = "skippedUpdateVersion"
     }
 
     @Published var isEnabled: Bool {
@@ -69,6 +71,19 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(pauseDuringCalls, forKey: Key.pauseDuringCalls) }
     }
 
+    /// Skip the update dialog and just install silently in the
+    /// background when a new version is found.
+    @Published var autoInstallUpdates: Bool {
+        didSet { defaults.set(autoInstallUpdates, forKey: Key.autoInstallUpdates) }
+    }
+
+    /// Version the user dismissed via "Skip This Version" in the update
+    /// dialog — the automatic background check won't re-prompt for it,
+    /// though a manual "Check for Updates…" still will. Empty means none.
+    @Published var skippedUpdateVersion: String {
+        didSet { defaults.set(skippedUpdateVersion, forKey: Key.skippedUpdateVersion) }
+    }
+
     private init() {
         defaults.register(defaults: [
             Key.isEnabled: true,
@@ -79,6 +94,8 @@ final class AppSettings: ObservableObject {
             Key.launchAtLogin: false,
             Key.flashDurationSeconds: 2.0,
             Key.pauseDuringCalls: true,
+            Key.autoInstallUpdates: false,
+            Key.skippedUpdateVersion: "",
         ])
 
         isEnabled = defaults.bool(forKey: Key.isEnabled)
@@ -89,5 +106,7 @@ final class AppSettings: ObservableObject {
         launchAtLogin = LaunchAtLogin.isEnabled
         flashDurationSeconds = defaults.double(forKey: Key.flashDurationSeconds)
         pauseDuringCalls = defaults.bool(forKey: Key.pauseDuringCalls)
+        autoInstallUpdates = defaults.bool(forKey: Key.autoInstallUpdates)
+        skippedUpdateVersion = defaults.string(forKey: Key.skippedUpdateVersion) ?? ""
     }
 }
