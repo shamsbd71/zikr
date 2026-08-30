@@ -11,33 +11,45 @@ Don't add features that require the user to open the app or interact
 with it — that would contradict the core pitch (see the site's "what
 most reminder apps ask of you" vs. "what Zikr asks of you" panel).
 
-Native builds for three platforms, each a separate, deliberately
+Native builds for four platforms, each a separate, deliberately
 non-shared implementation (not a port via a cross-platform toolkit):
 
-| | macOS | Linux | Windows |
-|---|---|---|---|
-| Language/UI | Swift/SwiftUI+AppKit | Python 3 + GTK3 | C#/.NET Framework 4.8 + WinForms |
-| Path | `Sources/ZikrReminder/` | `linux/zikr/` | `windows/Zikr/` |
-| Tests | none (see below) | `linux/tests/` | `windows/Zikr.Tests/` |
+| | macOS | Linux | Windows | Android |
+|---|---|---|---|---|
+| Language/UI | Swift/SwiftUI+AppKit | Python 3 + GTK3 | C#/.NET Framework 4.8 + WinForms | Kotlin/Jetpack Compose |
+| Path | `Sources/ZikrReminder/` | `linux/zikr/` | `windows/Zikr/` | `android/app/` |
+| Tests | none (see below) | `linux/tests/` | `windows/Zikr.Tests/` | `android/app/src/test/` |
 
 **Why separate implementations, not a shared cross-platform layer**:
 every subsystem (tray icon, notifications, TTS, autostart, config
 storage, mic-in-use detection, update checking) is built on that
 platform's actual native API, chosen deliberately each time rather than
-reaching for an abstraction library. See `linux/README.md` and
-`windows/README.md` for the full mapping table and rationale per
-subsystem.
+reaching for an abstraction library. See `linux/README.md`,
+`windows/README.md`, and `android/README.md` for the full mapping
+table and rationale per subsystem.
 
-**Cross-platform parity is a hard expectation.** A feature added to one
-platform (a new setting, a new menu item, a new background check)
-should be added to all three unless there's a documented, deliberate
-reason not to (e.g. only macOS self-installs updates in place — Linux
-and Windows intentionally don't, because installs vary too much across
+**Cross-platform parity is a hard expectation among the three desktop
+builds (macOS/Linux/Windows).** A feature added to one should be added
+to all three unless there's a documented, deliberate reason not to
+(e.g. only macOS self-installs updates in place — Linux and Windows
+intentionally don't, because installs vary too much across
 distros/package managers to safely overwrite). When in doubt, mirror
 the architecture: same setting key (translated to each platform's
 naming convention — `camelCase` on macOS, `snake_case` on Linux/JSON,
 `PascalCase` on Windows), same default value, same menu item wording,
 same UI section placement.
+
+**Android is intentionally behind the desktop trio in scope** — it's
+Phase 1 of a deliberately phased mobile plan (see conversation history
+or ask the user for the plan doc if one gets written): ambient random
+reminders only, no mic-pause, no update dialog/changelog viewer, no
+launch-at-login equivalent. Don't treat Android's smaller feature set
+as drift to "fix" — check whether it's an intentional Phase 1 gap
+before porting a desktop feature over. A "social-media-triggered
+reminder" variant (Phase 2) was scoped but deliberately deferred — it
+needs OS-specific, higher-risk mechanisms (iOS Family Controls
+entitlement, Android Accessibility/UsageStats) on both a future iOS
+build and an Android update, not yet started either one.
 
 ## Repo layout
 
@@ -46,8 +58,10 @@ Sources/ZikrReminder/     macOS app (Swift Package Manager, no Xcode project)
 linux/zikr/                Linux app (Python/GTK3)
 windows/Zikr/               Windows app (C#/.NET Framework 4.8/WinForms)
 windows/Zikr.Tests/          Windows MSTest suite
+android/app/                 Android app (Kotlin/Jetpack Compose, Phase 1)
+android/app/src/test/        Android JUnit suite (pure logic only, no emulator)
 docs/                        GitHub Pages site (docs/index.html - trilingual EN/BN/AR)
-.github/workflows/          test.yml (CI, all 3 platforms) + release.yml (tag-triggered)
+.github/workflows/          test.yml (CI, all 4 platforms) + release.yml (tag-triggered)
 CHANGELOG.md                 Keep-a-Changelog-style, one entry per release
 DESIGN.md                    Site design system reference - read before touching docs/index.html
 ```
@@ -60,7 +74,7 @@ machine).
 ## Release process
 
 1. Land changes via a feature branch + PR (not direct pushes to
-   `main`) — CI (`test.yml`, all 3 platforms) must be green before
+   `main`) — CI (`test.yml`, all platforms) must be green before
    merging.
 2. Add an entry to `CHANGELOG.md` under `## [Unreleased]` as part of
    the PR (or right after merging, before tagging) — what changed and
@@ -70,8 +84,8 @@ machine).
    `docs/index.html` (three languages — search for the previous
    version string), commit directly to `main`.
 4. Tag `vX.Y.Z` and push the tag — `release.yml` re-runs the full test
-   gate, then builds and publishes all three platform installers as one
-   GitHub Release.
+   gate, then builds and publishes all platform installers (macOS zip,
+   Linux .deb, Windows installer, Android APK) as one GitHub Release.
 5. Verify the release actually built (`gh run watch <run-id>`) — don't
    assume success from the tag push alone.
 
@@ -83,20 +97,23 @@ version bump has happened yet - still pre-1.0-in-spirit despite the
 ## Testing philosophy
 
 **Never trust "should work."** This dev machine is macOS-only with no
-`dotnet` or `gi`/GTK available, so Linux and Windows changes cannot be
-compiled or run locally — always verify via the real CI runner
-(`gh run watch`) before considering a cross-platform change done, and
-read the actual CI logs rather than assuming a green checkmark means
-what you think it means. When something can be verified locally (macOS
-build, Linux pure-Python logic without `gi`, C# syntax by careful
-manual review), do that first, but don't skip the CI verification step
-just because the parts you *could* check passed.
+`dotnet`, `gi`/GTK, JDK, or Android SDK available, so Linux/Windows/
+Android changes cannot be compiled or run locally — always verify via
+the real CI runner (`gh run watch`) before considering a cross-platform
+change done, and read the actual CI logs rather than assuming a green
+checkmark means what you think it means. When something can be
+verified locally (macOS build, Linux/Android pure-logic functions run
+directly via `python3`/manually reasoned through, C#/Kotlin syntax and
+XML well-formedness by careful manual review), do that first, but don't
+skip the CI verification step just because the parts you *could* check
+passed.
 
 Pure logic (interval math, settings clamping, version comparison,
-changelog parsing, registry-ledger parsing) is factored into small
-testable functions on all three platforms specifically so it doesn't
-require the full native toolchain to exercise — prefer this pattern for
-new logic over embedding it directly in UI/platform-glue code.
+changelog parsing, registry-ledger parsing, zikr-list JSON parsing) is
+factored into small testable functions on all platforms specifically so
+it doesn't require the full native toolchain to exercise — prefer this
+pattern for new logic over embedding it directly in UI/platform-glue
+code.
 
 ## Known gotchas learned the hard way
 
@@ -126,6 +143,31 @@ new logic over embedding it directly in UI/platform-glue code.
   queued with zero jobs started for an extended period, check
   githubstatus.com before assuming the YAML is wrong — this has
   happened at least once due to a platform-wide Actions outage.
+- **Android version stamping**: same class of bug as Windows/Linux,
+  avoided proactively this time — `app/build.gradle.kts`'s
+  `versionName` reads a Gradle property (`-PversionNameOverride=`,
+  passed by `release.yml`) rather than a hardcoded value, specifically
+  because the other two platforms shipped stale versions for multiple
+  releases before anyone noticed.
+- **Android `org.json` in local unit tests**: `org.json.JSONArray`/
+  `JSONObject` are stub jars that throw `Stub!` in local JVM unit tests
+  (`src/test`, as opposed to instrumented `src/androidTest`) — only the
+  on-device implementation is real. Add
+  `testImplementation("org.json:json:...")` (a real pure-JVM
+  implementation of the same package) to actually exercise JSON-parsing
+  logic in local tests, rather than reaching for
+  `testOptions.unitTests.isReturnDefaultValues` (which just makes the
+  stubs return nulls/zeros silently instead of throwing — not the same
+  as parsing correctly).
+- **Android Gradle wrapper jar**: `gradle-wrapper.jar` is a binary file
+  that can't be hand-written. It was fetched directly from Gradle's own
+  tagged release
+  (`raw.githubusercontent.com/gradle/gradle/v8.9.0/gradle/wrapper/gradle-wrapper.jar`)
+  rather than generated locally, since this dev machine has no JDK to
+  run `gradle wrapper` with. `test.yml`'s `test-android` job runs
+  `gradle/actions/wrapper-validation@v4` to check its checksum against
+  Gradle's known-good list as a safety net for exactly this kind of
+  manually-sourced binary.
 
 ## i18n (GitHub Pages site)
 

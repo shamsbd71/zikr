@@ -1,0 +1,15 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Crescent moon, matching the app's brand icon - status bar icons
+         are rendered as a flat silhouette regardless of fill color, so
+         white is just the convention. -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M14.5,3 C10,3 6,7 6,12 C6,17 10,21 14.5,21 C11,19 9,15.8 9,12 C9,8.2 11,5 14.5,3 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M18,7.5 L18.6,9 L20.1,9.6 L18.6,10.2 L18,11.7 L17.4,10.2 L15.9,9.6 L17.4,9 Z" />
+</vector>
