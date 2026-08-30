@@ -7,7 +7,10 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "ZikrReminder",
-            path: "Sources/ZikrReminder"
+            path: "Sources/ZikrReminder",
+            linkerSettings: [
+                .linkedFramework("CoreAudio")
+            ]
         ),
         .executableTarget(
             name: "IconGen",

@@ -62,7 +62,10 @@ namespace Zikr
 
         private void Fire()
         {
-            Show(ZikrData.RandomZikr());
+            if (!(_settings.PauseDuringCalls && MicMonitor.IsInUse()))
+            {
+                Show(ZikrData.RandomZikr());
+            }
             if (_settings.Enabled) ScheduleNext();
         }
 

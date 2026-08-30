@@ -1,6 +1,6 @@
 # Zikr
 
-A minimal system-tray app that surfaces a short dhikr (Subhanallah, Alhamdulillah, Allahu Akbar, La ilaha illallah, and 17 others from the general Hisnul Muslim collection) at random intervals throughout the day. Native builds for **macOS** (this README) and **[Linux](linux/README.md)** (Python/GTK — see that README for why it's a separate implementation, not a recompile).
+A minimal system-tray app that surfaces a short dhikr (Subhanallah, Alhamdulillah, Allahu Akbar, La ilaha illallah, and 17 others from the general Hisnul Muslim collection) at random intervals throughout the day. Native builds for **macOS** (this README), **[Linux](linux/README.md)** (Python/GTK), and **[Windows](windows/README.md)** (C#/.NET Framework + WinForms) — see those READMEs for why each is a separate implementation, not a recompile.
 
 Repo: https://github.com/shamsbd71/zikr · Site: https://shamsbd71.github.io/zikr/ · License: [MIT](LICENSE)
 
@@ -11,6 +11,7 @@ Repo: https://github.com/shamsbd71/zikr · Site: https://shamsbd71.github.io/zik
 - Speaks the zikr aloud in Arabic using the built-in macOS voice, and shows it via a system notification or a soft full-screen flash (your choice, with adjustable on-screen duration).
 - Says "Bismillah" once at launch (covers login, if "Launch at login" is on) and again every time the screen is unlocked.
 - Optional "Launch at login" via `SMAppService` (Apple's current login-item API — no LaunchAgent plist needed).
+- Optional "Pause during calls (mic in use)" — skips a reminder rather than talking over a meeting, by checking whether any app (this one or another, e.g. Zoom or a browser tab) currently has the microphone open.
 - "Check for Updates…" in the menu — pulls the latest GitHub release and self-updates in place.
 - Settings, on/off, interval, style, and voice toggle are the only options. Nothing else — no azan, no prayer times, no accounts.
 

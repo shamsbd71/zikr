@@ -19,6 +19,7 @@ os.environ.setdefault("XDG_CONFIG_HOME", tempfile.mkdtemp(prefix="zikr-test-conf
 
 from zikr.zikr_data import ALL, random_zikr  # noqa: E402
 from zikr.scheduler import pick_delay_seconds  # noqa: E402
+from zikr.mic_monitor import _parse_alsa_status, _parse_pactl_source_outputs  # noqa: E402
 
 
 class TestZikrData(unittest.TestCase):
@@ -88,6 +89,7 @@ class TestSettings(unittest.TestCase):
         self.assertEqual(s.min_interval_minutes, 20)
         self.assertEqual(s.max_interval_minutes, 45)
         self.assertEqual(s.display_style, "notification")
+        self.assertTrue(s.pause_during_calls)
 
     def test_round_trips_through_disk(self):
         s = self.settings_mod.Settings()
@@ -132,6 +134,22 @@ class TestSettings(unittest.TestCase):
         self.settings_mod.AUTOSTART_FILE.unlink()  # simulate external removal
         s2 = self.settings_mod.Settings()
         self.assertFalse(s2.launch_at_login)
+
+
+class TestMicMonitorParsing(unittest.TestCase):
+    def test_pactl_empty_output_means_idle(self):
+        self.assertFalse(_parse_pactl_source_outputs(""))
+        self.assertFalse(_parse_pactl_source_outputs("\n"))
+
+    def test_pactl_nonempty_output_means_active(self):
+        self.assertTrue(_parse_pactl_source_outputs("123\t456\tmy-app\n"))
+
+    def test_alsa_running_state_means_active(self):
+        self.assertTrue(_parse_alsa_status("state: RUNNING\nother: stuff\n"))
+
+    def test_alsa_other_states_mean_idle(self):
+        self.assertFalse(_parse_alsa_status("state: CLOSED\n"))
+        self.assertFalse(_parse_alsa_status(""))
 
 
 class TestIconAndAssets(unittest.TestCase):

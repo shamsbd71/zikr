@@ -31,6 +31,11 @@ namespace Zikr
         public bool SpeakAloud { get; set; } = true;
         public double FlashDurationSeconds { get; set; } = 2.0;
 
+        /// <summary>Skip a scheduled reminder while the microphone is in
+        /// use - by this app or any other, e.g. a call in Zoom or a
+        /// browser tab - so Zikr never talks over a meeting.</summary>
+        public bool PauseDuringCalls { get; set; } = true;
+
         private bool _launchAtLogin;
         public bool LaunchAtLogin
         {
@@ -90,6 +95,7 @@ namespace Zikr
                 if (data.TryGetValue("display_style", out var v4)) DisplayStyle = Convert.ToString(v4);
                 if (data.TryGetValue("speak_aloud", out var v5)) SpeakAloud = Convert.ToBoolean(v5);
                 if (data.TryGetValue("flash_duration_seconds", out var v6)) FlashDurationSeconds = Convert.ToDouble(v6);
+                if (data.TryGetValue("pause_during_calls", out var v7)) PauseDuringCalls = Convert.ToBoolean(v7);
             }
             catch (Exception)
             {
@@ -108,6 +114,7 @@ namespace Zikr
                 ["display_style"] = DisplayStyle,
                 ["speak_aloud"] = SpeakAloud,
                 ["flash_duration_seconds"] = FlashDurationSeconds,
+                ["pause_during_calls"] = PauseDuringCalls,
             };
             var serializer = new JavaScriptSerializer();
             File.WriteAllText(_configFile, serializer.Serialize(data), System.Text.Encoding.UTF8);

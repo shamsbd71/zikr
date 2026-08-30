@@ -17,6 +17,7 @@ final class AppSettings: ObservableObject {
         static let speakAloud = "speakAloud"
         static let launchAtLogin = "launchAtLogin"
         static let flashDurationSeconds = "flashDurationSeconds"
+        static let pauseDuringCalls = "pauseDuringCalls"
     }
 
     @Published var isEnabled: Bool {
@@ -61,6 +62,13 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(flashDurationSeconds, forKey: Key.flashDurationSeconds) }
     }
 
+    /// Skip a scheduled reminder while the microphone is in use — by this
+    /// app or any other, e.g. a call in Zoom or a browser tab — so Zikr
+    /// never talks over a meeting.
+    @Published var pauseDuringCalls: Bool {
+        didSet { defaults.set(pauseDuringCalls, forKey: Key.pauseDuringCalls) }
+    }
+
     private init() {
         defaults.register(defaults: [
             Key.isEnabled: true,
@@ -70,6 +78,7 @@ final class AppSettings: ObservableObject {
             Key.speakAloud: true,
             Key.launchAtLogin: false,
             Key.flashDurationSeconds: 2.0,
+            Key.pauseDuringCalls: true,
         ])
 
         isEnabled = defaults.bool(forKey: Key.isEnabled)
@@ -79,5 +88,6 @@ final class AppSettings: ObservableObject {
         speakAloud = defaults.bool(forKey: Key.speakAloud)
         launchAtLogin = LaunchAtLogin.isEnabled
         flashDurationSeconds = defaults.double(forKey: Key.flashDurationSeconds)
+        pauseDuringCalls = defaults.bool(forKey: Key.pauseDuringCalls)
     }
 }

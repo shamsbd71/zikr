@@ -6,7 +6,7 @@ import random
 
 from gi.repository import GLib
 
-from . import flash, notifications, speech
+from . import flash, mic_monitor, notifications, speech
 from .zikr_data import random_zikr
 
 
@@ -48,7 +48,8 @@ class Scheduler:
         self._source_id = GLib.timeout_add(int(delay_seconds * 1000), self._fire)
 
     def _fire(self):
-        self._show(random_zikr())
+        if not (self.settings.pause_during_calls and mic_monitor.is_microphone_in_use()):
+            self._show(random_zikr())
         if self.settings.enabled:
             self._schedule_next()
         return False
