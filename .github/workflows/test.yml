@@ -92,6 +92,36 @@ jobs:
           dpkg -I dist/zikr_0.0.0-test_all.deb
           dpkg -c dist/zikr_0.0.0-test_all.deb
 
+  test-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: Unit tests
+        working-directory: android
+        run: ./gradlew testDebugUnitTest --stacktrace
+
+      - name: Build debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Verify APK output
+        run: |
+          apk=$(find android/app/build/outputs/apk/debug -name "*.apk")
+          if [ -z "$apk" ]; then echo "::error::debug APK not found"; exit 1; fi
+          size=$(stat -c%s "$apk")
+          echo "Built: $apk ($size bytes)"
+          if [ "$size" -lt 1000000 ]; then echo "::error::APK suspiciously small ($size bytes)"; exit 1; fi
+
   test-windows:
     runs-on: windows-latest
     defaults:

@@ -1,6 +1,6 @@
 # Zikr
 
-A minimal system-tray app that surfaces a short dhikr (Subhanallah, Alhamdulillah, Allahu Akbar, La ilaha illallah, and 17 others from the general Hisnul Muslim collection) at random intervals throughout the day. Native builds for **macOS** (this README), **[Linux](linux/README.md)** (Python/GTK), and **[Windows](windows/README.md)** (C#/.NET Framework + WinForms) — see those READMEs for why each is a separate implementation, not a recompile.
+A minimal system-tray app that surfaces a short dhikr (Subhanallah, Alhamdulillah, Allahu Akbar, La ilaha illallah, and 17 others from the general Hisnul Muslim collection) at random intervals throughout the day. Native builds for **macOS** (this README), **[Linux](linux/README.md)** (Python/GTK), **[Windows](windows/README.md)** (C#/.NET Framework + WinForms), and **[Android](android/README.md)** (Kotlin/Jetpack Compose, Phase 1 — ambient reminders only, sideloaded APK) — see those READMEs for why each is a separate implementation, not a recompile.
 
 Repo: https://github.com/shamsbd71/zikr · Site: https://shamsbd71.github.io/zikr/ · License: [MIT](LICENSE)
 

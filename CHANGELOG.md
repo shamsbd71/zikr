@@ -4,6 +4,18 @@ All notable changes to Zikr are documented here. Dates are release dates
 (Asia/Dhaka). See [releases](https://github.com/shamsbd71/zikr/releases)
 for downloadable assets per version.
 
+## [Unreleased]
+
+### Added
+- Native Android build (Kotlin/Jetpack Compose) — Phase 1 only: ambient
+  random-interval reminders (notification + optional spoken Arabic via
+  `TextToSpeech`, same English-transliteration fallback convention as
+  every other platform), driven by a single self-rescheduling
+  `WorkManager` job rather than a persistent foreground service. No
+  in-place self-updater and no Play Store listing yet — download the
+  APK from GitHub Releases and install it directly (allow "install from
+  unknown sources" when prompted). minSdk 26 (Android 8.0).
+
 ## [1.5.0] — 2026-08-30
 
 ### Added

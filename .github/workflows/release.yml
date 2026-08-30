@@ -107,3 +107,35 @@ jobs:
           name: "Zikr ${{ github.ref_name }}"
           generate_release_notes: true
           files: dist/ZikrSetup-${{ steps.version.outputs.version }}.exe
+
+  build-android:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Derive version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Build debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug -PversionNameOverride=${{ steps.version.outputs.version }} --stacktrace
+
+      - name: Rename APK
+        run: |
+          mkdir -p dist
+          cp android/app/build/outputs/apk/debug/app-debug.apk "dist/Zikr-${{ steps.version.outputs.version }}.apk"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Zikr ${{ github.ref_name }}"
+          generate_release_notes: true
+          files: dist/Zikr-${{ steps.version.outputs.version }}.apk
