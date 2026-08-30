@@ -4,7 +4,7 @@ All notable changes to Zikr are documented here. Dates are release dates
 (Asia/Dhaka). See [releases](https://github.com/shamsbd71/zikr/releases)
 for downloadable assets per version.
 
-## [Unreleased]
+## [1.4.0] — 2026-08-30
 
 ### Added
 - "Pause during calls (mic in use)" setting (on by default) — skips a
