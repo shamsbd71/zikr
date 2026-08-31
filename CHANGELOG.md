@@ -4,7 +4,7 @@ All notable changes to Zikr are documented here. Dates are release dates
 (Asia/Dhaka). See [releases](https://github.com/shamsbd71/zikr/releases)
 for downloadable assets per version.
 
-## [Unreleased]
+## [1.6.1] — 2026-08-31
 
 ### Fixed
 - Android: reminders would almost never actually fire ("no zikr in
