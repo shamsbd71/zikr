@@ -97,16 +97,50 @@ version bump has happened yet - still pre-1.0-in-spirit despite the
 ## Testing philosophy
 
 **Never trust "should work."** This dev machine is macOS-only with no
-`dotnet`, `gi`/GTK, JDK, or Android SDK available, so Linux/Windows/
-Android changes cannot be compiled or run locally — always verify via
-the real CI runner (`gh run watch`) before considering a cross-platform
-change done, and read the actual CI logs rather than assuming a green
-checkmark means what you think it means. When something can be
-verified locally (macOS build, Linux/Android pure-logic functions run
+`dotnet` or `gi`/GTK available, so Linux/Windows changes cannot be
+compiled or run locally — always verify Linux/Windows changes via the
+real CI runner (`gh run watch`) before considering them done, and read
+the actual CI logs rather than assuming a green checkmark means what
+you think it means.
+
+**Android is the exception — a full local toolchain exists on this
+machine and should be used, not skipped.** Android Studio is installed
+at `/Applications/Android Studio.app`, which bundles a real JDK
+(`/Applications/Android Studio.app/Contents/jbr/Contents/Home`) and
+there's a full Android SDK at `~/Library/Android/sdk` including a
+working AVD (`Medium_Phone_API_36.1`, arm64, hardware-accelerated on
+this Apple Silicon Mac). This means Android changes can be genuinely
+built (`JAVA_HOME=".../jbr/Contents/Home" ./gradlew assembleDebug`),
+installed on a booted emulator, and exercised end-to-end with `adb` —
+not just syntax-reviewed and shipped on faith. This was the difference
+that caught a real bug: the original WorkManager-based reminder
+scheduler looked correct in every static review and even in
+`dumpsys jobscheduler` output, but only revealed itself as broken (job
+scheduled and overdue, never dispatched, once the process was frozen in
+the background) by actually backgrounding the app on the emulator and
+waiting. Boot it headless for testing:
+```
+export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export PATH="$JAVA_HOME/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH"
+emulator -avd Medium_Phone_API_36.1 -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect &
+adb wait-for-device
+```
+Then `adb install -r <apk>`, `adb shell input tap/text/keyevent` to
+drive the UI, `adb exec-out screencap -p > file.png` to see it (`adb
+shell screencap` writing to `/sdcard` directly can fail with a
+permission error — pipe through `exec-out` instead), and `adb logcat`
+/`adb shell dumpsys <service>` to verify what actually happened rather
+than what should have happened. A stray "Process system isn't
+responding" / "System UI isn't responding" dialog right after a cold
+boot is emulator flakiness under software rendering, not an app bug —
+wait it out rather than debugging your own code for it.
+
+For Windows/Linux, or when something can be verified locally without
+the full toolchain (macOS build, Linux/Android pure-logic functions run
 directly via `python3`/manually reasoned through, C#/Kotlin syntax and
 XML well-formedness by careful manual review), do that first, but don't
-skip the CI verification step just because the parts you *could* check
-passed.
+skip CI verification just because the parts you *could* check passed.
 
 Pure logic (interval math, settings clamping, version comparison,
 changelog parsing, registry-ledger parsing, zikr-list JSON parsing) is
@@ -168,6 +202,23 @@ code.
   `gradle/actions/wrapper-validation@v4` to check its checksum against
   Gradle's known-good list as a safety net for exactly this kind of
   manually-sourced binary.
+- **Android: WorkManager `OneTimeWorkRequest` is not reliable for
+  "must actually fire" reminders.** It looks completely fine in static
+  review and even in `dumpsys jobscheduler` (job scheduled, later shows
+  "READY" - all constraints satisfied) but can simply never get
+  dispatched once Android freezes the app's process in the background -
+  reproduced directly on the emulator, matching a real user report of
+  "no zikr in duration." Fixed by switching to
+  `AlarmManager.setExactAndAllowWhileIdle` (falling back to
+  `setAndAllowWhileIdle` without the user-granted `SCHEDULE_EXACT_ALARM`
+  permission) via a `BroadcastReceiver`, which is specifically allowed
+  to wake a frozen/idle process - the standard mechanism real
+  alarm/reminder apps use. Unlike WorkManager, this needs its own
+  `BOOT_COMPLETED` receiver to re-arm after a reboot. If a future
+  background-triggered feature is tempted to reach for WorkManager
+  again, test it the same way this was caught: schedule a short
+  interval, background the app, wait past the trigger time, and check
+  whether it actually fired - not just whether it was scheduled.
 
 ## i18n (GitHub Pages site)
 

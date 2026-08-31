@@ -12,8 +12,8 @@ import kotlin.coroutines.suspendCoroutine
  * Speaks a zikr aloud, preferring an installed Arabic voice and falling
  * back to reading the English transliteration if none is available -
  * same fallback convention as ZikrSpeaker.swift / speech.py / Speech.cs.
- * Suspends until speech finishes (or fails) so the calling
- * CoroutineWorker's execution window covers it.
+ * Suspends until speech finishes (or fails) so the caller's execution
+ * window (a goAsync() coroutine, typically) covers it.
  */
 object Speech {
     suspend fun speak(context: Context, zikr: ZikrItem) = suspendCoroutine { continuation ->
@@ -42,6 +42,7 @@ object Speech {
                     continuation.resume(Unit)
                 }
 
+                @Suppress("OVERRIDE_DEPRECATION")
                 override fun onError(utteranceId: String?) {
                     engine.shutdown()
                     continuation.resume(Unit)

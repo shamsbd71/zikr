@@ -2,7 +2,7 @@ package com.abu.zikr
 
 import android.app.Application
 import com.abu.zikr.notification.NotificationHelper
-import com.abu.zikr.scheduler.ReminderScheduler
+import com.abu.zikr.scheduler.AlarmScheduler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,7 +14,7 @@ class ZikrApplication : Application() {
         super.onCreate()
         NotificationHelper.ensureChannel(this)
         scope.launch {
-            ReminderScheduler(this@ZikrApplication).start()
+            AlarmScheduler(this@ZikrApplication).start()
         }
     }
 }
