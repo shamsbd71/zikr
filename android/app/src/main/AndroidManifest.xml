@@ -29,6 +29,8 @@
 
         <receiver android:name=".notification.MuteActionReceiver" android:exported="false" />
 
+        <receiver android:name=".notification.PauseResumeActionReceiver" android:exported="false" />
+
         <receiver android:name=".scheduler.BootReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

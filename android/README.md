@@ -129,8 +129,17 @@ old behavior exactly.
 
 ## Notification actions
 
-The reminder notification includes a "Disable Sound" action button -
-tapping it turns off "Speak zikr aloud" without opening the app.
+The reminder notification includes two action buttons:
+
+- **Pause** - like a music player's play/pause, but without a
+  persistent always-on notification the way a real music player has:
+  tapping it turns off "Enable reminders" (cancelling the scheduled
+  alarm) and swaps the reminder notification for a small "paused, tap
+  Resume" card. Tapping **Resume** on that card turns reminders back on
+  and reschedules the alarm. Both directly reflect in Settings' "Enable
+  reminders" toggle, since it's the same underlying setting either way.
+- **Disable Sound** - turns off "Speak zikr aloud" without opening the
+  app.
 
 ## Known limitations
 

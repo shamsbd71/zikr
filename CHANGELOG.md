@@ -7,6 +7,12 @@ for downloadable assets per version.
 ## [Unreleased]
 
 ### Added
+- Android: a "Pause" action button on the reminder notification,
+  mirroring a music player's play/pause — pausing swaps the
+  notification for a small "paused, tap Resume" card rather than
+  leaving anything persistent up, unlike a real music player's
+  now-playing bar (Zikr still isn't continuously "playing" the way
+  music is, so a permanent bar would sit there mostly idle).
 - Android: "Bismillah on unlock", matching UnlockGreeter.swift on
   macOS — best-effort, since it needs the app's background process
   alive (Android forbids declaring `ACTION_USER_PRESENT` in the
