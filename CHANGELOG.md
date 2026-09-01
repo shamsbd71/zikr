@@ -4,7 +4,7 @@ All notable changes to Zikr are documented here. Dates are release dates
 (Asia/Dhaka). See [releases](https://github.com/shamsbd71/zikr/releases)
 for downloadable assets per version.
 
-## [Unreleased]
+## [1.7.0] — 2026-09-02
 
 ### Added
 - Android: a "Pause" action button on the reminder notification,
