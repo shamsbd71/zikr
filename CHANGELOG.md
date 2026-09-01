@@ -4,6 +4,42 @@ All notable changes to Zikr are documented here. Dates are release dates
 (Asia/Dhaka). See [releases](https://github.com/shamsbd71/zikr/releases)
 for downloadable assets per version.
 
+## [Unreleased]
+
+### Added
+- Android: a "Pause" action button on the reminder notification,
+  mirroring a music player's play/pause — pausing swaps the
+  notification for a small "paused, tap Resume" card rather than
+  leaving anything persistent up, unlike a real music player's
+  now-playing bar (Zikr still isn't continuously "playing" the way
+  music is, so a permanent bar would sit there mostly idle).
+- Android: "Bismillah on unlock", matching UnlockGreeter.swift on
+  macOS — best-effort, since it needs the app's background process
+  alive (Android forbids declaring `ACTION_USER_PRESENT` in the
+  manifest since API 26), but the periodic reminder alarm keeps that
+  reasonably fresh in practice.
+- Android: a "Disable Sound" action button on the reminder notification
+  itself — turns off "Speak zikr aloud" without opening the app.
+- Android: a "Voice" picker in Settings, listing every installed voice
+  for whichever language is in use and previewing it on selection — the
+  system default is often a female voice with no way to change it
+  otherwise.
+- Android: requests `ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` on
+  first launch (a real system dialog, not just a settings deep-link) —
+  found via device testing that even with an exact alarm scheduled,
+  battery optimization/App Standby Buckets can still delay or drop
+  reminders entirely, and this varied by device (worked on one phone,
+  not on a Google Pixel 7, without it).
+- Android: Settings screen redesigned into grouped, labeled sections
+  with a description under every control, plus warning banners for
+  either missing permission above — was "not standard, not
+  interactive/guiding" before.
+
+### Fixed
+- Android: the Settings screen didn't scroll, so on smaller/taller
+  content (now including the new sections and permission banners) the
+  bottom was completely unreachable. Caught via testing, not review.
+
 ## [1.6.1] — 2026-08-31
 
 ### Fixed

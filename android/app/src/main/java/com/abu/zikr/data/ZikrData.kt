@@ -40,4 +40,7 @@ object ZikrData {
     }
 
     fun random(context: Context): ZikrItem = all(context).random()
+
+    /** Id 22 in zikr.json - said on unlock, mirroring UnlockGreeter.swift. */
+    fun bismillah(context: Context): ZikrItem = all(context).first { it.id == 22 }
 }

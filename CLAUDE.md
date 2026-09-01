@@ -136,6 +136,19 @@ responding" / "System UI isn't responding" dialog right after a cold
 boot is emulator flakiness under software rendering, not an app bug —
 wait it out rather than debugging your own code for it.
 
+**Don't eyeball tap coordinates from a screenshot — they're wrong often
+enough to waste real time.** The screenshot tool reports the image at a
+downscaled display size and says what to multiply by to map back to
+real device pixels; forgetting that (or arithmetic-slipping it) sends
+taps into the wrong element and looks exactly like a broken button. For
+anything beyond one quick tap, get exact bounds instead:
+`adb shell uiautomator dump /sdcard/window_dump.xml` then
+`adb shell cat /sdcard/window_dump.xml | grep -o 'text="Some Label"[^>]*bounds="\[[0-9,]*\]\[[0-9,]*\]"'`
+— the `bounds="[x1,y1][x2,y2]"` are real coordinates, tap the center.
+Also useful: `adb shell dumpsys window | grep mCurrentFocus` to check
+whether a dropdown/popup is still open and eating taps meant for
+whatever's behind it.
+
 For Windows/Linux, or when something can be verified locally without
 the full toolchain (macOS build, Linux/Android pure-logic functions run
 directly via `python3`/manually reasoned through, C#/Kotlin syntax and
