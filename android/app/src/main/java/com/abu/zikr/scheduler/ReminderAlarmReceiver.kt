@@ -33,7 +33,7 @@ class ReminderAlarmReceiver : BroadcastReceiver() {
                     val zikr = ZikrData.random(context)
                     NotificationHelper.show(context, zikr)
                     if (snapshot.speakAloud) {
-                        Speech.speak(context, zikr)
+                        Speech.speak(context, zikr, snapshot.selectedVoiceName)
                     }
                     AlarmScheduler(context).scheduleNext(snapshot.minIntervalMinutes, snapshot.maxIntervalMinutes)
                 }

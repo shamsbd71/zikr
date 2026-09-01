@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -23,12 +24,19 @@ class Settings(private val context: Context) {
         val MIN_INTERVAL = intPreferencesKey("min_interval_minutes")
         val MAX_INTERVAL = intPreferencesKey("max_interval_minutes")
         val SPEAK_ALOUD = booleanPreferencesKey("speak_aloud")
+        val BISMILLAH_ON_UNLOCK = booleanPreferencesKey("bismillah_on_unlock")
+        val SELECTED_VOICE = stringPreferencesKey("selected_voice_name")
     }
 
     val enabled: Flow<Boolean> = context.dataStore.data.map { it[Keys.ENABLED] ?: true }
     val minIntervalMinutes: Flow<Int> = context.dataStore.data.map { it[Keys.MIN_INTERVAL] ?: 20 }
     val maxIntervalMinutes: Flow<Int> = context.dataStore.data.map { it[Keys.MAX_INTERVAL] ?: 45 }
     val speakAloud: Flow<Boolean> = context.dataStore.data.map { it[Keys.SPEAK_ALOUD] ?: true }
+    val bismillahOnUnlock: Flow<Boolean> = context.dataStore.data.map { it[Keys.BISMILLAH_ON_UNLOCK] ?: true }
+
+    /** Null means "automatic" - Speech picks the default voice for the
+     * chosen language, same as before this setting existed. */
+    val selectedVoiceName: Flow<String?> = context.dataStore.data.map { it[Keys.SELECTED_VOICE] }
 
     suspend fun setEnabled(value: Boolean) {
         context.dataStore.edit { it[Keys.ENABLED] = value }
@@ -56,6 +64,16 @@ class Settings(private val context: Context) {
         context.dataStore.edit { it[Keys.SPEAK_ALOUD] = value }
     }
 
+    suspend fun setBismillahOnUnlock(value: Boolean) {
+        context.dataStore.edit { it[Keys.BISMILLAH_ON_UNLOCK] = value }
+    }
+
+    suspend fun setSelectedVoiceName(name: String?) {
+        context.dataStore.edit { prefs ->
+            if (name == null) prefs.remove(Keys.SELECTED_VOICE) else prefs[Keys.SELECTED_VOICE] = name
+        }
+    }
+
     suspend fun snapshot(): SettingsSnapshot {
         val prefs = context.dataStore.data.first()
         return SettingsSnapshot(
@@ -63,6 +81,8 @@ class Settings(private val context: Context) {
             minIntervalMinutes = prefs[Keys.MIN_INTERVAL] ?: 20,
             maxIntervalMinutes = prefs[Keys.MAX_INTERVAL] ?: 45,
             speakAloud = prefs[Keys.SPEAK_ALOUD] ?: true,
+            bismillahOnUnlock = prefs[Keys.BISMILLAH_ON_UNLOCK] ?: true,
+            selectedVoiceName = prefs[Keys.SELECTED_VOICE],
         )
     }
 }
@@ -72,4 +92,6 @@ data class SettingsSnapshot(
     val minIntervalMinutes: Int,
     val maxIntervalMinutes: Int,
     val speakAloud: Boolean,
+    val bismillahOnUnlock: Boolean,
+    val selectedVoiceName: String?,
 )

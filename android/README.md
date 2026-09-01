@@ -15,6 +15,7 @@ higher permission/store-review risk, deferred for now).
 | UNUserNotificationCenter | `NotificationCompat` + a notification channel |
 | AVSpeechSynthesizer | `android.speech.tts.TextToSpeech` |
 | A single self-rescheduling `Timer` | A single self-rescheduling `AlarmManager.setExactAndAllowWhileIdle` alarm |
+| UnlockGreeter (Bismillah on unlock) | Dynamically-registered `ACTION_USER_PRESENT` receiver, same effect |
 | UserDefaults | Jetpack DataStore |
 
 Same 21-phrase zikr list (`res/raw/zikr.json`, copied from the other
@@ -59,6 +60,18 @@ Settings screen shows a banner with a button that deep-links straight
 to it when not granted. Without it, reminders still fire (via the
 inexact fallback) but with looser timing.
 
+### Battery optimization exemption
+
+Even with an exact alarm scheduled, aggressive battery management (App
+Standby Buckets, and OEM-specific power management on top of stock
+Android - this varied noticeably between test devices, including not
+firing at all on one) can still delay or drop reminders. `MainActivity`
+requests `ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` on first launch,
+which shows a real system dialog ("Let app always run in background?")
+rather than just navigating to a settings page - this is the actual
+"ask for background running permission" prompt. The Settings screen
+also shows a banner with a button to re-request it if declined.
+
 ## Why no in-place self-updater
 
 Same decision as Linux/Windows, for the same reason, plus Android adds
@@ -74,8 +87,9 @@ Download `Zikr-<version>.apk` from
 [releases](https://github.com/shamsbd71/zikr/releases/latest), open
 it on your device, and allow "install from unknown sources" if
 prompted (this is a debug-signed build — no Play Store listing yet).
-On first launch, Android will ask for notification permission — allow
-it, or reminders won't show.
+On first launch, Android will ask for notification permission and then
+"let Zikr always run in the background" - allow both, or reminders may
+not show/fire reliably.
 
 ## Build it yourself
 
@@ -102,6 +116,22 @@ Unit tests cover the random-interval scheduling math
 a check against the real bundled `zikr.json` for the expected 21-entry
 count) — all pure functions, no emulator or Android framework needed.
 
+## Voice selection
+
+The system default voice for a language is often whatever a device
+ships with (frequently female, with no way to change it) - Settings →
+Voice lists every installed voice for whichever language `Speech`
+would actually use (Arabic if available, else English), and selecting
+one previews it immediately so you can compare before committing.
+Network-only voices are excluded to keep the app's offline promise
+intact. "Automatic (system default)" is the default and matches the
+old behavior exactly.
+
+## Notification actions
+
+The reminder notification includes a "Disable Sound" action button -
+tapping it turns off "Speak zikr aloud" without opening the app.
+
 ## Known limitations
 
 - No Arabic TTS voice ships on every device the way it does on
@@ -109,7 +139,7 @@ count) — all pure functions, no emulator or Android framework needed.
   and falls back to reading the English transliteration if Arabic isn't
   installed, same fallback convention as every other platform. Users
   can install an Arabic TTS language pack via Settings → System →
-  Languages → Text-to-speech.
+  Languages → Text-to-speech, then pick it under Settings → Voice.
 - No bundled-audio-recording override yet (the other builds can play a
   real recording per zikr if you drop one in `Resources/`) — could be
   added later as a raw/asset lookup by id, not implemented in Phase 1.
