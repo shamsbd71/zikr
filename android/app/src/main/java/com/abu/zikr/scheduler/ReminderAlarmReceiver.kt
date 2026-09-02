@@ -7,6 +7,7 @@ import com.abu.zikr.data.ZikrData
 import com.abu.zikr.notification.NotificationHelper
 import com.abu.zikr.settings.Settings
 import com.abu.zikr.speech.Speech
+import com.abu.zikr.update.UpdateFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,6 +30,11 @@ class ReminderAlarmReceiver : BroadcastReceiver() {
             try {
                 val settings = Settings(context)
                 val snapshot = settings.snapshot()
+
+                // Piggybacks on this alarm wake rather than adding a
+                // separate schedule - gated to once a day internally.
+                UpdateFlow.maybeCheckForUpdate(context)
+
                 if (snapshot.enabled) {
                     val zikr = ZikrData.random(context)
                     NotificationHelper.show(context, zikr)

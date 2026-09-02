@@ -15,6 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import com.abu.zikr.ui.SettingsScreen
 import com.abu.zikr.ui.theme.ZikrTheme
+import com.abu.zikr.update.UpdateFlow
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +45,8 @@ class MainActivity : ComponentActivity() {
                                 .setData(Uri.parse("package:${context.packageName}")),
                         )
                     }
+
+                    UpdateFlow.checkNow(context)
                 }
 
                 SettingsScreen()

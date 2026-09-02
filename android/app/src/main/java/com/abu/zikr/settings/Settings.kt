@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +27,7 @@ class Settings(private val context: Context) {
         val SPEAK_ALOUD = booleanPreferencesKey("speak_aloud")
         val BISMILLAH_ON_UNLOCK = booleanPreferencesKey("bismillah_on_unlock")
         val SELECTED_VOICE = stringPreferencesKey("selected_voice_name")
+        val LAST_UPDATE_CHECK_AT = longPreferencesKey("last_update_check_at")
     }
 
     val enabled: Flow<Boolean> = context.dataStore.data.map { it[Keys.ENABLED] ?: true }
@@ -72,6 +74,14 @@ class Settings(private val context: Context) {
         context.dataStore.edit { prefs ->
             if (name == null) prefs.remove(Keys.SELECTED_VOICE) else prefs[Keys.SELECTED_VOICE] = name
         }
+    }
+
+    /** Not exposed in Settings UI - internal bookkeeping for
+     * UpdateFlow's once-a-day passive check cadence. */
+    suspend fun lastUpdateCheckAt(): Long = context.dataStore.data.first()[Keys.LAST_UPDATE_CHECK_AT] ?: 0L
+
+    suspend fun setLastUpdateCheckAt(value: Long) {
+        context.dataStore.edit { it[Keys.LAST_UPDATE_CHECK_AT] = value }
     }
 
     suspend fun snapshot(): SettingsSnapshot {

@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
         android:name=".ZikrApplication"
@@ -36,6 +38,31 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <receiver android:name=".update.UpdateActionReceiver" android:exported="false" />
+
+        <!-- exported=true: this needs to receive DownloadManager's
+             system-sent ACTION_DOWNLOAD_COMPLETE broadcast, which comes
+             from a different app/process - exported=false silently
+             blocked it on testing. Safe to export: onReceive() verifies
+             the download id matches UpdateInstaller's own pending id
+             before doing anything, so an unrelated/spoofed broadcast is
+             a no-op. -->
+        <receiver android:name=".update.DownloadCompleteReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
     </application>
 

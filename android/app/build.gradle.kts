@@ -37,6 +37,10 @@ android {
 
     buildFeatures {
         compose = true
+        // Needed for BuildConfig.VERSION_NAME, used by the update
+        // checker to know its own version - AGP 8+ no longer generates
+        // BuildConfig by default.
+        buildConfig = true
     }
 
     composeOptions {
