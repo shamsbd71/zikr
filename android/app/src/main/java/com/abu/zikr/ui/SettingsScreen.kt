@@ -52,6 +52,10 @@ import com.abu.zikr.notification.NotificationHelper
 import com.abu.zikr.scheduler.AlarmScheduler
 import com.abu.zikr.settings.Settings
 import com.abu.zikr.speech.Speech
+import com.abu.zikr.update.UpdateCheckResult
+import com.abu.zikr.update.UpdateFlow
+import com.abu.zikr.update.UpdateInfo
+import com.abu.zikr.update.UpdateInstaller
 import kotlinx.coroutines.launch
 
 private const val AUTOMATIC_VOICE_LABEL = "Automatic (system default)"
@@ -188,6 +192,8 @@ fun SettingsScreen() {
                 )
             }
 
+            UpdateSection(context = context)
+
             SettingsSection(title = "Test") {
                 Button(onClick = {
                     scope.launch {
@@ -266,6 +272,64 @@ private fun PermissionWarnings(
                     }) {
                         Text("Allow exact alarms")
                     }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Manual "Check for Updates", mirroring the desktop builds' menu item.
+ * Also backs the passive check UpdateFlow.maybeCheckForUpdate runs
+ * piggybacked on the reminder alarm, and the on-launch check in
+ * MainActivity - all three end up here or in NotificationHelper's
+ * "update available" card, whichever fires first.
+ */
+@Composable
+private fun UpdateSection(context: android.content.Context) {
+    var status by remember { mutableStateOf("") }
+    var checking by remember { mutableStateOf(false) }
+    var pendingUpdate by remember { mutableStateOf<UpdateInfo?>(null) }
+    val scope = rememberCoroutineScope()
+
+    SettingsSection(title = "Updates") {
+        if (status.isNotEmpty()) {
+            Text(status, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(
+                enabled = !checking,
+                onClick = {
+                    checking = true
+                    status = "Checking…"
+                    scope.launch {
+                        when (val result = UpdateFlow.checkNow(context)) {
+                            is UpdateCheckResult.Available -> {
+                                pendingUpdate = result.info
+                                status = "Zikr ${result.info.version} is available."
+                            }
+                            is UpdateCheckResult.UpToDate -> {
+                                pendingUpdate = null
+                                status = "You're up to date (v${result.currentVersion})."
+                            }
+                            is UpdateCheckResult.Error -> {
+                                pendingUpdate = null
+                                status = result.message
+                            }
+                        }
+                        checking = false
+                    }
+                },
+            ) {
+                Text(if (checking) "Checking…" else "Check for Updates")
+            }
+
+            pendingUpdate?.let { info ->
+                Button(onClick = {
+                    UpdateInstaller.enqueueDownload(context, info.apkDownloadUrl)
+                    status = "Downloading ${info.version}…"
+                }) {
+                    Text("Download & Install")
                 }
             }
         }

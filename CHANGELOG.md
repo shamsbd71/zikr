@@ -4,6 +4,25 @@ All notable changes to Zikr are documented here. Dates are release dates
 (Asia/Dhaka). See [releases](https://github.com/shamsbd71/zikr/releases)
 for downloadable assets per version.
 
+## [Unreleased]
+
+### Fixed
+- Android: the reminder notification's default channel sound played a
+  system chime an instant before the TTS speech started (the
+  notification posts instantly; the TTS engine takes a moment to bind),
+  sounding like a redundant double-alert. The channel is now silent
+  (`setSound(null, null)`); since Android locks a channel's sound at
+  creation, this required moving to a new channel id and deleting the
+  old one so existing installs actually pick it up.
+
+### Added
+- Android: in-app update checker — checks GitHub Releases on launch,
+  once a day piggybacked on the reminder alarm, and on demand via
+  Settings → Updates. Downloads the APK with `DownloadManager` and
+  hands it to the system installer; the user still confirms the
+  install (Android requires this), but there's no manual
+  browser-download step.
+
 ## [1.7.0] — 2026-09-02
 
 ### Added

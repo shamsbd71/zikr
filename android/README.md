@@ -72,14 +72,19 @@ rather than just navigating to a settings page - this is the actual
 "ask for background running permission" prompt. The Settings screen
 also shows a banner with a button to re-request it if declined.
 
-## Why no in-place self-updater
+## In-app update checker
 
-Same decision as Linux/Windows, for the same reason, plus Android adds
-its own: an app can't silently replace its own APK at all without
-either Play Store's own update mechanism or the user manually
-re-installing. There's no "Check for Updates" yet — download a new APK
-from [releases](https://github.com/shamsbd71/zikr/releases/latest) and
-install over the old one when a new version ships.
+Unlike Linux/Windows/macOS (which deliberately don't self-update — see
+their own READMEs), Android *can* do this without Play Store: the app
+checks GitHub Releases for a newer tag (on launch, once a day
+piggybacked on the reminder alarm, or on demand via Settings → Updates
+→ "Check for Updates"), and if found, downloads the APK with
+`DownloadManager` and hands it to the system installer
+(`ACTION_VIEW` on a `FileProvider` URI). Android still requires the
+user to explicitly confirm the install — there's no way around that
+without root/MDM — but there's no separate "open a browser, find the
+download, tap it" dance either. Same GitHub Releases source as every
+other platform's manual download link.
 
 ## Install
 
@@ -140,6 +145,16 @@ The reminder notification includes two action buttons:
   reminders" toggle, since it's the same underlying setting either way.
 - **Disable Sound** - turns off "Speak zikr aloud" without opening the
   app.
+
+The reminder notification's channel has no sound of its own
+(`setSound(null, null)`) - a default-sound channel meant every
+reminder played a system chime *before* the TTS speech started
+(the notification posts instantly, the TTS engine takes a moment to
+bind), which sounded like a double-alert. Android locks a channel's
+sound once created, so this required a new channel id
+(`zikr_reminders_v2`, deleting the old `zikr_reminders` channel) —
+recreating a channel with the same id has no effect on existing
+installs.
 
 ## Known limitations
 
