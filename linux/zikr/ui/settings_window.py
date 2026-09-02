@@ -145,6 +145,54 @@ def show(settings, on_changed):
 
     root.pack_start(Gtk.Separator(), False, False, 0)
 
+    quiet_label = Gtk.Label(label="<b>Quiet Hours</b>", use_markup=True, xalign=0)
+    root.pack_start(quiet_label, False, False, 0)
+
+    quiet_row = Gtk.CheckButton(label="Turn off reminders during a daily window")
+    quiet_row.set_active(settings.quiet_hours_enabled)
+    root.pack_start(quiet_row, False, False, 0)
+
+    def time_row(label_text, initial_minutes):
+        row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        row.pack_start(Gtk.Label(label=label_text, xalign=0, width_chars=12), False, False, 0)
+        hour_adj = Gtk.Adjustment(value=initial_minutes // 60, lower=0, upper=23, step_increment=1)
+        hour_spin = Gtk.SpinButton(adjustment=hour_adj)
+        row.pack_start(hour_spin, False, False, 0)
+        row.pack_start(Gtk.Label(label=":"), False, False, 0)
+        minute_adj = Gtk.Adjustment(value=initial_minutes % 60, lower=0, upper=59, step_increment=1)
+        minute_spin = Gtk.SpinButton(adjustment=minute_adj)
+        row.pack_start(minute_spin, False, False, 0)
+        return row, hour_spin, minute_spin
+
+    start_row, start_hour_spin, start_minute_spin = time_row("From", settings.quiet_hours_start_minutes)
+    root.pack_start(start_row, False, False, 0)
+
+    end_row, end_hour_spin, end_minute_spin = time_row("To", settings.quiet_hours_end_minutes)
+    root.pack_start(end_row, False, False, 0)
+
+    def on_start_time(_spin):
+        settings.quiet_hours_start_minutes = int(start_hour_spin.get_value()) * 60 + int(start_minute_spin.get_value())
+
+    start_hour_spin.connect("value-changed", on_start_time)
+    start_minute_spin.connect("value-changed", on_start_time)
+
+    def on_end_time(_spin):
+        settings.quiet_hours_end_minutes = int(end_hour_spin.get_value()) * 60 + int(end_minute_spin.get_value())
+
+    end_hour_spin.connect("value-changed", on_end_time)
+    end_minute_spin.connect("value-changed", on_end_time)
+
+    def on_quiet(btn):
+        settings.quiet_hours_enabled = btn.get_active()
+        start_row.set_visible(settings.quiet_hours_enabled)
+        end_row.set_visible(settings.quiet_hours_enabled)
+
+    quiet_row.connect("toggled", on_quiet)
+    start_row.set_visible(settings.quiet_hours_enabled)
+    end_row.set_visible(settings.quiet_hours_enabled)
+
+    root.pack_start(Gtk.Separator(), False, False, 0)
+
     test_btn = Gtk.Button(label="Test Zikr (Speak + Flash)")
 
     def on_test(_btn):

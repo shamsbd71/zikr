@@ -25,6 +25,11 @@ namespace Zikr
         private CheckBox _speakBox;
         private CheckBox _loginBox;
         private CheckBox _callsBox;
+        private CheckBox _quietHoursBox;
+        private DateTimePicker _quietStartPicker;
+        private DateTimePicker _quietEndPicker;
+        private Panel _quietStartRow;
+        private Panel _quietEndRow;
 
         public static void Show(Settings settings, Action onChanged)
         {
@@ -48,7 +53,7 @@ namespace Zikr
             MaximizeBox = false;
             MinimizeBox = false;
             StartPosition = FormStartPosition.CenterScreen;
-            ClientSize = new Size(380, 428);
+            ClientSize = new Size(380, 560);
             Padding = new Padding(18);
 
             var layout = new FlowLayoutPanel
@@ -123,6 +128,38 @@ namespace Zikr
             _callsBox.CheckedChanged += (s, e) => { _settings.PauseDuringCalls = _callsBox.Checked; _settings.Save(); _onChanged?.Invoke(); };
             layout.Controls.Add(_callsBox);
 
+            layout.Controls.Add(Section("Quiet Hours"));
+
+            _quietHoursBox = new CheckBox { Text = "Turn off reminders during a daily window", Checked = _settings.QuietHoursEnabled, AutoSize = true };
+            layout.Controls.Add(_quietHoursBox);
+
+            _quietStartRow = TimeRow("From", out _quietStartPicker, _settings.QuietHoursStartMinutes);
+            layout.Controls.Add(_quietStartRow);
+            _quietStartPicker.ValueChanged += (s, e) =>
+            {
+                _settings.QuietHoursStartMinutes = MinutesFromTime(_quietStartPicker.Value);
+                _settings.Save();
+                _onChanged?.Invoke();
+            };
+
+            _quietEndRow = TimeRow("To", out _quietEndPicker, _settings.QuietHoursEndMinutes);
+            layout.Controls.Add(_quietEndRow);
+            _quietEndPicker.ValueChanged += (s, e) =>
+            {
+                _settings.QuietHoursEndMinutes = MinutesFromTime(_quietEndPicker.Value);
+                _settings.Save();
+                _onChanged?.Invoke();
+            };
+
+            _quietStartRow.Visible = _quietEndRow.Visible = _settings.QuietHoursEnabled;
+            _quietHoursBox.CheckedChanged += (s, e) =>
+            {
+                _settings.QuietHoursEnabled = _quietHoursBox.Checked;
+                _settings.Save();
+                _quietStartRow.Visible = _quietEndRow.Visible = _settings.QuietHoursEnabled;
+                _onChanged?.Invoke();
+            };
+
             layout.Controls.Add(Section(""));
 
             var testButton = new Button { Text = "Test Zikr (Speak + Flash)", AutoSize = true };
@@ -170,5 +207,21 @@ namespace Zikr
             spin = new NumericUpDown { Minimum = min, Maximum = max, Value = value, Width = 80 };
             return LabeledRow(label, spin);
         }
+
+        private static Panel TimeRow(string label, out DateTimePicker picker, int minutes)
+        {
+            picker = new DateTimePicker
+            {
+                Format = DateTimePickerFormat.Time,
+                ShowUpDown = true,
+                Width = 90,
+                Value = TimeFromMinutes(minutes),
+            };
+            return LabeledRow(label, picker);
+        }
+
+        private static DateTime TimeFromMinutes(int minutes) => DateTime.Today.AddMinutes(minutes);
+
+        private static int MinutesFromTime(DateTime time) => time.Hour * 60 + time.Minute;
     }
 }

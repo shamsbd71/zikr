@@ -42,6 +42,17 @@ namespace Zikr
         /// will. Empty means none.</summary>
         public string SkippedUpdateVersion { get; set; } = "";
 
+        /// <summary>Turn reminders completely off during a daily time
+        /// window (e.g. overnight) - unlike PauseDuringCalls, this is a
+        /// fixed schedule rather than a live signal.</summary>
+        public bool QuietHoursEnabled { get; set; } = false;
+
+        /// <summary>Minutes since midnight (0-1439), local time. When
+        /// start > end the window wraps past midnight (e.g.
+        /// 22:00-06:00).</summary>
+        public int QuietHoursStartMinutes { get; set; } = 22 * 60;
+        public int QuietHoursEndMinutes { get; set; } = 6 * 60;
+
         private bool _launchAtLogin;
         public bool LaunchAtLogin
         {
@@ -103,6 +114,9 @@ namespace Zikr
                 if (data.TryGetValue("flash_duration_seconds", out var v6)) FlashDurationSeconds = Convert.ToDouble(v6);
                 if (data.TryGetValue("pause_during_calls", out var v7)) PauseDuringCalls = Convert.ToBoolean(v7);
                 if (data.TryGetValue("skipped_update_version", out var v8)) SkippedUpdateVersion = Convert.ToString(v8);
+                if (data.TryGetValue("quiet_hours_enabled", out var v9)) QuietHoursEnabled = Convert.ToBoolean(v9);
+                if (data.TryGetValue("quiet_hours_start_minutes", out var v10)) QuietHoursStartMinutes = Convert.ToInt32(v10);
+                if (data.TryGetValue("quiet_hours_end_minutes", out var v11)) QuietHoursEndMinutes = Convert.ToInt32(v11);
             }
             catch (Exception)
             {
@@ -123,6 +137,9 @@ namespace Zikr
                 ["flash_duration_seconds"] = FlashDurationSeconds,
                 ["pause_during_calls"] = PauseDuringCalls,
                 ["skipped_update_version"] = SkippedUpdateVersion,
+                ["quiet_hours_enabled"] = QuietHoursEnabled,
+                ["quiet_hours_start_minutes"] = QuietHoursStartMinutes,
+                ["quiet_hours_end_minutes"] = QuietHoursEndMinutes,
             };
             var serializer = new JavaScriptSerializer();
             File.WriteAllText(_configFile, serializer.Serialize(data), System.Text.Encoding.UTF8);
