@@ -4,7 +4,7 @@ All notable changes to Zikr are documented here. Dates are release dates
 (Asia/Dhaka). See [releases](https://github.com/shamsbd71/zikr/releases)
 for downloadable assets per version.
 
-## [Unreleased]
+## [1.8.0] — 2026-09-02
 
 ### Fixed
 - Android: the reminder notification's default channel sound played a
