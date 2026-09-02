@@ -4,6 +4,14 @@ All notable changes to Zikr are documented here. Dates are release dates
 (Asia/Dhaka). See [releases](https://github.com/shamsbd71/zikr/releases)
 for downloadable assets per version.
 
+## [Unreleased]
+
+### Added
+- macOS, Linux, Windows: Quiet Hours — a daily time window (e.g.
+  22:00–06:00) during which reminders are turned off completely, set
+  under Settings → Quiet Hours. Disabled by default; the window can
+  cross midnight.
+
 ## [1.8.0] — 2026-09-02
 
 ### Fixed

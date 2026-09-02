@@ -2,6 +2,7 @@
 random zikr, then reschedules itself. Mirrors ReminderScheduler.swift —
 no polling, no retained history.
 """
+import datetime
 import random
 
 from gi.repository import GLib
@@ -16,6 +17,23 @@ def pick_delay_seconds(min_interval_minutes, max_interval_minutes):
     lo = max(1, min_interval_minutes) * 60
     hi = max(lo, max_interval_minutes * 60)
     return random.uniform(lo, hi)
+
+
+def is_within_quiet_hours(now_minutes, start_minutes, end_minutes):
+    """Pure so the wraparound logic (a window like 22:00-06:00 that
+    crosses midnight) is easy to test independent of the clock. Equal
+    bounds means "no window" rather than "always on" - a user who hasn't
+    set both ends yet shouldn't get silenced entirely by accident."""
+    if start_minutes == end_minutes:
+        return False
+    if start_minutes < end_minutes:
+        return start_minutes <= now_minutes < end_minutes
+    return now_minutes >= start_minutes or now_minutes < end_minutes
+
+
+def _current_minutes_of_day():
+    now = datetime.datetime.now()
+    return now.hour * 60 + now.minute
 
 
 class Scheduler:
@@ -48,7 +66,12 @@ class Scheduler:
         self._source_id = GLib.timeout_add(int(delay_seconds * 1000), self._fire)
 
     def _fire(self):
-        if not (self.settings.pause_during_calls and mic_monitor.is_microphone_in_use()):
+        in_quiet_hours = self.settings.quiet_hours_enabled and is_within_quiet_hours(
+            _current_minutes_of_day(),
+            self.settings.quiet_hours_start_minutes,
+            self.settings.quiet_hours_end_minutes,
+        )
+        if not (self.settings.pause_during_calls and mic_monitor.is_microphone_in_use()) and not in_quiet_hours:
             self._show(random_zikr())
         if self.settings.enabled:
             self._schedule_next()

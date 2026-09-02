@@ -62,11 +62,31 @@ namespace Zikr
 
         private void Fire()
         {
-            if (!(_settings.PauseDuringCalls && MicMonitor.IsInUse()))
+            bool inQuietHours = _settings.QuietHoursEnabled && IsWithinQuietHours(
+                CurrentMinutesOfDay(), _settings.QuietHoursStartMinutes, _settings.QuietHoursEndMinutes);
+            if (!(_settings.PauseDuringCalls && MicMonitor.IsInUse()) && !inQuietHours)
             {
                 Show(ZikrData.RandomZikr());
             }
             if (_settings.Enabled) ScheduleNext();
+        }
+
+        /// <summary>Pure so the wraparound logic (a window like
+        /// 22:00-06:00 that crosses midnight) is easy to test independent
+        /// of the clock. Equal bounds means "no window" rather than
+        /// "always on" - a user who hasn't set both ends yet shouldn't get
+        /// silenced entirely by accident.</summary>
+        public static bool IsWithinQuietHours(int nowMinutes, int startMinutes, int endMinutes)
+        {
+            if (startMinutes == endMinutes) return false;
+            if (startMinutes < endMinutes) return nowMinutes >= startMinutes && nowMinutes < endMinutes;
+            return nowMinutes >= startMinutes || nowMinutes < endMinutes;
+        }
+
+        private static int CurrentMinutesOfDay()
+        {
+            DateTime now = DateTime.Now;
+            return now.Hour * 60 + now.Minute;
         }
 
         private void Show(ZikrItem zikr)

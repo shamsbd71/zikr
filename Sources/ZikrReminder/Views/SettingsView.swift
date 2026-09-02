@@ -57,6 +57,23 @@ struct SettingsView: View {
                 Toggle("Automatically download and install updates", isOn: $settings.autoInstallUpdates)
             }
 
+            Section("Quiet Hours") {
+                Toggle("Turn off reminders during a daily window", isOn: $settings.quietHoursEnabled)
+
+                if settings.quietHoursEnabled {
+                    DatePicker(
+                        "From",
+                        selection: quietHoursBinding(\.quietHoursStartMinutes),
+                        displayedComponents: .hourAndMinute
+                    )
+                    DatePicker(
+                        "To",
+                        selection: quietHoursBinding(\.quietHoursEndMinutes),
+                        displayedComponents: .hourAndMinute
+                    )
+                }
+            }
+
             Section {
                 Button("Test Zikr (Speak + Flash)") {
                     ReminderScheduler.shared.testNow()
@@ -67,6 +84,21 @@ struct SettingsView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 380, height: 430)
+        .frame(width: 380, height: 540)
+    }
+
+    private func quietHoursBinding(_ keyPath: ReferenceWritableKeyPath<AppSettings, Int>) -> Binding<Date> {
+        Binding(
+            get: {
+                var comps = DateComponents()
+                comps.hour = settings[keyPath: keyPath] / 60
+                comps.minute = settings[keyPath: keyPath] % 60
+                return Calendar.current.date(from: comps) ?? Date()
+            },
+            set: { date in
+                let comps = Calendar.current.dateComponents([.hour, .minute], from: date)
+                settings[keyPath: keyPath] = (comps.hour ?? 0) * 60 + (comps.minute ?? 0)
+            }
+        )
     }
 }
