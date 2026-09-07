@@ -112,19 +112,34 @@ def expected_seconds(arabic):
 
 
 def pick_burst(found, expect):
-    """The burst closest to `expect`, or None if none is close enough."""
+    """The run of consecutive bursts whose span best matches `expect`.
+
+    A run rather than a single burst because a longer dua is recited with
+    pauses between its clauses that exceed MIN_GAP, so one recitation
+    arrives as several bursts. Considering every contiguous run covers
+    both that and the short-phrase case, where the best run is one burst
+    and any leading chapter-title announcement is excluded by making the
+    span too long.
+    """
     if not found:
         return None
     if expect is None:                      # no reference: fall back to first
         start, end = found[0]
         return max(0.0, start - PAD), end + PAD
     lo, hi = TOLERANCE
-    scored = [(abs((end - start) / expect - 1.0), start, end)
-              for start, end in found
-              if lo <= (end - start) / expect <= hi]
-    if not scored:
+    best = None
+    for i in range(len(found)):
+        for j in range(i, len(found)):
+            start, end = found[i][0], found[j][1]
+            ratio = (end - start) / expect
+            if not lo <= ratio <= hi:
+                continue
+            score = abs(ratio - 1.0)
+            if best is None or score < best[0]:
+                best = (score, start, end)
+    if best is None:
         return None
-    _, start, end = min(scored)
+    _, start, end = best
     return max(0.0, start - PAD), end + PAD
 
 
