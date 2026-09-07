@@ -6,7 +6,14 @@ APP_NAME="Zikr"
 BUNDLE_ID="com.abu.ZikrReminder"
 APP_DIR="dist/${APP_NAME}.app"
 INSTALL_DIR="${HOME}/Applications"
-VERSION="${VERSION:-1.0}"
+# Local builds stamp a version above any published release on purpose.
+# With "Automatically download and install updates" enabled, a dev build
+# stamped 1.0 sees the latest GitHub release as newer, downloads it, and
+# overwrites itself - the running app silently becomes the last release,
+# resources and all, which looks exactly like your changes not working.
+# CI always passes VERSION explicitly (see release.yml), so this default
+# only ever applies to local builds.
+VERSION="${VERSION:-99.0.0-dev}"
 INSTALL="${INSTALL:-1}"
 
 echo "==> Building release binary (universal: arm64 + x86_64)"
@@ -46,8 +53,8 @@ cp data/zikr.json "$APP_DIR/Contents/Resources/zikr.json"
 
 # Amiri (SIL OFL 1.1) — a real Naskh face for the Arabic. The system font
 # has poor Arabic shaping, which made the flash card look like a missing
-# font. ATSApplicationFontsPath in Info.plist registers these at launch,
-# so no runtime CTFontManager call is needed.
+# font. FontLoader registers these explicitly at launch - the Info.plist
+# ATSApplicationFontsPath key alone did not take.
 cp -R Resources/Fonts "$APP_DIR/Contents/Resources/Fonts"
 
 # Recitations, keyed by zikr id. data/audio is the canonical location
@@ -105,6 +112,16 @@ echo "==> Code signing (ad-hoc)"
 codesign --force --deep -s - "$APP_DIR"
 
 if [ "$INSTALL" = "1" ]; then
+  # Quit a running copy first. Installing over one leaves rm -rf half
+  # done, and the cp that follows produces a bundle missing Resources -
+  # which then dies at launch on the zikr.json fatalError, looking like a
+  # code bug rather than a bad install.
+  if pgrep -x "$APP_NAME" >/dev/null; then
+    echo "==> Quitting running $APP_NAME"
+    osascript -e "tell application \"$APP_NAME\" to quit" 2>/dev/null || pkill -x "$APP_NAME" || true
+    for _ in 1 2 3 4 5; do pgrep -x "$APP_NAME" >/dev/null || break; sleep 1; done
+  fi
+
   mkdir -p "$INSTALL_DIR"
   rm -rf "${INSTALL_DIR}/${APP_NAME}.app"
   cp -R "$APP_DIR" "$INSTALL_DIR/"

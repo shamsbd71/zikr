@@ -3,6 +3,7 @@ import SwiftUI
 @main
 struct ZikrReminderApp: App {
     init() {
+        FontLoader.registerBundledFonts()
         ReminderScheduler.shared.start()
         UnlockGreeter.shared.start()
         UpdateScheduler.shared.start()
