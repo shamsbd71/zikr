@@ -101,7 +101,7 @@ final class AppSettings: ObservableObject {
             Key.displayStyle: DisplayStyle.notification.rawValue,
             Key.speakAloud: true,
             Key.launchAtLogin: false,
-            Key.flashDurationSeconds: 2.0,
+            Key.flashDurationSeconds: 4.0,
             Key.pauseDuringCalls: true,
             Key.allowLongZikr: false,
             Key.autoInstallUpdates: false,

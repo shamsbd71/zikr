@@ -33,6 +33,7 @@ final class ReminderScheduler {
 
     func start() {
         NotificationManager.requestAuthorizationIfNeeded()
+        NotificationManager.clearDelivered()
         if settings.isEnabled {
             scheduleNext()
         }

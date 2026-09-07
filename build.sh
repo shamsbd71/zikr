@@ -44,6 +44,12 @@ cp Resources/AppIcon.icns "$APP_DIR/Contents/Resources/AppIcon.icns"
 
 cp data/zikr.json "$APP_DIR/Contents/Resources/zikr.json"
 
+# Amiri (SIL OFL 1.1) — a real Naskh face for the Arabic. The system font
+# has poor Arabic shaping, which made the flash card look like a missing
+# font. ATSApplicationFontsPath in Info.plist registers these at launch,
+# so no runtime CTFontManager call is needed.
+cp -R Resources/Fonts "$APP_DIR/Contents/Resources/Fonts"
+
 # Recitations, keyed by zikr id. data/audio is the canonical location
 # shared with the other platforms; Resources/Audio stays supported so a
 # locally dropped-in clip still overrides.
@@ -67,6 +73,8 @@ cat > "$APP_DIR/Contents/Info.plist" <<PLIST
     <string>${APP_NAME}</string>
     <key>CFBundleIdentifier</key>
     <string>${BUNDLE_ID}</string>
+    <key>ATSApplicationFontsPath</key>
+    <string>Fonts</string>
     <key>CFBundleVersion</key>
     <string>${VERSION}</string>
     <key>CFBundleShortVersionString</key>
