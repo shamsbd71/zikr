@@ -42,8 +42,18 @@ mkdir -p "$APP_DIR/Contents/MacOS" "$APP_DIR/Contents/Resources"
 cp "$BUILD_DIR/ZikrReminder" "$APP_DIR/Contents/MacOS/$APP_NAME"
 cp Resources/AppIcon.icns "$APP_DIR/Contents/Resources/AppIcon.icns"
 
+cp data/zikr.json "$APP_DIR/Contents/Resources/zikr.json"
+
+# Recitations, keyed by zikr id. data/audio is the canonical location
+# shared with the other platforms; Resources/Audio stays supported so a
+# locally dropped-in clip still overrides.
+if [ -d "data/audio" ]; then
+  mkdir -p "$APP_DIR/Contents/Resources/Audio"
+  cp data/audio/*.mp3 "$APP_DIR/Contents/Resources/Audio/" 2>/dev/null || true
+fi
 if [ -d "Resources/Audio" ]; then
-  cp -R "Resources/Audio" "$APP_DIR/Contents/Resources/Audio"
+  mkdir -p "$APP_DIR/Contents/Resources/Audio"
+  cp -R "Resources/Audio/." "$APP_DIR/Contents/Resources/Audio/"
 fi
 
 cat > "$APP_DIR/Contents/Info.plist" <<PLIST

@@ -9,6 +9,7 @@ final class ReminderScheduler {
     static let shared = ReminderScheduler()
 
     private var timer: Timer?
+    private var lastSpokenID: Int?
     private var cancellables = Set<AnyCancellable>()
     private let settings = AppSettings.shared
 
@@ -43,7 +44,7 @@ final class ReminderScheduler {
     /// that can't be guaranteed for an unsigned local build, so the test
     /// button needs a path that's always audible/visible.
     func testNow() {
-        let zikr = ZikrList.random()
+        guard let zikr = nextZikr() else { return }
         if settings.speakAloud { ZikrSpeaker.shared.speak(zikr) }
         FlashOverlayController.shared.present(zikr)
     }
@@ -68,12 +69,22 @@ final class ReminderScheduler {
     }
 
     private func fire() {
-        if !(settings.pauseDuringCalls && MicrophoneMonitor.isInUse) {
-            show(ZikrList.random())
+        if !(settings.pauseDuringCalls && MicrophoneMonitor.isInUse), let zikr = nextZikr() {
+            show(zikr)
         }
         if settings.isEnabled {
             scheduleNext()
         }
+    }
+
+    /// Weighted by time of day, filtered by the "longer adhkar" opt-in,
+    /// and never the same one twice in a row.
+    private func nextZikr() -> Zikr? {
+        let zikr = ZikrSelector.pick(from: ZikrLoader.all,
+                                     allowLong: settings.allowLongZikr,
+                                     excluding: lastSpokenID)
+        lastSpokenID = zikr?.id
+        return zikr
     }
 
     private func show(_ zikr: Zikr) {
