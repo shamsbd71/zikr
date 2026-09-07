@@ -42,6 +42,8 @@ specified in the last section.
 | Long-zikr boundary | 5s, opt-in beyond | 10s (kept time-weighting alive by default, but overrides the stated 5s line); conditional per-pool caps (two rules, unnameable in one checkbox) |
 | Time windows | Hardcoded, no setting | Toggle; toggle + editable times |
 | Data layout | One canonical `data/zikr.json` | Codegen the Swift; keep 4 copies + CI drift check |
+| Audio source | Hamad Al-Duraihim, via hisnmuslim's per-dua catalogue | Slicing Afasy/Fares Abbad/Abu Ziyad out of whole-book tracks (a duration match in a 40-minute file is far weaker than in a 7-second one); commissioning a reciter; shipping TTS only |
+| Settings surface | Exactly one checkbox: longer adhkar | Any time-window setting at all |
 
 ### Accepted consequence of the 5s boundary
 
@@ -133,13 +135,28 @@ a single named value per platform, and the tests pin the resulting
 
 ## List composition
 
-Grows from 21 to roughly 55 entries, all drawn from the Hisn al-Muslim
-per-dua catalogue so each has a matching recitation.
+**Built: 52 entries, 40 with a verified recitation.** The remaining 12
+fall back to TTS, which is the existing shipping behaviour on all four
+platforms.
 
-| Tier | Count | Contents |
+| Tier | Count |
+|---|---|
+| Default (`seconds` ≤ 5) | 30 |
+| Opt-in (`seconds` > 5) | 22 |
+
+| Window | Tagged | Of which in the default pool |
 |---|---|---|
-| Default (`seconds` ≤ 5) | ~30 | Curated from the 54 short candidates; includes the 3 short time-locked ones |
-| Opt-in (`seconds` > 5) | ~25 | The morning/evening/night sets, plus existing id 9 |
+| `morning` | 10 | 2 |
+| `evening` | 7 | 3 |
+| `night` | 6 | 2 |
+| *(anytime)* | 35 | 25 |
+
+The 12 TTS-only entries are short fragments that Hisn al-Muslim never
+recites standalone - they occur only inside longer duas. Extracting
+them by duration match is possible but unsafe on its own: the matcher
+compares length, not words, so a span of the right length inside a
+multi-phrase dua may be the wrong phrase entirely. Any such extraction
+must be listened to before it ships.
 
 Excluded entirely: anything over ~25s (Ayat al-Kursi, the 3 Quls,
 Sayyidul Istighfar). Even behind the setting, a 45-second recitation is
