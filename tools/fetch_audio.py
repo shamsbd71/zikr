@@ -9,11 +9,17 @@ Two things make this more than a download loop:
 
   * The files carry an embedded cover-art MJPEG stream. Any ffmpeg filter
     that doesn't say `-map 0:a` silently does nothing at all.
-  * Each clip recites its phrase two to four times with gaps between.
-    Trimming silence is not enough - we take the *first* utterance only,
-    found from an RMS envelope rather than ffmpeg's silencedetect (which
-    finds no silence in these at any threshold, because the reverb tail
-    never drops below the noise floor).
+  * Each file may open with the narrator announcing the chapter title,
+    and then recites the phrase one to four times. Taking the first
+    utterance is therefore wrong for every dua that opens a chapter -
+    hisn:240 ("SubhanAllah") starts with 2.55s of "دعاء التعجب والأمر
+    السار" before the dhikr itself. Bursts are located from an RMS
+    envelope (ffmpeg's silencedetect finds nothing in these at any
+    threshold, because the reverb tail never drops below the noise
+    floor) and then matched against an expected duration synthesised
+    with macOS's Arabic voice. A dua whose bursts match nothing is
+    skipped and reported, never guessed at - a wrong clip is worse than
+    no clip, because TTS already covers the gap.
 
 Reads `source` ("hisn:<dua id>") from data/zikr.json, writes clips to
 data/audio/<zikr id>.mp3, and writes back the measured duration as
@@ -38,8 +44,9 @@ UA = {"User-Agent": "zikr-audio-fetch/1.0 (+https://github.com/abu/zikr)"}
 ENVELOPE_RATE = 8000      # Hz, mono - plenty to locate speech
 WINDOW = 0.05             # 50ms envelope resolution
 GATE_BELOW_PEAK = 22      # dB below peak counts as speech
-MIN_GAP = 0.45            # s of quiet that ends the first utterance
+MIN_GAP = 0.45            # s of quiet that separates utterances
 PAD = 0.18                # s kept either side
+TOLERANCE = (0.6, 1.8)    # accepted burst/expected duration ratio
 
 
 def download(dua_id, dest):
@@ -65,24 +72,60 @@ def envelope(path):
     return out
 
 
-def first_utterance(env):
-    """(start, end) seconds of the first contiguous speech burst."""
+def bursts(env):
+    """Every contiguous speech burst as (start, end) seconds."""
     if not env:
-        return None
+        return []
     gate = max(env) - GATE_BELOW_PEAK
     loud = [level > gate for level in env]
-    if True not in loud:
+    found, i = [], 0
+    while i < len(loud):
+        if not loud[i]:
+            i += 1
+            continue
+        start = last = i
+        quiet = 0.0
+        while i < len(loud):
+            if loud[i]:
+                last, quiet = i, 0.0
+            else:
+                quiet += WINDOW
+                if quiet >= MIN_GAP:
+                    break
+            i += 1
+        found.append((start * WINDOW, last * WINDOW))
+    return found
+
+
+def expected_seconds(arabic):
+    """How long the phrase should take, per macOS's Arabic voice.
+
+    Only a reference length, never shipped - it tells us which burst is
+    the dhikr and which is the narrator reading a chapter title.
+    """
+    try:
+        subprocess.run(["say", "-v", "Majed", "-o", "/tmp/zikr-ref.aiff", arabic],
+                       capture_output=True, check=True)
+        return duration(Path("/tmp/zikr-ref.aiff"))
+    except (subprocess.CalledProcessError, OSError, ValueError):
         return None
-    start = loud.index(True)
-    end, quiet = start, 0.0
-    for i in range(start, len(loud)):
-        if loud[i]:
-            end, quiet = i, 0.0
-        else:
-            quiet += WINDOW
-            if quiet >= MIN_GAP:
-                break
-    return max(0.0, start * WINDOW - PAD), end * WINDOW + PAD
+
+
+def pick_burst(found, expect):
+    """The burst closest to `expect`, or None if none is close enough."""
+    if not found:
+        return None
+    if expect is None:                      # no reference: fall back to first
+        start, end = found[0]
+        return max(0.0, start - PAD), end + PAD
+    lo, hi = TOLERANCE
+    scored = [(abs((end - start) / expect - 1.0), start, end)
+              for start, end in found
+              if lo <= (end - start) / expect <= hi]
+    if not scored:
+        return None
+    _, start, end = min(scored)
+    return max(0.0, start - PAD), end + PAD
 
 
 def encode(src, dest, start, end):
@@ -133,9 +176,13 @@ def main():
         try:
             if not raw.exists():
                 download(dua_id, raw)
-            span = first_utterance(envelope(raw))
+            found = bursts(envelope(raw))
+            expect = expected_seconds(entry["arabic"])
+            span = pick_burst(found, expect)
             if span is None:
-                print(f"  {zid:>3}  FAIL      no speech detected in hisn:{dua_id}")
+                lengths = ", ".join(f"{e - s:.1f}s" for s, e in found) or "none"
+                print(f"  {zid:>3}  SKIP      hisn:{dua_id} bursts [{lengths}] "
+                      f"match no ~{expect:.1f}s phrase")
                 failed += 1
                 continue
             encode(raw, out, *span)
