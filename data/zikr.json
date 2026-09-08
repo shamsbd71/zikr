@@ -5,8 +5,9 @@
     "transliteration": "SubhanAllah",
     "translation": "Glory be to Allah",
     "windows": [],
-    "seconds": 1.3,
-    "source": "hisn:240"
+    "seconds": 2.9,
+    "source": "hisn:240",
+    "announce": "دعاء التعجب والأمر السار"
   },
   {
     "id": 2,
@@ -24,7 +25,8 @@
     "translation": "Allah is the Greatest",
     "windows": [],
     "seconds": 1.4,
-    "source": "hisn:241"
+    "source": "hisn:241",
+    "announce": "دعاء التعجب والأمر السار"
   },
   {
     "id": 4,
@@ -32,8 +34,9 @@
     "transliteration": "La ilaha illallah",
     "translation": "There is no god but Allah",
     "windows": [],
-    "seconds": 2.4,
-    "source": "hisn:245"
+    "seconds": 6.7,
+    "source": "hisn:245",
+    "announce": "ما يقال عند الفزع"
   },
   {
     "id": 5,
@@ -59,8 +62,9 @@
     "transliteration": "SubhanAllahi wa bihamdihi",
     "translation": "Glory be to Allah and praise be to Him",
     "windows": [],
-    "seconds": 2.6,
-    "source": "hisn:91"
+    "seconds": 4.9,
+    "source": "hisn:91",
+    "announce": "أذكار الصباح والمساء"
   },
   {
     "id": 8,
@@ -78,7 +82,8 @@
     "translation": "There is no god but You, glory be to You, I was among the wrongdoers",
     "windows": [],
     "seconds": 6.2,
-    "source": "hisn:124"
+    "source": "hisn:124",
+    "announce": "دعاء الكرب"
   },
   {
     "id": 10,
@@ -87,7 +92,8 @@
     "translation": "Allah is sufficient for us, and He is the best disposer of affairs",
     "windows": [],
     "seconds": 3.1,
-    "source": "hisn:128"
+    "source": "hisn:128",
+    "announce": "دعاء لقاء العدو و ذي السلطان"
   },
   {
     "id": 11,
@@ -149,8 +155,9 @@
     "transliteration": "Subhana Rabbiyal Azeem",
     "translation": "Glory be to my Lord, the Magnificent",
     "windows": [],
-    "seconds": 2.4,
-    "source": "hisn:33"
+    "seconds": 8.9,
+    "source": "hisn:33",
+    "announce": "دعاء الركوع"
   },
   {
     "id": 18,
@@ -158,8 +165,9 @@
     "transliteration": "Subhana Rabbiyal A'la",
     "translation": "Glory be to my Lord, the Most High",
     "windows": [],
-    "seconds": 2.5,
-    "source": "hisn:41"
+    "seconds": 9.1,
+    "source": "hisn:41",
+    "announce": "دعاء السجود"
   },
   {
     "id": 19,
@@ -185,8 +193,9 @@
     "transliteration": "Bismillah",
     "translation": "In the name of Allah",
     "windows": [],
-    "seconds": 1.2,
-    "source": "hisn:9"
+    "seconds": 2.8,
+    "source": "hisn:9",
+    "announce": "ما يقول إذا وضع ثوبه"
   },
   {
     "id": 23,
@@ -197,8 +206,9 @@
       "morning",
       "evening"
     ],
-    "seconds": 6.8,
-    "source": "hisn:83"
+    "seconds": 8.6,
+    "source": "hisn:83",
+    "announce": "أذكار الصباح والمساء"
   },
   {
     "id": 24,
@@ -209,8 +219,9 @@
       "morning",
       "evening"
     ],
-    "seconds": 8.5,
-    "source": "hisn:86"
+    "seconds": 10.8,
+    "source": "hisn:86",
+    "announce": "أذكار الصباح والمساء"
   },
   {
     "id": 25,
@@ -221,8 +232,9 @@
       "morning",
       "evening"
     ],
-    "seconds": 9.7,
-    "source": "hisn:87"
+    "seconds": 12.6,
+    "source": "hisn:87",
+    "announce": "أذكار الصباح والمساء"
   },
   {
     "id": 26,
@@ -233,8 +245,9 @@
       "morning",
       "evening"
     ],
-    "seconds": 9.0,
-    "source": "hisn:88"
+    "seconds": 10.3,
+    "source": "hisn:88",
+    "announce": "أذكار الصباح والمساء"
   },
   {
     "id": 27,
@@ -244,8 +257,9 @@
     "windows": [
       "morning"
     ],
-    "seconds": 9.8,
-    "source": "hisn:93"
+    "seconds": 13.2,
+    "source": "hisn:93",
+    "announce": "أذكار الصباح والمساء"
   },
   {
     "id": 28,
@@ -255,8 +269,9 @@
     "windows": [
       "morning"
     ],
-    "seconds": 8.2,
-    "source": "hisn:94"
+    "seconds": 11.4,
+    "source": "hisn:94",
+    "announce": "أذكار الصباح والمساء"
   },
   {
     "id": 29,
@@ -267,7 +282,8 @@
       "morning"
     ],
     "seconds": 6.4,
-    "source": "hisn:95"
+    "source": "hisn:95",
+    "announce": "أذكار الصباح والمساء"
   },
   {
     "id": 30,
@@ -278,8 +294,9 @@
       "morning",
       "evening"
     ],
-    "seconds": 3.2,
-    "source": "hisn:96"
+    "seconds": 6.5,
+    "source": "hisn:96",
+    "announce": "أذكار الصباح والمساء"
   },
   {
     "id": 31,
@@ -289,8 +306,9 @@
     "windows": [
       "evening"
     ],
-    "seconds": 5.0,
-    "source": "hisn:97"
+    "seconds": 9.0,
+    "source": "hisn:97",
+    "announce": "أذكار الصباح والمساء"
   },
   {
     "id": 32,
@@ -301,8 +319,9 @@
       "morning",
       "evening"
     ],
-    "seconds": 3.8,
-    "source": "hisn:98"
+    "seconds": 6.2,
+    "source": "hisn:98",
+    "announce": "أذكار الصباح والمساء"
   },
   {
     "id": 33,
@@ -312,8 +331,9 @@
     "windows": [
       "night"
     ],
-    "seconds": 11.6,
-    "source": "hisn:102"
+    "seconds": 15.2,
+    "source": "hisn:102",
+    "announce": "أذكار النوم"
   },
   {
     "id": 34,
@@ -323,8 +343,9 @@
     "windows": [
       "night"
     ],
-    "seconds": 15.0,
-    "source": "hisn:103"
+    "seconds": 19.2,
+    "source": "hisn:103",
+    "announce": "أذكار النوم"
   },
   {
     "id": 35,
@@ -334,8 +355,9 @@
     "windows": [
       "night"
     ],
-    "seconds": 3.9,
-    "source": "hisn:104"
+    "seconds": 6.6,
+    "source": "hisn:104",
+    "announce": "أذكار النوم"
   },
   {
     "id": 36,
@@ -346,7 +368,8 @@
       "night"
     ],
     "seconds": 3.2,
-    "source": "hisn:105"
+    "source": "hisn:105",
+    "announce": "أذكار النوم"
   },
   {
     "id": 37,
@@ -356,8 +379,9 @@
     "windows": [
       "night"
     ],
-    "seconds": 8.2,
-    "source": "hisn:108"
+    "seconds": 13.1,
+    "source": "hisn:108",
+    "announce": "أذكار النوم"
   },
   {
     "id": 38,
@@ -367,8 +391,9 @@
     "windows": [
       "night"
     ],
-    "seconds": 8.1,
-    "source": "hisn:113"
+    "seconds": 21.3,
+    "source": "hisn:113",
+    "announce": "دعاء الفزع في النوم و من بُلِيَ بالوحشة"
   },
   {
     "id": 39,
@@ -378,8 +403,9 @@
     "windows": [
       "morning"
     ],
-    "seconds": 6.7,
-    "source": "hisn:3"
+    "seconds": 9.3,
+    "source": "hisn:3",
+    "announce": "أذكار الاستيقاظ من النوم"
   },
   {
     "id": 40,
@@ -388,7 +414,8 @@
     "translation": "How perfect You are, O Allah, and praise be to You. Blessed is Your name, exalted Your majesty, and there is no god but You",
     "windows": [],
     "seconds": 7.5,
-    "source": "hisn:28"
+    "source": "hisn:28",
+    "announce": "دعاء الاستفتاح"
   },
   {
     "id": 41,
@@ -397,7 +424,8 @@
     "translation": "How perfect You are, O Allah our Lord, and praise be to You. O Allah, forgive me",
     "windows": [],
     "seconds": 5.5,
-    "source": "hisn:34"
+    "source": "hisn:34",
+    "announce": "دعاء الركوع"
   },
   {
     "id": 42,
@@ -405,8 +433,9 @@
     "transliteration": "Subbuhun Quddusun, Rabbul-mala'ikati war-Ruh",
     "translation": "Perfect and Holy, Lord of the angels and the Spirit",
     "windows": [],
-    "seconds": 3.7,
-    "source": "hisn:35"
+    "seconds": 6.1,
+    "source": "hisn:35",
+    "announce": "دعاء الركوع"
   },
   {
     "id": 43,
@@ -415,7 +444,8 @@
     "translation": "Glory be to the Possessor of might, dominion, majesty and greatness",
     "windows": [],
     "seconds": 5.6,
-    "source": "hisn:37"
+    "source": "hisn:37",
+    "announce": "دعاء الركوع"
   },
   {
     "id": 44,
@@ -424,7 +454,8 @@
     "translation": "Our Lord, to You is all praise - abundant, good and blessed",
     "windows": [],
     "seconds": 6.8,
-    "source": "hisn:39"
+    "source": "hisn:39",
+    "announce": "دعاء الرفع من الركوع"
   },
   {
     "id": 45,
@@ -432,8 +463,9 @@
     "transliteration": "Allahummaghfir li, warhamni, wahdini, wajburni, wa 'afini, warzuqni, warfa'ni",
     "translation": "O Allah, forgive me, have mercy on me, guide me, support me, protect me, provide for me, and raise me",
     "windows": [],
-    "seconds": 9.5,
-    "source": "hisn:49"
+    "seconds": 11.3,
+    "source": "hisn:49",
+    "announce": "دعاء الجلسة بين السجدتين"
   },
   {
     "id": 46,
@@ -442,7 +474,8 @@
     "translation": "O Allah, help me to remember You, thank You, and worship You well",
     "windows": [],
     "seconds": 4.5,
-    "source": "hisn:59"
+    "source": "hisn:59",
+    "announce": "الدعاء بعد التشهد الأخير قبل السلام"
   },
   {
     "id": 47,
@@ -451,7 +484,8 @@
     "translation": "O Allah, I ask You for Paradise and seek refuge in You from the Fire",
     "windows": [],
     "seconds": 4.7,
-    "source": "hisn:61"
+    "source": "hisn:61",
+    "announce": "الدعاء بعد التشهد الأخير قبل السلام"
   },
   {
     "id": 48,
@@ -460,7 +494,8 @@
     "translation": "Allah, Allah is my Lord; I associate nothing with Him",
     "windows": [],
     "seconds": 5.0,
-    "source": "hisn:125"
+    "source": "hisn:125",
+    "announce": "دعاء الكرب"
   },
   {
     "id": 49,
@@ -468,8 +503,9 @@
     "transliteration": "Allahummakfini bihalalika 'an haramik, wa aghnini bifadlika 'amman siwak",
     "translation": "O Allah, suffice me with what is lawful against what is forbidden, and enrich me by Your grace from all besides You",
     "windows": [],
-    "seconds": 7.3,
-    "source": "hisn:136"
+    "seconds": 9.8,
+    "source": "hisn:136",
+    "announce": "دعاء قضاء الدين"
   },
   {
     "id": 50,
@@ -477,8 +513,9 @@
     "transliteration": "Qadarullahi wa ma sha'a fa'al",
     "translation": "It is the decree of Allah, and He does what He wills",
     "windows": [],
-    "seconds": 2.7,
-    "source": "hisn:144"
+    "seconds": 4.4,
+    "source": "hisn:144",
+    "announce": "الدعاء حينما يقع ما لا يرضاه أو ُ غلب على أمره"
   },
   {
     "id": 51,
@@ -486,8 +523,9 @@
     "transliteration": "A'udhu billahi minash-shaytanir-rajeem",
     "translation": "I seek refuge in Allah from the accursed Satan",
     "windows": [],
-    "seconds": 3.1,
-    "source": "hisn:193"
+    "seconds": 8.0,
+    "source": "hisn:193",
+    "announce": "دعاء الغضب"
   },
   {
     "id": 52,
@@ -496,7 +534,8 @@
     "translation": "O Allah, make me among those who turn to You in repentance, and among those who keep themselves pure",
     "windows": [],
     "seconds": 5.6,
-    "source": "hisn:14"
+    "source": "hisn:14",
+    "announce": "الذكر بعد الفراغ من الوضوء"
   },
   {
     "id": 53,
@@ -504,7 +543,8 @@
     "transliteration": "Subhanal-ladhi yusabbihur-ra'du bihamdihi wal-mala'ikatu min kheefatih",
     "translation": "Glory be to Him whom the thunder glorifies with praise, and the angels too, in awe of Him",
     "windows": [],
-    "seconds": 5.9,
-    "source": "hisn:168"
+    "seconds": 12.7,
+    "source": "hisn:168",
+    "announce": "دعاء الرعد"
   }
 ]

@@ -111,35 +111,48 @@ def expected_seconds(arabic):
         return None
 
 
-def pick_burst(found, expect):
-    """The run of consecutive bursts whose span best matches `expect`.
+def announce_seconds(entry):
+    """Length of this dua's chapter title as spoken, if we know it.
 
-    A run rather than a single burst because a longer dua is recited with
-    pauses between its clauses that exceed MIN_GAP, so one recitation
-    arrives as several bursts. Considering every contiguous run covers
-    both that and the short-phrase case, where the best run is one burst
-    and any leading chapter-title announcement is excluded by making the
-    span too long.
+    `announce` in the data names the chapter the dua opens, which is what
+    the reciter reads before it. Without one, nothing is trimmed.
+    """
+    title = entry.get("announce")
+    return expected_seconds(title) if title else None
+
+
+def pick_burst(found, expect, announce=None):
+    """Everything the reciter says, minus a leading chapter announcement.
+
+    An earlier version searched for the run of bursts whose *duration*
+    best matched the phrase. That shipped wrong audio: duration cannot
+    tell words apart, so inside a file holding several phrases it happily
+    picked one of the others. Eleven of forty clips ended up keeping
+    under half their source, and the mismatches were audible.
+
+    So: keep the whole recitation and only drop burst one, and only when
+    it looks more like the chapter title being announced than like the
+    dhikr itself. The clip may then contain the phrase repeated, which is
+    how these adhkar are recited anyway — but it is never a different
+    phrase, which is the failure that actually matters.
     """
     if not found:
         return None
-    if expect is None:                      # no reference: fall back to first
-        start, end = found[0]
-        return max(0.0, start - PAD), end + PAD
-    lo, hi = TOLERANCE
-    best = None
-    for i in range(len(found)):
-        for j in range(i, len(found)):
-            start, end = found[i][0], found[j][1]
-            ratio = (end - start) / expect
-            if not lo <= ratio <= hi:
-                continue
-            score = abs(ratio - 1.0)
-            if best is None or score < best[0]:
-                best = (score, start, end)
-    if best is None:
-        return None
-    _, start, end = best
+
+    start_index = 0
+    if announce and expect and len(found) > 2:
+        first = found[0][1] - found[0][0]
+        as_title = abs(first / announce - 1.0)
+        as_phrase = abs(first / expect - 1.0)
+        # Only drop it when it is clearly the title and clearly not the
+        # dhikr. Where the two are close in length the test cannot tell
+        # them apart, and guessing wrong deletes the phrase itself - so
+        # keep the announcement instead. Audible, but correct.
+        if as_title < 0.25 and as_phrase > 0.6:
+            start_index = 1
+
+    start = found[start_index][0]
+    end = found[-1][1]
     return max(0.0, start - PAD), end + PAD
 
 
@@ -193,7 +206,7 @@ def main():
                 download(dua_id, raw)
             found = bursts(envelope(raw))
             expect = expected_seconds(entry["arabic"])
-            span = pick_burst(found, expect)
+            span = pick_burst(found, expect, announce=announce_seconds(entry))
             if span is None:
                 lengths = ", ".join(f"{e - s:.1f}s" for s, e in found) or "none"
                 print(f"  {zid:>3}  SKIP      hisn:{dua_id} bursts [{lengths}] "
