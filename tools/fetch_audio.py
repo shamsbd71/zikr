@@ -33,6 +33,7 @@ import json
 import math
 import subprocess
 import sys
+import tempfile
 import urllib.request
 from pathlib import Path
 
@@ -46,7 +47,7 @@ WINDOW = 0.05             # 50ms envelope resolution
 GATE_BELOW_PEAK = 22      # dB below peak counts as speech
 MIN_GAP = 0.45            # s of quiet that separates utterances
 PAD = 0.18                # s kept either side
-TOLERANCE = (0.6, 1.8)    # accepted burst/expected duration ratio
+TOLERANCE = (0.6, 2.0)    # credible span/expected duration ratio
 
 
 def download(dua_id, dest):
@@ -104,9 +105,17 @@ def expected_seconds(arabic):
     the dhikr and which is the narrator reading a chapter title.
     """
     try:
-        subprocess.run(["say", "-v", "Majed", "-o", "/tmp/zikr-ref.aiff", arabic],
-                       capture_output=True, check=True)
-        return duration(Path("/tmp/zikr-ref.aiff"))
+        # Unique per call: a fixed path collides when two runs overlap,
+        # and a half-written file measures short, which silently changes
+        # which burst gets chosen.
+        with tempfile.NamedTemporaryFile(suffix=".aiff", delete=False) as tmp:
+            ref = Path(tmp.name)
+        try:
+            subprocess.run(["say", "-v", "Majed", "-o", str(ref), arabic],
+                           capture_output=True, check=True)
+            return duration(ref)
+        finally:
+            ref.unlink(missing_ok=True)
     except (subprocess.CalledProcessError, OSError, ValueError):
         return None
 
@@ -122,37 +131,50 @@ def announce_seconds(entry):
 
 
 def pick_burst(found, expect, announce=None):
-    """Everything the reciter says, minus a leading chapter announcement.
+    """The last thing in the file that is the right length for the phrase.
 
-    An earlier version searched for the run of bursts whose *duration*
-    best matched the phrase. That shipped wrong audio: duration cannot
-    tell words apart, so inside a file holding several phrases it happily
-    picked one of the others. Eleven of forty clips ended up keeping
-    under half their source, and the mismatches were audible.
+    These recordings open with narrator preamble - sometimes the chapter
+    title, more often a short "يقول" ("he says") - and often close with a
+    repetition count like "ثلاث مرات". The dhikr itself sits between.
 
-    So: keep the whole recitation and only drop burst one, and only when
-    it looks more like the chapter title being announced than like the
-    dhikr itself. The clip may then contain the phrase repeated, which is
-    how these adhkar are recited anyway — but it is never a different
-    phrase, which is the failure that actually matters.
+    Two earlier attempts failed. Matching the globally best-fitting span
+    picked whichever phrase in the file happened to be the right length,
+    which shipped audibly wrong clips. Keeping everything after a
+    suspected title kept the preamble whenever title and phrase were
+    similar in length, and deleted the dhikr whenever the guess went the
+    other way.
+
+    What works, checked against every clip a listener flagged: take the
+    LATEST run of bursts whose duration is credible for the phrase.
+    Latest, because the junk that matters is at the front - preamble is
+    the common failure and trailing bursts are short enough to fall below
+    the floor. `expect` comes from synthesising the phrase, so "credible"
+    spans a wide band: a reciter is slower than a synthesiser, unevenly.
     """
     if not found:
         return None
+    if expect is None:
+        start, end = found[0]
+        return max(0.0, start - PAD), end + PAD
 
-    start_index = 0
-    if announce and expect and len(found) > 2:
-        first = found[0][1] - found[0][0]
-        as_title = abs(first / announce - 1.0)
-        as_phrase = abs(first / expect - 1.0)
-        # Only drop it when it is clearly the title and clearly not the
-        # dhikr. Where the two are close in length the test cannot tell
-        # them apart, and guessing wrong deletes the phrase itself - so
-        # keep the announcement instead. Audible, but correct.
-        if as_title < 0.25 and as_phrase > 0.6:
-            start_index = 1
-
-    start = found[start_index][0]
-    end = found[-1][1]
+    lo, hi = TOLERANCE
+    best = None                      # (start_index, closeness)
+    for i in range(len(found)):
+        for j in range(i, len(found)):
+            span = found[j][1] - found[i][0]
+            ratio = span / expect
+            if not lo <= ratio <= hi:
+                continue
+            candidate = (i, abs(ratio - 1.0))
+            # Prefer the latest start; break ties on the closer fit.
+            if best is None or candidate[0] > best[0] or (
+                candidate[0] == best[0] and candidate[1] < best[1]
+            ):
+                best = candidate
+                chosen = (found[i][0], found[j][1])
+    if best is None:
+        return None
+    start, end = chosen
     return max(0.0, start - PAD), end + PAD
 
 
