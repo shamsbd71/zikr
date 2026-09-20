@@ -5,9 +5,8 @@
     "transliteration": "SubhanAllah",
     "translation": "Glory be to Allah",
     "windows": [],
-    "seconds": 1.3,
-    "source": "hisn:240",
-    "announce": "دعاء التعجب والأمر السار"
+    "seconds": 1.4,
+    "source": "gtaf:241"
   },
   {
     "id": 2,
@@ -15,8 +14,8 @@
     "transliteration": "Alhamdulillah",
     "translation": "All praise is due to Allah",
     "windows": [],
-    "seconds": 1.9,
-    "source": null
+    "seconds": 1.5,
+    "source": "gtaf:183#1"
   },
   {
     "id": 3,
@@ -24,9 +23,8 @@
     "transliteration": "Allahu Akbar",
     "translation": "Allah is the Greatest",
     "windows": [],
-    "seconds": 1.4,
-    "source": "hisn:241",
-    "announce": "دعاء التعجب والأمر السار"
+    "seconds": 1.6,
+    "source": "gtaf:223"
   },
   {
     "id": 4,
@@ -34,9 +32,8 @@
     "transliteration": "La ilaha illallah",
     "translation": "There is no god but Allah",
     "windows": [],
-    "seconds": 3.3,
-    "source": "hisn:245",
-    "announce": "ما يقال عند الفزع"
+    "seconds": 3.1,
+    "source": "gtaf:146"
   },
   {
     "id": 5,
@@ -44,8 +41,8 @@
     "transliteration": "Astaghfirullah",
     "translation": "I seek forgiveness from Allah",
     "windows": [],
-    "seconds": 1.9,
-    "source": null
+    "seconds": 2.0,
+    "source": "gtaf:63#1@0.25"
   },
   {
     "id": 6,
@@ -53,8 +50,8 @@
     "transliteration": "La hawla wala quwwata illa billah",
     "translation": "There is no power nor strength except with Allah",
     "windows": [],
-    "seconds": 4.1,
-    "source": null
+    "seconds": 3.5,
+    "source": "gtaf:243"
   },
   {
     "id": 7,
@@ -62,18 +59,17 @@
     "transliteration": "SubhanAllahi wa bihamdihi",
     "translation": "Glory be to Allah and praise be to Him",
     "windows": [],
-    "seconds": 2.6,
-    "source": "hisn:91",
-    "announce": "أذكار الصباح والمساء"
+    "seconds": 3.0,
+    "source": "gtaf:89"
   },
   {
     "id": 8,
-    "arabic": "سُبْحَانَ اللَّهِ الْعَظِيمِ",
-    "transliteration": "SubhanAllahil Azeem",
-    "translation": "Glory be to Allah, the Magnificent",
+    "arabic": "سُبْحَانَ اللَّهِ الْعَظِيمِ وَبِحَمْدِهِ",
+    "transliteration": "SubhanAllahil Azeemi wa bihamdihi",
+    "translation": "Glory be to Allah the Magnificent, and praise be to Him",
     "windows": [],
-    "seconds": 2.5,
-    "source": null
+    "seconds": 3.1,
+    "source": "gtaf:242"
   },
   {
     "id": 9,
@@ -81,9 +77,8 @@
     "transliteration": "La ilaha illa anta subhanaka inni kuntu minaz-zalimin",
     "translation": "There is no god but You, glory be to You, I was among the wrongdoers",
     "windows": [],
-    "seconds": 6.2,
-    "source": "hisn:124",
-    "announce": "دعاء الكرب"
+    "seconds": 10.2,
+    "source": "gtaf:120"
   },
   {
     "id": 10,
@@ -91,46 +86,26 @@
     "transliteration": "Hasbunallahu wa ni'mal wakeel",
     "translation": "Allah is sufficient for us, and He is the best disposer of affairs",
     "windows": [],
-    "seconds": 3.1,
-    "source": "hisn:128",
-    "announce": "دعاء لقاء العدو و ذي السلطان"
-  },
-  {
-    "id": 11,
-    "arabic": "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ",
-    "transliteration": "Allahumma salli 'ala Muhammad",
-    "translation": "O Allah, send blessings upon Muhammad",
-    "windows": [],
-    "seconds": 3.0,
-    "source": null
+    "seconds": 4.0,
+    "source": "gtaf:124"
   },
   {
     "id": 12,
-    "arabic": "رَبِّ اغْفِرْ لِي",
-    "transliteration": "Rabbighfir li",
-    "translation": "My Lord, forgive me",
+    "arabic": "رَبِّ اغْفِرْ لِي، رَبِّ اغْفِرْ لِي",
+    "transliteration": "Rabbighfir li, Rabbighfir li",
+    "translation": "My Lord, forgive me. My Lord, forgive me",
     "windows": [],
-    "seconds": 1.4,
-    "source": "hisn:48",
-    "announce": "دعاء الجلسة بين السجدتين"
-  },
-  {
-    "id": 13,
-    "arabic": "يَا حَيُّ يَا قَيُّومُ",
-    "transliteration": "Ya Hayyu Ya Qayyum",
-    "translation": "O Ever-Living, O Sustainer",
-    "windows": [],
-    "seconds": 3.0,
-    "source": null
+    "seconds": 3.7,
+    "source": "gtaf:45"
   },
   {
     "id": 14,
-    "arabic": "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً",
-    "transliteration": "Rabbana atina fid-dunya hasanah",
-    "translation": "Our Lord, give us good in this world",
+    "arabic": "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
+    "transliteration": "Rabbana atina fid-dunya hasanah, wa fil-akhirati hasanah, wa qina 'adhaban-nar",
+    "translation": "Our Lord, give us good in this world and good in the Hereafter, and protect us from the punishment of the Fire",
     "windows": [],
-    "seconds": 3.6,
-    "source": null
+    "seconds": 8.7,
+    "source": "gtaf:224"
   },
   {
     "id": 15,
@@ -138,17 +113,8 @@
     "transliteration": "Allahumma innaka 'afuwwun tuhibbul 'afwa fa'fu 'anni",
     "translation": "O Allah, You are Forgiving and love forgiveness, so forgive me",
     "windows": [],
-    "seconds": 4.7,
-    "source": null
-  },
-  {
-    "id": 16,
-    "arabic": "لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ",
-    "transliteration": "La ilaha illallah wahdahu la sharika lah",
-    "translation": "There is no god but Allah alone, with no partner",
-    "windows": [],
     "seconds": 5.3,
-    "source": null
+    "source": "gtaf:327"
   },
   {
     "id": 17,
@@ -157,8 +123,7 @@
     "translation": "Glory be to my Lord, the Magnificent",
     "windows": [],
     "seconds": 2.4,
-    "source": "hisn:33",
-    "announce": "دعاء الركوع"
+    "source": "gtaf:30"
   },
   {
     "id": 18,
@@ -166,9 +131,8 @@
     "transliteration": "Subhana Rabbiyal A'la",
     "translation": "Glory be to my Lord, the Most High",
     "windows": [],
-    "seconds": 2.5,
-    "source": "hisn:41",
-    "announce": "دعاء السجود"
+    "seconds": 2.3,
+    "source": "gtaf:38"
   },
   {
     "id": 19,
@@ -176,17 +140,17 @@
     "transliteration": "Rabbi zidni ilma",
     "translation": "My Lord, increase me in knowledge",
     "windows": [],
-    "seconds": 2.5,
-    "source": null
+    "seconds": 3.3,
+    "source": "gtaf:291"
   },
   {
     "id": 20,
-    "arabic": "تَوَكَّلْتُ عَلَى اللَّهِ",
-    "transliteration": "Tawakkaltu 'alallah",
-    "translation": "I place my trust in Allah",
+    "arabic": "بِسْمِ اللَّهِ، تَوَكَّلْتُ عَلَى اللَّهِ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ",
+    "transliteration": "Bismillah, tawakkaltu 'alallah, wa la hawla wa la quwwata illa billah",
+    "translation": "In the name of Allah, I place my trust in Allah; there is no might nor power except with Allah",
     "windows": [],
-    "seconds": 2.5,
-    "source": null
+    "seconds": 6.5,
+    "source": "gtaf:17"
   },
   {
     "id": 22,
@@ -194,9 +158,8 @@
     "transliteration": "Bismillah",
     "translation": "In the name of Allah",
     "windows": [],
-    "seconds": 1.2,
-    "source": "hisn:9",
-    "announce": "ما يقول إذا وضع ثوبه"
+    "seconds": 2.0,
+    "source": "gtaf:13"
   },
   {
     "id": 23,
@@ -207,9 +170,8 @@
       "morning",
       "evening"
     ],
-    "seconds": 6.8,
-    "source": "hisn:83",
-    "announce": "أذكار الصباح والمساء"
+    "seconds": 8.8,
+    "source": "gtaf:81"
   },
   {
     "id": 24,
@@ -220,9 +182,8 @@
       "morning",
       "evening"
     ],
-    "seconds": 8.5,
-    "source": "hisn:86",
-    "announce": "أذكار الصباح والمساء"
+    "seconds": 8.0,
+    "source": "gtaf:84"
   },
   {
     "id": 25,
@@ -233,9 +194,8 @@
       "morning",
       "evening"
     ],
-    "seconds": 6.9,
-    "source": "hisn:87",
-    "announce": "أذكار الصباح والمساء"
+    "seconds": 9.5,
+    "source": "gtaf:85"
   },
   {
     "id": 26,
@@ -246,9 +206,8 @@
       "morning",
       "evening"
     ],
-    "seconds": 7.2,
-    "source": "hisn:88",
-    "announce": "أذكار الصباح والمساء"
+    "seconds": 11.7,
+    "source": "gtaf:86"
   },
   {
     "id": 27,
@@ -258,9 +217,8 @@
     "windows": [
       "morning"
     ],
-    "seconds": 7.9,
-    "source": "hisn:93",
-    "announce": "أذكار الصباح والمساء"
+    "seconds": 11.2,
+    "source": "gtaf:90"
   },
   {
     "id": 28,
@@ -270,9 +228,8 @@
     "windows": [
       "morning"
     ],
-    "seconds": 5.2,
-    "source": "hisn:94",
-    "announce": "أذكار الصباح والمساء"
+    "seconds": 8.8,
+    "source": "gtaf:91"
   },
   {
     "id": 29,
@@ -282,9 +239,8 @@
     "windows": [
       "morning"
     ],
-    "seconds": 6.4,
-    "source": "hisn:95",
-    "announce": "أذكار الصباح والمساء"
+    "seconds": 8.3,
+    "source": "gtaf:70"
   },
   {
     "id": 30,
@@ -295,9 +251,8 @@
       "morning",
       "evening"
     ],
-    "seconds": 2.0,
-    "source": "hisn:96",
-    "announce": "أذكار الصباح والمساء"
+    "seconds": 3.9,
+    "source": "gtaf:93"
   },
   {
     "id": 31,
@@ -307,9 +262,8 @@
     "windows": [
       "evening"
     ],
-    "seconds": 5.0,
-    "source": "hisn:97",
-    "announce": "أذكار الصباح والمساء"
+    "seconds": 5.5,
+    "source": "gtaf:94"
   },
   {
     "id": 32,
@@ -320,9 +274,8 @@
       "morning",
       "evening"
     ],
-    "seconds": 3.8,
-    "source": "hisn:98",
-    "announce": "أذكار الصباح والمساء"
+    "seconds": 4.4,
+    "source": "gtaf:95"
   },
   {
     "id": 33,
@@ -332,9 +285,8 @@
     "windows": [
       "night"
     ],
-    "seconds": 9.1,
-    "source": "hisn:102",
-    "announce": "أذكار النوم"
+    "seconds": 13.6,
+    "source": "gtaf:99"
   },
   {
     "id": 34,
@@ -344,9 +296,8 @@
     "windows": [
       "night"
     ],
-    "seconds": 10.0,
-    "source": "hisn:103",
-    "announce": "أذكار النوم"
+    "seconds": 17.8,
+    "source": "gtaf:100"
   },
   {
     "id": 35,
@@ -356,9 +307,8 @@
     "windows": [
       "night"
     ],
-    "seconds": 3.9,
-    "source": "hisn:104",
-    "announce": "أذكار النوم"
+    "seconds": 4.2,
+    "source": "gtaf:101"
   },
   {
     "id": 36,
@@ -368,9 +318,8 @@
     "windows": [
       "night"
     ],
-    "seconds": 3.2,
-    "source": "hisn:105",
-    "announce": "أذكار النوم"
+    "seconds": 4.2,
+    "source": "gtaf:102"
   },
   {
     "id": 37,
@@ -380,9 +329,8 @@
     "windows": [
       "night"
     ],
-    "seconds": 8.2,
-    "source": "hisn:108",
-    "announce": "أذكار النوم"
+    "seconds": 11.3,
+    "source": "gtaf:105"
   },
   {
     "id": 38,
@@ -392,9 +340,8 @@
     "windows": [
       "night"
     ],
-    "seconds": 6.8,
-    "source": "hisn:113",
-    "announce": "دعاء الفزع في النوم و من بُلِيَ بالوحشة"
+    "seconds": 11.9,
+    "source": "gtaf:110"
   },
   {
     "id": 39,
@@ -404,9 +351,8 @@
     "windows": [
       "morning"
     ],
-    "seconds": 6.7,
-    "source": "hisn:3",
-    "announce": "أذكار الاستيقاظ من النوم"
+    "seconds": 8.1,
+    "source": "gtaf:4"
   },
   {
     "id": 40,
@@ -414,9 +360,8 @@
     "transliteration": "Subhanaka Allahumma wa bihamdika, wa tabarakasmuka, wa ta'ala jadduka, wa la ilaha ghayruk",
     "translation": "How perfect You are, O Allah, and praise be to You. Blessed is Your name, exalted Your majesty, and there is no god but You",
     "windows": [],
-    "seconds": 5.1,
-    "source": "hisn:28",
-    "announce": "دعاء الاستفتاح"
+    "seconds": 8.3,
+    "source": "gtaf:25"
   },
   {
     "id": 41,
@@ -424,9 +369,8 @@
     "transliteration": "Subhanaka Allahumma Rabbana wa bihamdika, Allahummaghfir li",
     "translation": "How perfect You are, O Allah our Lord, and praise be to You. O Allah, forgive me",
     "windows": [],
-    "seconds": 5.5,
-    "source": "hisn:34",
-    "announce": "دعاء الركوع"
+    "seconds": 6.0,
+    "source": "gtaf:31"
   },
   {
     "id": 42,
@@ -434,9 +378,8 @@
     "transliteration": "Subbuhun Quddusun, Rabbul-mala'ikati war-Ruh",
     "translation": "Perfect and Holy, Lord of the angels and the Spirit",
     "windows": [],
-    "seconds": 3.7,
-    "source": "hisn:35",
-    "announce": "دعاء الركوع"
+    "seconds": 6.6,
+    "source": "gtaf:32"
   },
   {
     "id": 43,
@@ -444,9 +387,8 @@
     "transliteration": "Subhana dhil-jabaruti wal-malakuti wal-kibriya'i wal-'azamah",
     "translation": "Glory be to the Possessor of might, dominion, majesty and greatness",
     "windows": [],
-    "seconds": 5.6,
-    "source": "hisn:37",
-    "announce": "دعاء الركوع"
+    "seconds": 6.6,
+    "source": "gtaf:34"
   },
   {
     "id": 44,
@@ -454,9 +396,8 @@
     "transliteration": "Rabbana wa lakal-hamdu, hamdan katheeran tayyiban mubarakan feeh",
     "translation": "Our Lord, to You is all praise - abundant, good and blessed",
     "windows": [],
-    "seconds": 4.0,
-    "source": "hisn:39",
-    "announce": "دعاء الرفع من الركوع"
+    "seconds": 5.7,
+    "source": "gtaf:36"
   },
   {
     "id": 45,
@@ -464,9 +405,8 @@
     "transliteration": "Allahummaghfir li, warhamni, wahdini, wajburni, wa 'afini, warzuqni, warfa'ni",
     "translation": "O Allah, forgive me, have mercy on me, guide me, support me, protect me, provide for me, and raise me",
     "windows": [],
-    "seconds": 6.1,
-    "source": "hisn:49",
-    "announce": "دعاء الجلسة بين السجدتين"
+    "seconds": 8.7,
+    "source": "gtaf:46"
   },
   {
     "id": 46,
@@ -474,9 +414,8 @@
     "transliteration": "Allahumma a'inni 'ala dhikrika wa shukrika wa husni 'ibadatik",
     "translation": "O Allah, help me to remember You, thank You, and worship You well",
     "windows": [],
-    "seconds": 4.5,
-    "source": "hisn:59",
-    "announce": "الدعاء بعد التشهد الأخير قبل السلام"
+    "seconds": 6.6,
+    "source": "gtaf:56"
   },
   {
     "id": 47,
@@ -484,9 +423,8 @@
     "transliteration": "Allahumma inni as'alukal-jannata wa a'udhu bika minan-nar",
     "translation": "O Allah, I ask You for Paradise and seek refuge in You from the Fire",
     "windows": [],
-    "seconds": 4.7,
-    "source": "hisn:61",
-    "announce": "الدعاء بعد التشهد الأخير قبل السلام"
+    "seconds": 6.6,
+    "source": "gtaf:58"
   },
   {
     "id": 48,
@@ -494,9 +432,8 @@
     "transliteration": "Allahu Allahu Rabbi la ushriku bihi shay'a",
     "translation": "Allah, Allah is my Lord; I associate nothing with Him",
     "windows": [],
-    "seconds": 5.0,
-    "source": "hisn:125",
-    "announce": "دعاء الكرب"
+    "seconds": 5.7,
+    "source": "gtaf:121"
   },
   {
     "id": 49,
@@ -504,9 +441,8 @@
     "transliteration": "Allahummakfini bihalalika 'an haramik, wa aghnini bifadlika 'amman siwak",
     "translation": "O Allah, suffice me with what is lawful against what is forbidden, and enrich me by Your grace from all besides You",
     "windows": [],
-    "seconds": 7.3,
-    "source": "hisn:136",
-    "announce": "دعاء قضاء الدين"
+    "seconds": 8.4,
+    "source": "gtaf:131"
   },
   {
     "id": 50,
@@ -514,9 +450,8 @@
     "transliteration": "Qadarullahi wa ma sha'a fa'al",
     "translation": "It is the decree of Allah, and He does what He wills",
     "windows": [],
-    "seconds": 2.7,
-    "source": "hisn:144",
-    "announce": "الدعاء حينما يقع ما لا يرضاه أو ُ غلب على أمره"
+    "seconds": 3.0,
+    "source": "gtaf:137"
   },
   {
     "id": 51,
@@ -524,9 +459,8 @@
     "transliteration": "A'udhu billahi minash-shaytanir-rajeem",
     "translation": "I seek refuge in Allah from the accursed Satan",
     "windows": [],
-    "seconds": 3.1,
-    "source": "hisn:193",
-    "announce": "دعاء الغضب"
+    "seconds": 3.8,
+    "source": "gtaf:133"
   },
   {
     "id": 52,
@@ -534,9 +468,8 @@
     "transliteration": "Allahummaj'alni minat-tawwabeena, waj'alni minal-mutatahhireen",
     "translation": "O Allah, make me among those who turn to You in repentance, and among those who keep themselves pure",
     "windows": [],
-    "seconds": 5.6,
-    "source": "hisn:14",
-    "announce": "الذكر بعد الفراغ من الوضوء"
+    "seconds": 5.4,
+    "source": "gtaf:15"
   },
   {
     "id": 53,
@@ -544,8 +477,7 @@
     "transliteration": "Subhanal-ladhi yusabbihur-ra'du bihamdihi wal-mala'ikatu min kheefatih",
     "translation": "Glory be to Him whom the thunder glorifies with praise, and the angels too, in awe of Him",
     "windows": [],
-    "seconds": 6.3,
-    "source": "hisn:168",
-    "announce": "دعاء الرعد"
+    "seconds": 6.9,
+    "source": "gtaf:163"
   }
 ]

@@ -1,13 +1,14 @@
 import AVFoundation
 
-/// Speaks the zikr aloud. If a real recording is bundled for this phrase
-/// (drop one at Resources/Audio/<id>.mp3|m4a|caf|wav — see README), that
-/// plays instead; otherwise it falls back to the built-in macOS Arabic
-/// voice (ships as "Majed" on every Mac) so it's still pronounced
-/// correctly, not just chimed. We don't bundle third-party reciter audio
-/// ourselves — the well-known Hisnul Muslim recordings we found are full
-/// multi-dua CD tracks with no clear per-phrase reuse license, so bundling
-/// them without a verified license isn't something we do on your behalf.
+/// Speaks the zikr aloud. Every phrase in the list ships with a real
+/// recitation (data/audio/<id>.mp3, bundled by build.sh), so that plays;
+/// the built-in macOS Arabic voice ("Majed", on every Mac) remains the
+/// fallback for anything without a clip, so a phrase is still pronounced
+/// rather than chimed. Dropping a file at Resources/Audio/<id>.mp3 (or
+/// .m4a/.caf/.wav) overrides the bundled clip — see README.
+///
+/// The clips are cut from the Hisn al-Muslim recitation published by
+/// dua.gtaf.org; tools/fetch_audio.py documents how and from where.
 final class ZikrSpeaker {
     static let shared = ZikrSpeaker()
 
