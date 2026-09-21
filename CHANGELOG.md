@@ -4,7 +4,7 @@ All notable changes to Zikr are documented here. Dates are release dates
 (Asia/Dhaka). See [releases](https://github.com/shamsbd71/zikr/releases)
 for downloadable assets per version.
 
-## [Unreleased]
+## [1.9.0] — 2026-09-21
 
 ### Added
 - Linux, Windows and Android now ship the recitations too, so a real
