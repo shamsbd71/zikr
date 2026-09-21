@@ -15,6 +15,10 @@ derived formats are generated at package time rather than committed:
     Windows  wav   System.Media.SoundPlayer is PCM-only. 22.05kHz mono
                    keeps the installer near 13MB instead of 27MB, which
                    is inaudible for speech at this length.
+    iOS      caf   A clip is delivered as a notification's sound, which
+                   iOS requires to be linear PCM (or MA4/u-law/a-law) in
+                   .caf/.aif/.wav and under 30 seconds. The longest
+                   adhkar here is 17.8s, so the whole list qualifies.
 
 Committing three copies of the same five minutes of audio would put
 ~20MB of derived data in the repo and invite the formats drifting apart,
@@ -34,7 +38,19 @@ AUDIO_DIR = ROOT / "data" / "audio"
 ENCODERS = {
     "ogg": ["-c:a", "libvorbis", "-q:a", "3", "-ar", "44100", "-ac", "1"],
     "wav": ["-c:a", "pcm_s16le", "-ar", "22050", "-ac", "1"],
+    "caf": ["-c:a", "pcm_s16le", "-ar", "22050", "-ac", "1"],
 }
+
+# iOS refuses a notification sound longer than this and falls back to the
+# default tone, silently - so it is worth failing the build over.
+IOS_SOUND_LIMIT_SECONDS = 30.0
+
+
+def duration(path):
+    return float(subprocess.run(
+        ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+         "-of", "csv=p=0", str(path)],
+        capture_output=True, text=True, check=True).stdout.strip())
 
 
 def convert(src, dest, fmt):
@@ -63,10 +79,16 @@ def main():
         dest = out / f"{src.stem}.{args.format}"
         try:
             convert(src, dest, args.format)
-            done += 1
         except subprocess.CalledProcessError as exc:
             print(f"  {src.stem}: FAILED {exc}", file=sys.stderr)
             return 1
+        if args.format == "caf":
+            secs = duration(dest)
+            if secs > IOS_SOUND_LIMIT_SECONDS:
+                print(f"  {src.stem}: {secs:.1f}s exceeds the {IOS_SOUND_LIMIT_SECONDS:.0f}s "
+                      "iOS notification-sound limit", file=sys.stderr)
+                return 1
+        done += 1
 
     total = sum(p.stat().st_size for p in out.glob(f"*.{args.format}"))
     print(f"converted {done} clips to {args.format} in {out} ({total / 1e6:.1f} MB)")
