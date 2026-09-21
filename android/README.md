@@ -18,10 +18,12 @@ higher permission/store-review risk, deferred for now).
 | UnlockGreeter (Bismillah on unlock) | Dynamically-registered `ACTION_USER_PRESENT` receiver, same effect |
 | UserDefaults | Jetpack DataStore |
 
-Same 21-phrase zikr list (`res/raw/zikr.json`, copied from the other
-builds' data — keep in sync by hand), same settings (interval range,
-speak-aloud toggle), same bundled-audio-overrides-voice convention... 
-except audio isn't bundled here — see Known limitations.
+Same zikr list as every other build — the repo-root `data/zikr.json`,
+copied into `res/raw/` at build time by `syncZikrList`, not a hand-synced
+copy — same settings (interval range, speak-aloud toggle), and the same
+bundled-audio-overrides-voice convention: the recitations ship in
+`assets/audio/<id>.mp3` and `MediaPlayer` plays them, falling back to TTS
+for anything without a clip.
 
 ## Why AlarmManager, not WorkManager
 
@@ -164,8 +166,9 @@ installs.
   installed, same fallback convention as every other platform. Users
   can install an Arabic TTS language pack via Settings → System →
   Languages → Text-to-speech, then pick it under Settings → Voice.
-- No bundled-audio-recording override yet (the other builds can play a
-  real recording per zikr if you drop one in `Resources/`) — could be
-  added later as a raw/asset lookup by id, not implemented in Phase 1.
+- Recitations are read from `assets/`, not `res/raw/`: a raw resource
+  name has to be a valid Java identifier and `1.mp3` is not. The mp3s go
+  in unconverted, since `MediaPlayer` handles them directly (the Linux
+  and Windows builds have to convert — see `tools/convert_audio.py`).
 - minSdk 26 (Android 8.0) — notification channels are required from
   that version on, and it's a reasonable modern floor.

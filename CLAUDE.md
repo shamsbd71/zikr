@@ -51,6 +51,18 @@ needs OS-specific, higher-risk mechanisms (iOS Family Controls
 entitlement, Android Accessibility/UsageStats) on both a future iOS
 build and an Android update, not yet started either one.
 
+**iOS is designed but not started**, and deliberately cannot copy the
+others: an iOS app gets no background process and no way to speak at a
+time of its choosing, so the reminder is a pre-scheduled local
+notification carrying the recitation as its sound. That caps the app at
+64 pending reminders and makes Focus/silent mode suppress the audio —
+real limitations, not bugs to fix. Read
+`docs/superpowers/specs/2026-09-21-ios-design.md` before writing any of
+it. Building it needs full Xcode, which this dev machine does not have
+(Command Line Tools only, no iOS SDK), and trusting it needs a real
+device — the Simulator will not tell you whether a notification
+actually fired once the app was backgrounded.
+
 ## Repo layout
 
 ```
@@ -164,6 +176,21 @@ code.
 
 ## Known gotchas learned the hard way
 
+- **macOS dev builds can silently replace themselves with the last
+  release.** If "Automatically download and install updates" is on,
+  `UpdateScheduler` runs shortly after launch, sees the local build's
+  version as older than the newest GitHub release, downloads it and
+  overwrites the running app. The result looks exactly like your
+  changes not working — old UI, missing newly-added resources — and
+  there is no error anywhere. `build.sh` now stamps `99.0.0-dev` by
+  default for this reason (CI passes `VERSION` explicitly), but if a
+  build ever seems to ignore your edits, check
+  `/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString"
+  ~/Applications/Zikr.app/Contents/Info.plist` before debugging code.
+- **Don't install over a running Zikr.** `rm -rf` on a running bundle
+  half-fails and the following `cp -R` leaves an app with no
+  `Contents/Resources`, which then dies on `ZikrLoader`'s fatalError.
+  `build.sh` quits a running copy first.
 - **macOS universal binary**: `build.sh` compiles arm64 and x86_64
   separately and `lipo`s them together — an arm64-only binary shipped
   once and broke installs on Intel Macs ("unsupported Mac" error).

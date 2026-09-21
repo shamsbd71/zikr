@@ -27,7 +27,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Resources\zikr.json">
+    <!-- Linked from the repo root rather than copied in: data/zikr.json
+         is the one list every platform reads, and a hand-synced copy
+         here is exactly what left this build on 21 stale adhkar while
+         the canonical file had 49. -->
+    <None Include="..\..\data\zikr.json" Link="Resources\zikr.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\icon.ico">

@@ -49,6 +49,9 @@ struct SettingsView: View {
                 }
 
                 Toggle("Speak zikr aloud", isOn: $settings.speakAloud)
+
+                Toggle("Include longer adhkar (morning, evening and night remembrances)",
+                       isOn: $settings.allowLongZikr)
             }
 
             Section("System") {

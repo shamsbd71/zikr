@@ -9,6 +9,7 @@ final class ReminderScheduler {
     static let shared = ReminderScheduler()
 
     private var timer: Timer?
+    private var lastSpokenID: Int?
     private var cancellables = Set<AnyCancellable>()
     private let settings = AppSettings.shared
 
@@ -32,6 +33,7 @@ final class ReminderScheduler {
 
     func start() {
         NotificationManager.requestAuthorizationIfNeeded()
+        NotificationManager.clearDelivered()
         if settings.isEnabled {
             scheduleNext()
         }
@@ -43,7 +45,7 @@ final class ReminderScheduler {
     /// that can't be guaranteed for an unsigned local build, so the test
     /// button needs a path that's always audible/visible.
     func testNow() {
-        let zikr = ZikrList.random()
+        guard let zikr = nextZikr() else { return }
         if settings.speakAloud { ZikrSpeaker.shared.speak(zikr) }
         FlashOverlayController.shared.present(zikr)
     }
@@ -73,8 +75,9 @@ final class ReminderScheduler {
             startMinutes: settings.quietHoursStartMinutes,
             endMinutes: settings.quietHoursEndMinutes
         )
-        if !(settings.pauseDuringCalls && MicrophoneMonitor.isInUse) && !inQuietHours {
-            show(ZikrList.random())
+        if !(settings.pauseDuringCalls && MicrophoneMonitor.isInUse), !inQuietHours,
+           let zikr = nextZikr() {
+            show(zikr)
         }
         if settings.isEnabled {
             scheduleNext()
@@ -97,6 +100,16 @@ final class ReminderScheduler {
     private static func currentMinutesOfDay() -> Int {
         let comps = Calendar.current.dateComponents([.hour, .minute], from: Date())
         return (comps.hour ?? 0) * 60 + (comps.minute ?? 0)
+    }
+
+    /// Weighted by time of day, filtered by the "longer adhkar" opt-in,
+    /// and never the same one twice in a row.
+    private func nextZikr() -> Zikr? {
+        let zikr = ZikrSelector.pick(from: ZikrLoader.all,
+                                     allowLong: settings.allowLongZikr,
+                                     excluding: lastSpokenID)
+        lastSpokenID = zikr?.id
+        return zikr
     }
 
     private func show(_ zikr: Zikr) {

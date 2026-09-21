@@ -81,6 +81,9 @@ Python, no compiled binary, so one package covers x86_64, arm64, etc.
 - Arabic TTS quality depends entirely on what's on the system —
   speech-dispatcher's espeak-ng backend is functional but robotic,
   same tradeoff as the macOS build's default voice. Drop a real
-  recording at `zikr/data/audio/<id>.{ogg,mp3,wav,flac}` (id matches
-  `zikr.json`) to override it, same convention as the macOS build's
-  `Resources/Audio/`.
+  recitation ships for every phrase, installed to
+  `/usr/share/zikr/audio/<id>.ogg` by `build_deb.sh` and preferred over
+  TTS. Vorbis rather than the canonical mp3 because `paplay`/`aplay` go
+  through libsndfile, which reads Ogg but not mp3; `tools/convert_audio.py`
+  does the conversion at package time so the repo keeps one copy of the
+  audio, not three.

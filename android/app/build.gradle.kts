@@ -52,7 +52,32 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    sourceSets["main"].res.srcDir(layout.buildDirectory.dir("generated/zikr/res"))
+    sourceSets["main"].assets.srcDir(layout.buildDirectory.dir("generated/zikr/assets"))
 }
+
+// data/zikr.json and data/audio at the repo root are the one list and the
+// one set of recitations every platform reads. They are copied into the
+// build rather than duplicated in the source tree: a hand-synced copy
+// under res/raw is exactly what left this build on 21 stale adhkar while
+// the canonical file had 49.
+val canonicalData: File = rootProject.file("../data")
+
+val syncZikrList by tasks.registering(Copy::class) {
+    from(canonicalData) { include("zikr.json") }
+    into(layout.buildDirectory.dir("generated/zikr/res/raw"))
+}
+
+// Assets rather than res/raw: a raw resource name has to be a valid Java
+// identifier, and "1.mp3" is not. MediaPlayer reads the mp3s directly, so
+// unlike the Linux and Windows builds nothing needs converting.
+val syncZikrAudio by tasks.registering(Copy::class) {
+    from(canonicalData.resolve("audio")) { include("*.mp3") }
+    into(layout.buildDirectory.dir("generated/zikr/assets/audio"))
+}
+
+tasks.named("preBuild") { dependsOn(syncZikrList, syncZikrAudio) }
 
 dependencies {
     implementation("androidx.core:core-ktx:1.13.1")

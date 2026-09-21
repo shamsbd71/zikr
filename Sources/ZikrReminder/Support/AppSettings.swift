@@ -18,6 +18,7 @@ final class AppSettings: ObservableObject {
         static let launchAtLogin = "launchAtLogin"
         static let flashDurationSeconds = "flashDurationSeconds"
         static let pauseDuringCalls = "pauseDuringCalls"
+        static let allowLongZikr = "allowLongZikr"
         static let autoInstallUpdates = "autoInstallUpdates"
         static let skippedUpdateVersion = "skippedUpdateVersion"
         static let quietHoursEnabled = "quietHoursEnabled"
@@ -74,6 +75,14 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(pauseDuringCalls, forKey: Key.pauseDuringCalls) }
     }
 
+    /// Let reminders include adhkar that take longer than a few seconds
+    /// to recite — the morning, evening and night remembrances. Off by
+    /// default: an unexpected long recitation interrupts in a way a short
+    /// phrase doesn't, so it's opt-in.
+    @Published var allowLongZikr: Bool {
+        didSet { defaults.set(allowLongZikr, forKey: Key.allowLongZikr) }
+    }
+
     /// Skip the update dialog and just install silently in the
     /// background when a new version is found.
     @Published var autoInstallUpdates: Bool {
@@ -112,8 +121,9 @@ final class AppSettings: ObservableObject {
             Key.displayStyle: DisplayStyle.notification.rawValue,
             Key.speakAloud: true,
             Key.launchAtLogin: false,
-            Key.flashDurationSeconds: 2.0,
+            Key.flashDurationSeconds: 4.0,
             Key.pauseDuringCalls: true,
+            Key.allowLongZikr: false,
             Key.autoInstallUpdates: false,
             Key.skippedUpdateVersion: "",
             Key.quietHoursEnabled: false,
@@ -129,6 +139,7 @@ final class AppSettings: ObservableObject {
         launchAtLogin = LaunchAtLogin.isEnabled
         flashDurationSeconds = defaults.double(forKey: Key.flashDurationSeconds)
         pauseDuringCalls = defaults.bool(forKey: Key.pauseDuringCalls)
+        allowLongZikr = defaults.bool(forKey: Key.allowLongZikr)
         autoInstallUpdates = defaults.bool(forKey: Key.autoInstallUpdates)
         skippedUpdateVersion = defaults.string(forKey: Key.skippedUpdateVersion) ?? ""
         quietHoursEnabled = defaults.bool(forKey: Key.quietHoursEnabled)

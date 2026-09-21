@@ -11,6 +11,89 @@ for downloadable assets per version.
   22:00–06:00) during which reminders are turned off completely, set
   under Settings → Quiet Hours. Disabled by default; the window can
   cross midnight.
+- The site can speak. Eight adhkar are playable inline, using the same
+  recordings the app ships, so a visitor can hear a real reciter before
+  installing anything. The hero holds a live card that cycles adhkar on
+  its own timer, the way the app does — the page demonstrates the
+  product rather than describing it.
+- A dark theme, now the default, with the previous parchment design
+  preserved as the light theme behind a toggle. It follows the system
+  preference, remembers an explicit choice, and applies before first
+  paint so nothing flashes.
+- `tools/stats.py` reports release downloads by platform and repo
+  traffic from GitHub's own numbers — nothing is collected from anyone
+  to produce it.
+- Cloudflare Web Analytics on the website only: cookieless, no personal
+  data. The beacon is injected only when a token is configured, so an
+  unconfigured checkout makes no third-party request at all.
+
+### Fixed
+- In the light theme every control in the hero rendered emerald on dark
+  emerald — the primary download button measured 1.21:1 against its own
+  label, effectively invisible. A theme-scoped `a` rule was outranking
+  each component's own colour, and the hero stays dark in both themes,
+  so gold darkened for parchment disappeared on it. Surfaces that are
+  dark in both themes now take colours that don't flip.
+
+### Changed
+- The privacy answer now separates the two honestly, in all three
+  languages and in the structured data: the app collects nothing, and
+  the website counts anonymous page views.
+
+## [1.9.0] — 2026-09-21
+
+### Added
+- Linux, Windows and Android now ship the recitations too, so a real
+  voice reads the zikr on every platform rather than only on macOS.
+  The canonical mp3s are converted at package time to the one format
+  each platform can actually play — Ogg Vorbis on Linux (libsndfile,
+  which `paplay`/`aplay` use, reads Ogg but not mp3), PCM wav on
+  Windows (`System.Media.SoundPlayer` is PCM-only) — while macOS and
+  Android play the mp3 directly. Android had no clip playback at all
+  before this and now prefers a recitation over TTS like the rest.
+
+### Changed
+- All four platforms read the same data/zikr.json. Linux, Windows and
+  Android each kept their own copy, "synced by hand", and all three had
+  silently drifted to a stale 21-entry list while the canonical file
+  had 49 — so those copies are gone and each build now takes the file
+  from the repo root. The count assertions in their test suites now
+  check the real list rather than the copy that drifted.
+
+### Fixed
+- Several adhkar in the list were fragments rather than whole
+  supplications, and were being spoken as such: "Rabbana atina
+  fid-dunya hasanah" stopped halfway through the verse, "Tawakkaltu
+  'alallah" was the middle clause of the dua for leaving home, and
+  "SubhanAllahil Azeem" was missing "wa bihamdihi". These now carry
+  their complete text.
+- The bundled recitations were systematically cut short. Measured
+  against the length each phrase's own text implies, the old clips ran
+  at a median of 0.92x — with 23 of 40 ending early and several at
+  0.62-0.67x, i.e. losing roughly a third of their words. Every clip
+  has been re-cut and now sits at a median of 1.19x, which is simply
+  the reciter being more measured than a synthesiser.
+- Three entries ("Ya Hayyu Ya Qayyum", "La ilaha illallah wahdahu la
+  sharika lah", "Allahumma salli 'ala Muhammad") were opening clauses
+  of adhkar already present in the list in full, so they have been
+  folded into those entries rather than kept as duplicates. The list
+  is now 49 entries, every one of them complete.
+
+### Added
+- Every zikr in the list now ships with a real recitation — 8 phrases
+  that previously fell back to the system voice have one for the first
+  time.
+
+### Changed
+- Recitations now come from the Hisn al-Muslim audio published by
+  [dua.gtaf.org](https://dua.gtaf.org/), which publishes each dua as
+  its own file with no narrator preamble and with its segments listed
+  as data. For 45 of the 49 entries the file simply is the phrase, so
+  the clip is a silence trim rather than a guess — the previous source
+  required locating the dhikr inside a longer track by matching it
+  against a synthesised reference, which shipped audibly wrong clips
+  twice. `tools/fetch_audio.py` now also rejects any clip that is not a
+  credible length for its own text instead of writing it.
 
 ## [1.8.0] — 2026-09-02
 
