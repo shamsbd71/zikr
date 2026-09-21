@@ -9,9 +9,9 @@ namespace Zikr.Tests
         [TestMethod]
         public void ExpectedCount()
         {
-            // Keep in sync with Sources/ZikrReminder/Models/ZikrList.swift
-            // and linux/zikr/data/zikr.json.
-            Assert.AreEqual(21, ZikrData.All.Count);
+            // The one repo-root data/zikr.json every platform reads;
+            // this project links it rather than keeping a copy.
+            Assert.AreEqual(49, ZikrData.All.Count);
         }
 
         [TestMethod]

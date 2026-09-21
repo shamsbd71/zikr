@@ -27,7 +27,7 @@ from zikr.changelog import parse as parse_changelog  # noqa: E402
 class TestZikrData(unittest.TestCase):
     def test_expected_count(self):
         # Keep in sync with Sources/ZikrReminder/Models/ZikrList.swift.
-        self.assertEqual(len(ALL), 21)
+        self.assertEqual(len(ALL), 49)
 
     def test_ids_unique(self):
         ids = [z["id"] for z in ALL]

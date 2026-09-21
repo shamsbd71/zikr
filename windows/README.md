@@ -97,9 +97,11 @@ Produces `dist\ZikrSetup-1.3.0.exe`.
   ships one). `Speech.cs` looks for one and falls back to reading the
   transliteration in English if none is installed. Users can install an
   Arabic language pack (Settings → Time & Language → Language & region)
-  to get one, or drop a real recording at
-  `Resources\audio\<id>.wav` (id matches `zikr.json`) to override it
-  entirely, same convention as the other builds.
-- Only `.wav` is supported for bundled audio overrides (via the built-in
-  `System.Media.SoundPlayer`, kept dependency-free rather than adding an
-  MP3/OGG decoding library for a feature nobody's using yet).
+  to get one. A real recitation ships for every phrase at
+  `Resources\audio\<id>.wav` (id matches `zikr.json`) and is preferred
+  over TTS, same convention as the other builds.
+- `.wav` specifically, because the built-in `System.Media.SoundPlayer` is
+  PCM-only and that stays dependency-free rather than adding an MP3
+  decoder. The canonical clips are mp3, converted at build time by
+  `tools/convert_audio.py` at 22.05kHz mono — inaudible for speech, and
+  it keeps the installer near 13MB instead of 27MB.

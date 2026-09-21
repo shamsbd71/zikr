@@ -56,7 +56,7 @@ jobs:
           sudo apt-get install -y \
             python3-gi gir1.2-glib-2.0 gir1.2-notify-0.7 \
             gir1.2-ayatanaappindicator3-0.1 \
-            speech-dispatcher xvfb dpkg-dev
+            speech-dispatcher xvfb dpkg-dev ffmpeg
 
       - name: Build .deb
         env:
@@ -92,6 +92,17 @@ jobs:
 
       - name: Build
         run: dotnet build windows/Zikr/Zikr.csproj -c Release -p:Version=${{ steps.version.outputs.version }}
+
+      - name: Convert recitations to WAV
+        # System.Media.SoundPlayer is PCM-only, so the canonical mp3s are
+        # converted into the build output, where the installer's
+        # Resources\* rule picks them up. See tools/convert_audio.py.
+        run: |
+          if (-not (Get-Command ffmpeg -ErrorAction SilentlyContinue)) {
+            choco install ffmpeg -y --no-progress
+            $env:PATH = "$env:PATH;C:\ProgramData\chocolatey\bin"
+          }
+          python tools\convert_audio.py --format wav --out windows\Zikr\bin\Release\net48\Resources\audio
 
       - name: Install Inno Setup
         run: choco install innosetup -y --no-progress
