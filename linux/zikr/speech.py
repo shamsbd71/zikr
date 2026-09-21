@@ -13,10 +13,13 @@ import subprocess
 from pathlib import Path
 
 ASSETS_AUDIO_DIRS = [
-    Path(__file__).resolve().parent / "data" / "audio",
-    Path("/usr/share/zikr/audio"),
+    Path("/usr/share/zikr/audio"),                        # installed
+    Path(__file__).resolve().parents[2] / "data" / "audio",   # checkout
 ]
 
+# paplay and aplay go through libsndfile, which handles Vorbis but not
+# mp3, so build_deb.sh installs .ogg - see tools/convert_audio.py. ffplay
+# would manage the mp3 in a checkout, but only if ffmpeg is installed.
 AUDIO_PLAYERS = ["paplay", "ffplay", "aplay"]
 
 

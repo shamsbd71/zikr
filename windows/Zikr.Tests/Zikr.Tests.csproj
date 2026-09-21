@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\Zikr\Resources\zikr.json" Link="Resources\zikr.json">
+    <None Include="..\..\data\zikr.json" Link="Resources\zikr.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

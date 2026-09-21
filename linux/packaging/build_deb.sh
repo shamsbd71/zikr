@@ -50,6 +50,15 @@ exec python3 -m zikr "$@"
 SHIM
 chmod 755 "$PKG_ROOT/usr/bin/zikr"
 
+# --- zikr list + recitations ---
+# The list is the repo-root data/zikr.json every platform reads; there is
+# no copy inside the python package. The clips are converted from the
+# canonical mp3s to Vorbis, because paplay/aplay go through libsndfile,
+# which plays Ogg but not mp3 (see tools/convert_audio.py).
+mkdir -p "$PKG_ROOT/usr/share/zikr"
+cp ../data/zikr.json "$PKG_ROOT/usr/share/zikr/zikr.json"
+python3 ../tools/convert_audio.py --format ogg --out "$PKG_ROOT/usr/share/zikr/audio"
+
 # --- desktop entry + icon ---
 cp packaging/zikr.desktop "$PKG_ROOT/usr/share/applications/zikr.desktop"
 cp zikr/data/icon.png "$PKG_ROOT/usr/share/icons/hicolor/256x256/apps/zikr.png"

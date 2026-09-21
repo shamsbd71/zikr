@@ -5,9 +5,10 @@ import com.abu.zikr.R
 import org.json.JSONArray
 
 /**
- * Loads the bundled zikr list. Same 21 general adhkar as the other
- * builds' ZikrList.swift/zikr_data.py/ZikrData.cs - res/raw/zikr.json
- * is kept in sync with them by hand.
+ * Loads the bundled zikr list. res/raw/zikr.json is copied straight from
+ * the repo-root data/zikr.json at build time (see syncZikrList in
+ * build.gradle.kts), so this build reads the same list as every other
+ * platform rather than a copy kept in step by hand.
  */
 object ZikrData {
     @Volatile private var cached: List<ZikrItem>? = null

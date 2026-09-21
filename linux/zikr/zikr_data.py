@@ -1,12 +1,18 @@
-"""Loads the bundled zikr list. Same 21 general adhkar as the macOS build's
-ZikrList.swift (data/zikr.json is kept in sync with it by hand)."""
+"""Loads the bundled zikr list.
+
+Reads the same data/zikr.json every other platform reads - installed to
+/usr/share/zikr/zikr.json by build_deb.sh, or straight out of the repo
+when running from a checkout. There is deliberately no copy inside this
+package: four hand-synced copies is exactly how the list drifted to 21
+stale entries while the canonical file had 49.
+"""
 import json
 import random
 from pathlib import Path
 
 _DATA_PATHS = [
-    Path(__file__).resolve().parent / "data" / "zikr.json",
-    Path("/usr/share/zikr/zikr.json"),
+    Path("/usr/share/zikr/zikr.json"),                       # installed
+    Path(__file__).resolve().parents[2] / "data" / "zikr.json",  # checkout
 ]
 
 

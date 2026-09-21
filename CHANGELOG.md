@@ -6,6 +6,24 @@ for downloadable assets per version.
 
 ## [Unreleased]
 
+### Added
+- Linux, Windows and Android now ship the recitations too, so a real
+  voice reads the zikr on every platform rather than only on macOS.
+  The canonical mp3s are converted at package time to the one format
+  each platform can actually play — Ogg Vorbis on Linux (libsndfile,
+  which `paplay`/`aplay` use, reads Ogg but not mp3), PCM wav on
+  Windows (`System.Media.SoundPlayer` is PCM-only) — while macOS and
+  Android play the mp3 directly. Android had no clip playback at all
+  before this and now prefers a recitation over TTS like the rest.
+
+### Changed
+- All four platforms read the same data/zikr.json. Linux, Windows and
+  Android each kept their own copy, "synced by hand", and all three had
+  silently drifted to a stale 21-entry list while the canonical file
+  had 49 — so those copies are gone and each build now takes the file
+  from the repo root. The count assertions in their test suites now
+  check the real list rather than the copy that drifted.
+
 ### Fixed
 - Several adhkar in the list were fragments rather than whole
   supplications, and were being spoken as such: "Rabbana atina

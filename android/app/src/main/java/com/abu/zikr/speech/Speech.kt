@@ -1,9 +1,12 @@
 package com.abu.zikr.speech
 
 import android.content.Context
+import android.media.AudioAttributes
+import android.media.MediaPlayer
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import com.abu.zikr.data.ZikrItem
+import java.io.IOException
 import java.util.Locale
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -22,11 +25,71 @@ import kotlin.coroutines.suspendCoroutine
  */
 object Speech {
     suspend fun speak(context: Context, zikr: ZikrItem, voiceName: String? = null) {
+        // A real recitation beats a synthesiser reading the same words,
+        // so the clip wins when there is one - same order as
+        // ZikrSpeaker.swift / speech.py / Speech.cs.
+        if (playClip(context, zikr)) return
+
         val engine = initTts(context) ?: return
         val (locale, text) = resolveLocaleAndText(engine, zikr)
         engine.language = locale
         applyVoice(engine, voiceName)
         speakAndWait(engine, text, "zikr-utterance")
+    }
+
+    /**
+     * Plays the bundled recitation for this phrase, suspending until it
+     * finishes. Returns false when there is no clip or it will not play,
+     * so the caller falls back to TTS rather than going silent.
+     *
+     * The mp3s live in assets/audio/<id>.mp3, copied from the repo-root
+     * data/audio at build time (syncZikrAudio in build.gradle.kts).
+     */
+    private suspend fun playClip(context: Context, zikr: ZikrItem): Boolean {
+        val descriptor = try {
+            context.assets.openFd("audio/${zikr.id}.mp3")
+        } catch (_: IOException) {
+            return false           // no clip for this phrase
+        }
+
+        return suspendCoroutine { continuation ->
+            var settled = false
+            // onCompletion and onError can both arrive; resuming a
+            // continuation twice is a crash, so the first one wins.
+            fun finish(played: Boolean, player: MediaPlayer?) {
+                if (settled) return
+                settled = true
+                player?.release()
+                try {
+                    descriptor.close()
+                } catch (_: IOException) {
+                }
+                continuation.resume(played)
+            }
+
+            val player = MediaPlayer()
+            try {
+                player.setAudioAttributes(
+                    AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                        .build()
+                )
+                player.setDataSource(
+                    descriptor.fileDescriptor,
+                    descriptor.startOffset,
+                    descriptor.length,
+                )
+                player.setOnCompletionListener { finish(true, it) }
+                player.setOnErrorListener { mp, _, _ -> finish(false, mp); true }
+                player.prepare()
+                player.start()
+            } catch (_: IOException) {
+                finish(false, player)
+            } catch (_: IllegalStateException) {
+                finish(false, player)
+            }
+        }
     }
 
     /** Voice names available for whichever language `speak` would
