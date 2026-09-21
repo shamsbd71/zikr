@@ -34,5 +34,30 @@ namespace Zikr.Tests
         {
             Assert.AreEqual(60, Scheduler.PickDelaySeconds(0, 0));
         }
+
+        [TestMethod]
+        public void QuietHoursWithinNormalRange()
+        {
+            // 13:00 is inside 09:00-17:00.
+            Assert.IsTrue(Scheduler.IsWithinQuietHours(13 * 60, 9 * 60, 17 * 60));
+            Assert.IsFalse(Scheduler.IsWithinQuietHours(8 * 60, 9 * 60, 17 * 60));
+            Assert.IsFalse(Scheduler.IsWithinQuietHours(17 * 60, 9 * 60, 17 * 60));
+        }
+
+        [TestMethod]
+        public void QuietHoursWrapsPastMidnight()
+        {
+            // 22:00-06:00 window.
+            Assert.IsTrue(Scheduler.IsWithinQuietHours(23 * 60, 22 * 60, 6 * 60));
+            Assert.IsTrue(Scheduler.IsWithinQuietHours(1 * 60, 22 * 60, 6 * 60));
+            Assert.IsFalse(Scheduler.IsWithinQuietHours(12 * 60, 22 * 60, 6 * 60));
+            Assert.IsFalse(Scheduler.IsWithinQuietHours(6 * 60, 22 * 60, 6 * 60));
+        }
+
+        [TestMethod]
+        public void QuietHoursEqualBoundsMeansNoWindow()
+        {
+            Assert.IsFalse(Scheduler.IsWithinQuietHours(10 * 60, 10 * 60, 10 * 60));
+        }
     }
 }

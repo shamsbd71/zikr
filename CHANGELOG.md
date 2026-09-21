@@ -7,6 +7,10 @@ for downloadable assets per version.
 ## [Unreleased]
 
 ### Added
+- macOS, Linux, Windows: Quiet Hours — a daily time window (e.g.
+  22:00–06:00) during which reminders are turned off completely, set
+  under Settings → Quiet Hours. Disabled by default; the window can
+  cross midnight.
 - The site can speak. Eight adhkar are playable inline, using the same
   recordings the app ships, so a visitor can hear a real reciter before
   installing anything. The hero holds a live card that cycles adhkar on

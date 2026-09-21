@@ -25,6 +25,9 @@ DEFAULTS = {
     "launch_at_login": False,
     "pause_during_calls": True,
     "skipped_update_version": "",
+    "quiet_hours_enabled": False,
+    "quiet_hours_start_minutes": 22 * 60,
+    "quiet_hours_end_minutes": 6 * 60,
 }
 
 

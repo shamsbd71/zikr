@@ -21,6 +21,9 @@ final class AppSettings: ObservableObject {
         static let allowLongZikr = "allowLongZikr"
         static let autoInstallUpdates = "autoInstallUpdates"
         static let skippedUpdateVersion = "skippedUpdateVersion"
+        static let quietHoursEnabled = "quietHoursEnabled"
+        static let quietHoursStartMinutes = "quietHoursStartMinutes"
+        static let quietHoursEndMinutes = "quietHoursEndMinutes"
     }
 
     @Published var isEnabled: Bool {
@@ -93,6 +96,23 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(skippedUpdateVersion, forKey: Key.skippedUpdateVersion) }
     }
 
+    /// Turn reminders completely off during a daily time window (e.g.
+    /// overnight) — unlike pauseDuringCalls, this is a fixed schedule
+    /// rather than a live signal.
+    @Published var quietHoursEnabled: Bool {
+        didSet { defaults.set(quietHoursEnabled, forKey: Key.quietHoursEnabled) }
+    }
+
+    /// Minutes since midnight (0–1439), local time. When start > end the
+    /// window wraps past midnight (e.g. 22:00–06:00).
+    @Published var quietHoursStartMinutes: Int {
+        didSet { defaults.set(quietHoursStartMinutes, forKey: Key.quietHoursStartMinutes) }
+    }
+
+    @Published var quietHoursEndMinutes: Int {
+        didSet { defaults.set(quietHoursEndMinutes, forKey: Key.quietHoursEndMinutes) }
+    }
+
     private init() {
         defaults.register(defaults: [
             Key.isEnabled: true,
@@ -106,6 +126,9 @@ final class AppSettings: ObservableObject {
             Key.allowLongZikr: false,
             Key.autoInstallUpdates: false,
             Key.skippedUpdateVersion: "",
+            Key.quietHoursEnabled: false,
+            Key.quietHoursStartMinutes: 22 * 60,
+            Key.quietHoursEndMinutes: 6 * 60,
         ])
 
         isEnabled = defaults.bool(forKey: Key.isEnabled)
@@ -119,5 +142,8 @@ final class AppSettings: ObservableObject {
         allowLongZikr = defaults.bool(forKey: Key.allowLongZikr)
         autoInstallUpdates = defaults.bool(forKey: Key.autoInstallUpdates)
         skippedUpdateVersion = defaults.string(forKey: Key.skippedUpdateVersion) ?? ""
+        quietHoursEnabled = defaults.bool(forKey: Key.quietHoursEnabled)
+        quietHoursStartMinutes = defaults.integer(forKey: Key.quietHoursStartMinutes)
+        quietHoursEndMinutes = defaults.integer(forKey: Key.quietHoursEndMinutes)
     }
 }

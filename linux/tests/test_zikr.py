@@ -18,7 +18,7 @@ from pathlib import Path
 os.environ.setdefault("XDG_CONFIG_HOME", tempfile.mkdtemp(prefix="zikr-test-config-"))
 
 from zikr.zikr_data import ALL, random_zikr  # noqa: E402
-from zikr.scheduler import pick_delay_seconds  # noqa: E402
+from zikr.scheduler import pick_delay_seconds, is_within_quiet_hours  # noqa: E402
 from zikr.mic_monitor import _parse_alsa_status, _parse_pactl_source_outputs  # noqa: E402
 from zikr.update_checker import compare_versions  # noqa: E402
 from zikr.changelog import parse as parse_changelog  # noqa: E402
@@ -65,6 +65,22 @@ class TestSchedulerDelay(unittest.TestCase):
     def test_floors_below_one_minute_to_one(self):
         delay = pick_delay_seconds(0, 0)
         self.assertEqual(delay, 60)
+
+
+class TestQuietHours(unittest.TestCase):
+    def test_within_normal_range(self):
+        self.assertTrue(is_within_quiet_hours(13 * 60, 9 * 60, 17 * 60))
+        self.assertFalse(is_within_quiet_hours(8 * 60, 9 * 60, 17 * 60))
+        self.assertFalse(is_within_quiet_hours(17 * 60, 9 * 60, 17 * 60))
+
+    def test_wraps_past_midnight(self):
+        self.assertTrue(is_within_quiet_hours(23 * 60, 22 * 60, 6 * 60))
+        self.assertTrue(is_within_quiet_hours(1 * 60, 22 * 60, 6 * 60))
+        self.assertFalse(is_within_quiet_hours(12 * 60, 22 * 60, 6 * 60))
+        self.assertFalse(is_within_quiet_hours(6 * 60, 22 * 60, 6 * 60))
+
+    def test_equal_bounds_means_no_window(self):
+        self.assertFalse(is_within_quiet_hours(10 * 60, 10 * 60, 10 * 60))
 
 
 class TestSettings(unittest.TestCase):

@@ -70,12 +70,36 @@ final class ReminderScheduler {
     }
 
     private func fire() {
-        if !(settings.pauseDuringCalls && MicrophoneMonitor.isInUse), let zikr = nextZikr() {
+        let inQuietHours = settings.quietHoursEnabled && Self.isWithinQuietHours(
+            nowMinutes: Self.currentMinutesOfDay(),
+            startMinutes: settings.quietHoursStartMinutes,
+            endMinutes: settings.quietHoursEndMinutes
+        )
+        if !(settings.pauseDuringCalls && MicrophoneMonitor.isInUse), !inQuietHours,
+           let zikr = nextZikr() {
             show(zikr)
         }
         if settings.isEnabled {
             scheduleNext()
         }
+    }
+
+    /// Pure so the wraparound logic (a window like 22:00–06:00 that
+    /// crosses midnight) is easy to reason about independent of the
+    /// clock. Equal bounds means "no window" rather than "always on" —
+    /// a user who hasn't set both ends yet shouldn't get silenced
+    /// entirely by accident.
+    static func isWithinQuietHours(nowMinutes: Int, startMinutes: Int, endMinutes: Int) -> Bool {
+        if startMinutes == endMinutes { return false }
+        if startMinutes < endMinutes {
+            return nowMinutes >= startMinutes && nowMinutes < endMinutes
+        }
+        return nowMinutes >= startMinutes || nowMinutes < endMinutes
+    }
+
+    private static func currentMinutesOfDay() -> Int {
+        let comps = Calendar.current.dateComponents([.hour, .minute], from: Date())
+        return (comps.hour ?? 0) * 60 + (comps.minute ?? 0)
     }
 
     /// Weighted by time of day, filtered by the "longer adhkar" opt-in,
