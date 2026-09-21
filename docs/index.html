@@ -589,9 +589,10 @@
      calling Cloudflare and failing. -->
 <script>
   (function () {
-    var CF_BEACON_TOKEN = "";              /* <- paste the token here */
+    var CF_BEACON_TOKEN = "472fbdd53e2e4a9dbd12a778f4ec3ce1";
     if (!/^[0-9a-f]{32}$/i.test(CF_BEACON_TOKEN)) return;
     var s = document.createElement("script");
+    s.type = "module";                     /* as Cloudflare issues it */
     s.defer = true;
     s.src = "https://static.cloudflareinsights.com/beacon.min.js";
     s.setAttribute("data-cf-beacon", JSON.stringify({ token: CF_BEACON_TOKEN }));
