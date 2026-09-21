@@ -51,6 +51,18 @@ needs OS-specific, higher-risk mechanisms (iOS Family Controls
 entitlement, Android Accessibility/UsageStats) on both a future iOS
 build and an Android update, not yet started either one.
 
+**iOS is designed but not started**, and deliberately cannot copy the
+others: an iOS app gets no background process and no way to speak at a
+time of its choosing, so the reminder is a pre-scheduled local
+notification carrying the recitation as its sound. That caps the app at
+64 pending reminders and makes Focus/silent mode suppress the audio —
+real limitations, not bugs to fix. Read
+`docs/superpowers/specs/2026-09-21-ios-design.md` before writing any of
+it. Building it needs full Xcode, which this dev machine does not have
+(Command Line Tools only, no iOS SDK), and trusting it needs a real
+device — the Simulator will not tell you whether a notification
+actually fired once the app was backgrounded.
+
 ## Repo layout
 
 ```
