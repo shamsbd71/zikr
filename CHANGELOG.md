@@ -4,6 +4,38 @@ All notable changes to Zikr are documented here. Dates are release dates
 (Asia/Dhaka). See [releases](https://github.com/shamsbd71/zikr/releases)
 for downloadable assets per version.
 
+## [Unreleased]
+
+### Added
+- The site can speak. Eight adhkar are playable inline, using the same
+  recordings the app ships, so a visitor can hear a real reciter before
+  installing anything. The hero holds a live card that cycles adhkar on
+  its own timer, the way the app does — the page demonstrates the
+  product rather than describing it.
+- A dark theme, now the default, with the previous parchment design
+  preserved as the light theme behind a toggle. It follows the system
+  preference, remembers an explicit choice, and applies before first
+  paint so nothing flashes.
+- `tools/stats.py` reports release downloads by platform and repo
+  traffic from GitHub's own numbers — nothing is collected from anyone
+  to produce it.
+- Cloudflare Web Analytics on the website only: cookieless, no personal
+  data. The beacon is injected only when a token is configured, so an
+  unconfigured checkout makes no third-party request at all.
+
+### Fixed
+- In the light theme every control in the hero rendered emerald on dark
+  emerald — the primary download button measured 1.21:1 against its own
+  label, effectively invisible. A theme-scoped `a` rule was outranking
+  each component's own colour, and the hero stays dark in both themes,
+  so gold darkened for parchment disappeared on it. Surfaces that are
+  dark in both themes now take colours that don't flip.
+
+### Changed
+- The privacy answer now separates the two honestly, in all three
+  languages and in the structured data: the app collects nothing, and
+  the website counts anonymous page views.
+
 ## [1.9.0] — 2026-09-21
 
 ### Added

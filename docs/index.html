@@ -21,7 +21,7 @@
 
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="theme-color" content="#0E6B52">
+<meta name="theme-color" content="#0A0F0D">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -54,350 +54,586 @@
     { "@type": "Question", "name": "Does Zikr need an internet connection?", "acceptedAnswer": { "@type": "Answer", "text": "No, once installed it runs entirely offline. It only reaches the network if you click Check for Updates." } },
     { "@type": "Question", "name": "Does Zikr play Adhan or show prayer times?", "acceptedAnswer": { "@type": "Answer", "text": "No. Zikr is intentionally scoped to one thing only: random dhikr reminders. It does not include Adhan, prayer times, Qibla, or any other feature." } },
     { "@type": "Question", "name": "Which zikr phrases are included?", "acceptedAnswer": { "@type": "Answer", "text": "A curated set of general, anytime adhkar from the well-known Hisnul Muslim (Fortress of the Muslim) collection, including SubhanAllah, Alhamdulillah, Allahu Akbar, La ilaha illallah, Astaghfirullah, and others." } },
-    { "@type": "Question", "name": "Does Zikr collect any data?", "acceptedAnswer": { "@type": "Answer", "text": "No. There is no analytics, telemetry, or account system. Settings are stored locally on your device." } }
+    { "@type": "Question", "name": "Does Zikr collect any data?", "acceptedAnswer": { "@type": "Answer", "text": "The app collects nothing - no analytics, no telemetry, no account - and your settings never leave your device. The website is separate: it counts anonymous page views through Cloudflare Web Analytics, with no cookies and nothing that identifies you." } }
   ]
 }
 </script>
 
 <style>
+  /* ------------------------------------------------------------------
+     Night-prayer world. Dark is the default because the hour people
+     actually reach for dhikr is a dark one; gold only reads as
+     illumination when there is something to illuminate. The parchment
+     world is preserved verbatim as the light theme.
+     ------------------------------------------------------------------ */
   :root {
-    --parchment: #F7EFDC;
-    --parchment-panel: #FCF7EB;
-    --ink: #29231D;
-    --ink-dim: #6B6053;
-    --emerald: #0E6B52;
-    --emerald-deep: #093D30;
-    --emerald-bright: #16855F;
-    --gold: #B8892E;
-    --gold-bright: #E4B94F;
-    --terracotta: #B7472A;
-    --lapis: #2A5C8A;
-    --border: rgba(41, 35, 29, 0.12);
-    --border-on-emerald: rgba(228, 185, 79, 0.35);
+    --bg:            #0A0F0D;
+    --bg-deep:       #060A09;
+    --panel:         #121B17;
+    --panel-raised:  #17231D;
+    --ink:           #EFE6D5;
+    --ink-dim:       #A6997F;
+    --emerald:       #34A77F;
+    --emerald-deep:  #0C3A2D;
+    --emerald-bright:#47C79A;
+    --gold:          #D6A63C;
+    --gold-bright:   #F2D184;
+    --terracotta:    #D9714F;
+    --hairline:      rgba(214, 166, 60, 0.20);
+    --hairline-soft: rgba(239, 230, 213, 0.10);
+    --shadow:        0 18px 44px -20px rgba(0, 0, 0, 0.9);
+    --shadow-lift:   0 26px 60px -22px rgba(0, 0, 0, 0.95);
+    --hero-from:     #07120E;
+    --hero-to:       #0D2C22;
+    --glow:          rgba(52, 167, 127, 0.16);
 
-    --font-en: "Noto Serif", Georgia, "Times New Roman", serif;
+    /* The hero and the "yes" panel stay dark in BOTH themes, so their
+       foregrounds must not flip with the theme. Light mode darkens
+       --gold-bright for parchment, which dropped the hero CTA to 1.21:1
+       against its own label. These stay luminous either way. */
+    --on-dark:            #F3EADA;
+    --gold-on-dark:       #F2D184;
+    --gold-on-dark-deep:  #D6A63C;
+    --lattice-on-dark:    rgba(242, 209, 132, 0.17);
+
+    --font-en: "Noto Serif", Georgia, serif;
     --font-bn: "Noto Serif Bengali", "Noto Serif", serif;
-    --font-ar: "Noto Naskh Arabic", "Traditional Arabic", "Geeza Pro", serif;
+    --font-ar: "Noto Naskh Arabic", "Noto Serif", serif;
     --font-body: var(--font-en);
+    --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    color-scheme: dark;
+  }
+
+  html[data-theme="light"] {
+    --bg:            #F7EFDC;
+    --bg-deep:       #F1E6CE;
+    --panel:         #FCF7EB;
+    --panel-raised:  #FFFDF6;
+    --ink:           #29231D;
+    --ink-dim:       #6B6053;
+    --emerald:       #0E6B52;
+    --emerald-deep:  #093D30;
+    --emerald-bright:#16855F;
+    --gold:          #B8892E;
+    --gold-bright:   #8A6416;
+    --terracotta:    #B7472A;
+    --hairline:      rgba(184, 137, 46, 0.28);
+    --hairline-soft: rgba(41, 35, 29, 0.10);
+    --shadow:        0 14px 34px -18px rgba(41, 35, 29, 0.34);
+    --shadow-lift:   0 22px 48px -20px rgba(41, 35, 29, 0.40);
+    --hero-from:     #093D30;
+    --hero-to:       #16855F;
+    --glow:          rgba(14, 107, 82, 0.12);
+
+    /* The hero and the "yes" panel stay dark in BOTH themes, so their
+       foregrounds must not flip with the theme. Light mode darkens
+       --gold-bright for parchment, which dropped the hero CTA to 1.21:1
+       against its own label. These stay luminous either way. */
+    --on-dark:            #F3EADA;
+    --gold-on-dark:       #F2D184;
+    --gold-on-dark-deep:  #D6A63C;
+    --lattice-on-dark:    rgba(242, 209, 132, 0.17);
+    color-scheme: light;
   }
 
   html[lang="bn"] { --font-body: var(--font-bn); }
   html[lang="ar"] { --font-body: var(--font-ar); }
 
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+
+  /* Flex containers blockify their children, which outranks the UA rule
+     for [hidden] and left both play and stop icons visible at once. */
+  [hidden] { display: none !important; }
+
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+  body { overflow-x: clip; }
 
   body {
     margin: 0;
-    background: var(--parchment);
+    background: var(--bg);
     color: var(--ink);
     font-family: var(--font-body);
-    line-height: 1.62;
+    font-size: 17px;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
+    transition: background 0.5s var(--ease), color 0.5s var(--ease);
   }
 
-  a { color: var(--emerald); transition: color 0.15s ease; }
-  a:hover { color: var(--terracotta); }
+  /* Browser surfaces belong to the design too. */
+  ::selection { background: var(--gold); color: #10150F; }
+  html[data-theme="light"] ::selection { background: var(--gold-bright); color: #FFF; }
+  :focus-visible {
+    outline: 2px solid var(--gold-bright);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  * { scrollbar-color: var(--emerald) transparent; scrollbar-width: thin; }
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: var(--bg-deep); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--emerald-deep);
+    border: 3px solid var(--bg-deep);
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--emerald); }
 
-  .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+  .wrap { width: min(1100px, 100% - 48px); margin-inline: auto; }
 
-  /* ---- top nav ---- */
+  /* Prose links only. The hero CTAs and platform badges are anchors too,
+     and a bare `a` rule outranks their own colour - in light mode that
+     painted every hero control emerald on dark emerald. Excluding them
+     here is what keeps that from silently coming back. */
+  a:not(.btn):not(.platform-badge) { color: var(--emerald-bright); }
+  html[data-theme="light"] a:not(.btn):not(.platform-badge) { color: var(--emerald); }
+
+  /* ---------------- nav ---------------- */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(14px) saturate(1.3);
+    border-bottom: 1px solid var(--hairline-soft);
+  }
   .topnav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 24px;
-    max-width: 980px;
-    margin: 0 auto;
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 0;
   }
   .brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 700;
-    font-size: 18px;
-    color: var(--emerald-deep);
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--font-ui); font-weight: 700;
+    letter-spacing: -0.02em; font-size: 17px;
+    margin-inline-end: auto;
   }
-  .brand img { width: 28px; height: 28px; }
+  .brand img { border-radius: 7px; }
 
-  .lang-switch {
-    display: flex;
-    gap: 4px;
-    background: var(--parchment-panel);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 3px;
+  .lang-switch, .theme-switch {
+    display: flex; align-items: center;
+    border: 1px solid var(--hairline); border-radius: 99px;
+    padding: 3px; gap: 2px;
   }
-  .lang-switch button {
-    appearance: none;
-    border: none;
-    background: transparent;
-    padding: 6px 13px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ink-dim);
-    cursor: pointer;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  .lang-switch button, .theme-switch button {
+    font-family: var(--font-ui); font-size: 12.5px; font-weight: 600;
+    color: var(--ink-dim); background: none; border: 0;
+    padding: 6px 12px; border-radius: 99px; cursor: pointer;
+    transition: color 0.15s ease, background 0.15s ease;
   }
-  .lang-switch button.active {
-    background: var(--emerald);
-    color: #fff;
+  .lang-switch button:hover, .theme-switch button:hover { color: var(--ink); }
+  .lang-switch button[aria-pressed="true"],
+  .theme-switch button[aria-pressed="true"] {
+    background: var(--emerald-deep); color: var(--gold-bright);
   }
+  html[data-theme="light"] .lang-switch button[aria-pressed="true"],
+  html[data-theme="light"] .theme-switch button[aria-pressed="true"] {
+    background: var(--emerald); color: #FFF8E6;
+  }
+  .theme-switch button { display: grid; place-items: center; padding: 6px 10px; }
+  .theme-switch svg { width: 15px; height: 15px; display: block; }
 
-  /* ---- hero ---- */
-  header.hero {
-    position: relative;
-    overflow: hidden;
-    padding: 68px 0 76px;
+  /* ---------------- hero ---------------- */
+  .hero {
+    position: relative; overflow: hidden;
+    padding: 72px 0 96px;
     background:
-      linear-gradient(160deg, var(--emerald-bright) 0%, var(--emerald) 45%, var(--emerald-deep) 100%);
-    color: #fff;
+      radial-gradient(120% 80% at 78% 8%, var(--glow), transparent 62%),
+      linear-gradient(168deg, var(--hero-from), var(--hero-to));
+    border-bottom: 1px solid var(--hairline);
   }
-  header.hero::before {
-    content: "";
-    position: absolute;
-    inset: 0;
+  /* Diamond lattice, drifting slowly. The page's ambient texture, not a
+     decorative grid: it is the manuscript border this world inherited. */
+  .hero::before {
+    content: ""; position: absolute; inset: -60px;
     background-image:
-      linear-gradient(45deg, rgba(228,185,79,0.10) 25%, transparent 25%, transparent 75%, rgba(228,185,79,0.10) 75%),
-      linear-gradient(45deg, rgba(228,185,79,0.10) 25%, transparent 25%, transparent 75%, rgba(228,185,79,0.10) 75%);
-    background-position: 0 0, 22px 22px;
-    background-size: 44px 44px;
+      repeating-linear-gradient(45deg, var(--lattice-on-dark) 0 1px, transparent 1px 34px),
+      repeating-linear-gradient(-45deg, var(--lattice-on-dark) 0 1px, transparent 1px 34px);
+    opacity: 0.55;
+    animation: lattice-drift 48s linear infinite;
     pointer-events: none;
   }
-  .hero-inner { position: relative; display: flex; align-items: center; gap: 44px; }
-  .crescent { flex: 0 0 auto; width: 132px; height: 132px; filter: drop-shadow(0 8px 20px rgba(0,0,0,0.25)); }
-
-  .eyebrow {
-    display: inline-block;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    color: var(--gold-bright);
-    margin: 0 0 14px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  @keyframes lattice-drift {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(34px, 34px, 0); }
   }
 
-  .hero-copy h1 {
-    font-size: 42px;
-    line-height: 1.18;
-    margin: 0 0 16px;
-    font-weight: 600;
-    max-width: 15ch;
-  }
-  html[lang="ar"] .hero-copy h1 { max-width: none; }
-
-  .hero-copy p.tagline {
-    font-size: 18px;
-    color: rgba(255,255,255,0.86);
-    margin: 0 0 30px;
-    max-width: 52ch;
-  }
-
-  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
-
-  .platform-badges {
-    display: flex;
+  .hero-inner {
+    position: relative; display: grid; gap: 56px;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
     align-items: center;
-    flex-wrap: wrap;
-    gap: 9px;
-    margin: 20px 0 0;
   }
+  .hero-copy { color: #F3EADA; }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5.2vw, 3.6rem);
+    line-height: 1.12; letter-spacing: -0.03em;
+    margin: 0 0 18px; text-wrap: balance;
+    color: #FFFDF7;
+  }
+  .hero .tagline {
+    font-size: 1.08rem; color: rgba(243, 234, 218, 0.82);
+    margin: 0 0 30px; max-width: 46ch;
+  }
+
+  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: var(--font-ui); font-weight: 650; font-size: 15px;
+    padding: 13px 24px; border-radius: 99px; text-decoration: none;
+    transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease),
+                background 0.18s ease, color 0.18s ease;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold-on-dark), var(--gold-on-dark-deep));
+    color: #22190A;
+    box-shadow: 0 10px 26px -12px rgba(214, 166, 60, 0.85);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 34px -12px rgba(214, 166, 60, 0.95); }
+  .btn-secondary {
+    background: rgba(255, 253, 247, 0.07);
+    color: #F3EADA;
+    border: 1px solid rgba(243, 234, 218, 0.26);
+  }
+  .btn-secondary:hover { background: rgba(255, 253, 247, 0.14); transform: translateY(-2px); }
+
+  .platform-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
   .platform-badges-label {
-    font-size: 12.5px;
-    letter-spacing: 0.03em;
-    color: rgba(255,255,255,0.58);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    margin-inline-end: 2px;
+    font-family: var(--font-ui); font-size: 12px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: rgba(243, 234, 218, 0.55);
+    margin-inline-end: 4px;
   }
   .platform-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 7px 14px 7px 11px;
-    border-radius: 999px;
-    background: rgba(255,255,255,0.07);
-    border: 1px solid var(--border-on-emerald);
-    color: rgba(255,255,255,0.92);
-    font-size: 13px;
-    font-weight: 600;
-    text-decoration: none;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--font-ui); font-size: 12.5px; font-weight: 600;
+    color: rgba(243, 234, 218, 0.9); text-decoration: none;
+    padding: 7px 13px; border-radius: 99px;
+    background: rgba(255, 253, 247, 0.06);
+    border: 1px solid rgba(243, 234, 218, 0.16);
+    transition: background 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
   }
-  .platform-badge svg { width: 15px; height: 15px; flex: 0 0 auto; color: var(--gold-bright); }
   .platform-badge:hover {
-    background: rgba(228,185,79,0.16);
-    border-color: var(--gold-bright);
-    color: #fff;
-    transform: translateY(-1px);
+    background: rgba(255, 253, 247, 0.13);
+    border-color: var(--gold-on-dark); transform: translateY(-1px);
   }
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 13px 22px;
-    border-radius: 10px;
-    font-weight: 700;
-    font-size: 15px;
-    text-decoration: none;
-    border: 1px solid transparent;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-  }
-  .btn-primary { background: linear-gradient(180deg, var(--gold-bright), var(--gold)); color: #1a1305; }
-  .btn-secondary { background: rgba(255,255,255,0.08); color: #fff; border-color: var(--border-on-emerald); }
-  .btn:hover { transform: translateY(-2px); }
-  .btn-primary:hover { box-shadow: 0 10px 22px rgba(0,0,0,0.28); }
-  .btn-secondary:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.4); }
+  .platform-badge svg { width: 15px; height: 15px; flex: none; }
 
-  /* ---- signature: passive vs active ---- */
-  section.signature { padding: 60px 0; }
+  /* ---------------- the live card: the page performs the product ------- */
+  .live {
+    position: relative;
+    background: linear-gradient(170deg, var(--panel-raised), var(--panel));
+    border: 1px solid var(--hairline);
+    border-radius: 20px;
+    padding: 34px 32px 26px;
+    box-shadow: var(--shadow-lift);
+    text-align: center;
+    min-height: 300px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  html[data-theme="light"] .live { background: var(--panel); }
+
+  .live-status {
+    position: absolute; top: 16px; inset-inline-start: 20px;
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--font-ui); font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--ink-dim);
+  }
+  .live-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--emerald-bright);
+    box-shadow: 0 0 0 0 var(--emerald-bright);
+    animation: live-pulse 2.6s var(--ease) infinite;
+  }
+  @keyframes live-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(71, 199, 154, 0.55); }
+    70%  { box-shadow: 0 0 0 9px rgba(71, 199, 154, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(71, 199, 154, 0); }
+  }
+
+  .live-arabic {
+    font-family: var(--font-ar);
+    font-size: clamp(1.9rem, 4.4vw, 2.9rem);
+    line-height: 1.85; color: var(--gold-bright);
+    margin: 10px 0 14px; direction: rtl; unicode-bidi: isolate;
+  }
+  html[data-theme="light"] .live-arabic { color: var(--emerald-deep); }
+  .live-translit {
+    font-family: var(--font-ui); font-size: 14px; font-weight: 600;
+    letter-spacing: 0.02em; color: var(--ink); margin-bottom: 6px;
+  }
+  .live-meaning {
+    font-size: 0.97rem; color: var(--ink-dim);
+    margin: 0 auto; max-width: 34ch;
+  }
+
+  /* The authored moment: each dhikr arrives out of soft focus. */
+  .live-text > * {
+    animation: dhikr-in 0.9s var(--ease) both;
+  }
+  .live-text > *:nth-child(2) { animation-delay: 0.07s; }
+  .live-text > *:nth-child(3) { animation-delay: 0.13s; }
+  @keyframes dhikr-in {
+    from { opacity: 0; transform: translateY(9px); filter: blur(7px); }
+    to   { opacity: 1; transform: none; filter: blur(0); }
+  }
+
+  .live-controls {
+    display: flex; align-items: center; justify-content: center;
+    gap: 14px; margin-top: 26px;
+  }
+  .play-btn {
+    position: relative;
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: var(--font-ui); font-size: 14px; font-weight: 650;
+    padding: 11px 22px 11px 18px; border-radius: 99px; cursor: pointer;
+    background: var(--emerald-deep); color: var(--gold-bright);
+    border: 1px solid var(--hairline);
+    transition: transform 0.18s var(--ease), background 0.18s ease, color 0.18s ease;
+  }
+  html[data-theme="light"] .play-btn { background: var(--emerald); color: #FFF8E6; border-color: transparent; }
+  .play-btn:hover { transform: translateY(-2px); background: var(--emerald); color: #FFF8E6; }
+  .play-btn svg { width: 15px; height: 15px; flex: none; }
+  .play-btn[data-playing="true"] { background: var(--gold); color: #22190A; border-color: transparent; }
+
+  .live-progress {
+    height: 2px; margin-top: 20px; border-radius: 99px;
+    background: var(--hairline-soft); overflow: hidden;
+  }
+  .live-progress span {
+    display: block; height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--emerald), var(--gold));
+    transition: width 0.25s linear;
+  }
+
+  /* ---------------- sections ---------------- */
+  main { padding: 84px 0 40px; }
+  section { margin-bottom: 92px; }
+  .section-title {
+    font-size: clamp(1.5rem, 3vw, 2.05rem);
+    letter-spacing: -0.025em; line-height: 1.2;
+    margin: 0 0 28px; text-wrap: balance;
+  }
+  .section-lede { color: var(--ink-dim); max-width: 68ch; margin: -14px 0 32px; }
+
+  /* signature panel — the page's one structural argument */
   .signature-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
   }
-  .sig-col { padding: 32px 30px; }
-  .sig-col.no {
-    background: var(--parchment-panel);
-    border-inline-end: 1px solid var(--border);
+  .sig-col {
+    border-radius: 16px; padding: 28px 26px;
+    box-shadow: var(--shadow);
   }
+  .sig-col.no { background: var(--panel); }
   .sig-col.yes {
-    background: linear-gradient(160deg, var(--emerald-bright), var(--emerald));
-    color: #fff;
+    background: linear-gradient(158deg, var(--hero-from), var(--hero-to));
+    color: #F3EADA;
   }
   .sig-col h3 {
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 700;
-    margin: 0 0 18px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: var(--font-ui); font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.11em;
+    margin: 0 0 18px; color: var(--ink-dim);
   }
-  .sig-col.no h3 { color: var(--terracotta); }
-  .sig-col.yes h3 { color: var(--gold-bright); }
-
-  .sig-col.no ul { list-style: none; margin: 0; padding: 0; }
+  .sig-col.yes h3 { color: var(--gold-on-dark); }
+  .sig-col.no ul { margin: 0; padding: 0; list-style: none; }
   .sig-col.no li {
-    padding: 9px 0;
-    border-bottom: 1px dashed var(--border);
-    color: var(--ink-dim);
-    text-decoration: line-through;
+    padding: 11px 0; border-bottom: 1px solid var(--hairline-soft);
+    color: var(--ink-dim); text-decoration: line-through;
     text-decoration-color: var(--terracotta);
     text-decoration-thickness: 1.5px;
   }
-  .sig-col.no li:last-child { border-bottom: none; }
+  .sig-col.no li:last-child { border-bottom: 0; }
+  .sig-yes-text { font-size: 1.32rem; line-height: 1.5; margin: 0; letter-spacing: -0.015em; }
 
-  .sig-col.yes p { font-size: 22px; font-weight: 600; margin: 0; line-height: 1.5; }
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px 30px; }
+  .feature h3 { font-size: 1.04rem; margin: 0 0 7px; letter-spacing: -0.015em; }
+  .feature p { margin: 0; color: var(--ink-dim); font-size: 0.95rem; }
 
-  /* ---- generic sections ---- */
-  section { padding: 56px 0; border-bottom: 1px solid var(--border); }
-  section:last-of-type { border-bottom: none; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; counter-reset: step; }
+  .step { position: relative; padding-top: 22px; border-top: 1px solid var(--hairline); }
+  .step h3 { font-size: 1.02rem; margin: 0 0 6px; letter-spacing: -0.015em; }
+  .step p { margin: 0; color: var(--ink-dim); font-size: 0.95rem; }
 
-  h2.section-title {
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--gold);
-    margin: 0 0 30px;
-    font-weight: 700;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* ---------------- the library ---------------- */
+  .zikr-list { display: grid; gap: 10px; }
+  .zikr-row {
+    display: grid; grid-template-columns: auto 1fr auto;
+    align-items: center; gap: 18px;
+    background: var(--panel); border-radius: 14px;
+    padding: 16px 20px;
+    transition: background 0.2s ease, transform 0.2s var(--ease);
   }
-
-  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
-  .feature h3 { font-size: 17px; margin: 0 0 8px; color: var(--emerald-deep); }
-  .feature p { margin: 0; color: var(--ink-dim); font-size: 14.5px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-
-  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
-  .step .num {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 30px; height: 30px; border-radius: 50%;
-    background: var(--emerald); color: #fff; font-weight: 700; font-size: 14px;
-    margin-bottom: 12px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  .zikr-row:hover { background: var(--panel-raised); transform: translateY(-1px); }
+  .zikr-row[data-playing="true"] {
+    background: var(--panel-raised);
+    box-shadow: inset 0 0 0 1px var(--gold);
   }
-  .step h3 { font-size: 16px; margin: 0 0 6px; color: var(--emerald-deep); }
-  .step p { margin: 0; color: var(--ink-dim); font-size: 14.5px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-
-  .zikr-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-  .zikr-card {
-    background: var(--parchment-panel);
-    border: 1px solid var(--border);
-    border-inline-start: 3px solid var(--gold);
-    border-radius: 10px;
-    padding: 18px 20px;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  .row-play {
+    width: 42px; height: 42px; border-radius: 50%;
+    display: grid; place-items: center; cursor: pointer;
+    background: var(--emerald-deep); color: var(--gold-bright);
+    border: 1px solid var(--hairline);
+    transition: transform 0.18s var(--ease), background 0.18s ease, color 0.18s ease;
   }
-  .zikr-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(41,35,29,0.10);
+  html[data-theme="light"] .row-play { background: var(--emerald); color: #FFF8E6; border-color: transparent; }
+  .row-play:hover { background: var(--emerald); color: #FFF8E6; transform: scale(1.07); }
+  .row-play svg { width: 14px; height: 14px; }
+  .row-text { min-width: 0; }
+  .row-arabic {
+    font-family: var(--font-ar); font-size: 1.32rem; line-height: 1.9;
+    color: var(--gold-bright);
+    /* The script runs right-to-left, but the line still has to sit on
+       the same edge as the transliteration under it, or the two read as
+       unrelated. `start` would resolve to the right inside an rtl box. */
+    direction: rtl; unicode-bidi: isolate; text-align: left;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .zikr-card .arabic {
-    font-family: var(--font-ar);
-    font-size: 25px;
-    color: var(--emerald-deep);
-    direction: rtl;
-    margin-bottom: 6px;
+  html[dir="rtl"] .row-arabic { text-align: right; }
+  html[data-theme="light"] .row-arabic { color: var(--emerald-deep); }
+  .row-translit {
+    font-family: var(--font-ui); font-size: 13px; font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .zikr-card .translit { font-weight: 700; font-size: 14.5px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-  .zikr-card .meaning { color: var(--ink-dim); font-size: 13px; margin-top: 2px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-  .zikr-note { color: var(--ink-dim); font-size: 14.5px; margin-top: 18px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-
-  .about p { color: var(--ink-dim); max-width: 68ch; font-size: 16px; }
-
-  details { border-bottom: 1px solid var(--border); padding: 18px 0; }
-  details:first-of-type { border-top: 1px solid var(--border); }
-  summary {
-    cursor: pointer; font-weight: 700; font-size: 15.5px; list-style: none;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    color: var(--emerald-deep);
-    transition: color 0.15s ease;
+  .row-meaning { font-size: 0.9rem; color: var(--ink-dim); margin-top: 2px; }
+  .row-meta {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--font-ui); font-size: 12px; color: var(--ink-dim);
   }
-  summary:hover { color: var(--terracotta); }
-  summary::-webkit-details-marker { display: none; }
-  summary::before { content: "+ "; color: var(--terracotta); font-weight: 700; }
-  details[open] summary::before { content: "\2212 "; }
-  details p { color: var(--ink-dim); margin: 12px 0 0; font-size: 14.5px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .row-tag {
+    font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.09em; color: var(--gold);
+    border: 1px solid var(--hairline); border-radius: 99px;
+    padding: 3px 9px;
+  }
+  .row-dur { font-variant-numeric: tabular-nums; }
+  .zikr-note { color: var(--ink-dim); font-size: 0.92rem; margin-top: 22px; max-width: 70ch; }
 
-  footer { padding: 36px 0 56px; color: var(--ink-dim); font-size: 13.5px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-  footer a { color: var(--ink-dim); text-decoration: underline; }
-  .footer-version { margin: 8px 0 0; opacity: 0.72; }
+  .about p, .faq-a { color: var(--ink-dim); max-width: 70ch; }
+  .faq-item { border-top: 1px solid var(--hairline-soft); padding: 22px 0; }
+  .faq-q { font-size: 1.04rem; margin: 0 0 8px; letter-spacing: -0.015em; }
+  .faq-a { margin: 0; font-size: 0.96rem; }
 
-  :focus-visible { outline: 2px solid var(--terracotta); outline-offset: 2px; }
+  footer {
+    padding: 40px 0 60px; color: var(--ink-dim); font-size: 13.5px;
+    font-family: var(--font-ui);
+    border-top: 1px solid var(--hairline-soft);
+  }
+  footer a { color: var(--ink-dim); text-decoration: underline; text-underline-offset: 2px; }
+  footer a:hover { color: var(--gold-bright); }
+  .footer-version { margin: 8px 0 0; opacity: 0.78; }
 
-  @media (max-width: 720px) {
-    .hero-inner { flex-direction: column; align-items: flex-start; gap: 24px; }
-    .hero-copy h1 { font-size: 30px; max-width: none; }
-    .features, .steps, .zikr-grid { grid-template-columns: 1fr; }
-    .signature-grid { grid-template-columns: 1fr; }
-    .sig-col.no { border-inline-end: none; border-bottom: 1px solid var(--border); }
-    .topnav { flex-direction: column; gap: 12px; }
+  /* ---------------- responsive ---------------- */
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+    .features, .steps { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .wrap, .topnav { width: calc(100% - 32px); }
+    .hero { padding: 48px 0 64px; }
+    .features, .steps, .signature-grid { grid-template-columns: 1fr; }
+    .live { padding: 28px 20px 22px; min-height: 0; }
+    .zikr-row { grid-template-columns: auto 1fr; gap: 14px; }
+    .row-meta { grid-column: 2; margin-top: 4px; }
+    .topnav { gap: 10px; flex-wrap: wrap; }
+    .brand { font-size: 16px; }
+    .lang-switch button { padding: 6px 9px; font-size: 12px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
+    .hero::before { animation: none; }
+    .live-dot { animation: none; }
+    .live-text > * { animation: none; }
+    * { transition-duration: 0.01ms !important; }
   }
+
+  /* ---------------- bits the markup needs ---------------- */
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  .step .num {
+    display: block; font-family: var(--font-ui); font-size: 12px;
+    font-weight: 700; letter-spacing: 0.1em; color: var(--gold);
+    margin-bottom: 8px; font-variant-numeric: tabular-nums;
+  }
+  #faq details {
+    border-top: 1px solid var(--hairline-soft);
+    padding: 4px 0;
+  }
+  #faq details:last-of-type { border-bottom: 1px solid var(--hairline-soft); }
+  #faq summary {
+    cursor: pointer; list-style: none;
+    padding: 18px 34px 18px 0;
+    font-size: 1.02rem; letter-spacing: -0.015em;
+    position: relative;
+    transition: color 0.15s ease;
+  }
+  html[dir="rtl"] #faq summary { padding: 18px 0 18px 34px; }
+  #faq summary::-webkit-details-marker { display: none; }
+  #faq summary::after {
+    content: ""; position: absolute; inset-inline-end: 6px; top: 50%;
+    width: 9px; height: 9px; margin-top: -6px;
+    border-right: 1.8px solid var(--gold);
+    border-bottom: 1.8px solid var(--gold);
+    transform: rotate(45deg);
+    transition: transform 0.25s var(--ease);
+  }
+  #faq details[open] summary::after { transform: rotate(-135deg); margin-top: -2px; }
+  #faq summary:hover { color: var(--gold-bright); }
+  #faq details p { margin: 0 0 18px; }
 </style>
+<!-- Cloudflare Web Analytics: cookieless, no personal data, no consent
+     banner required. Paste the token from the Cloudflare dashboard
+     (Analytics & Logs -> Web Analytics -> Add a site) below.
+
+     It is injected rather than hardcoded as a <script src> so that an
+     unconfigured checkout makes no third-party request at all - a
+     placeholder token would otherwise have every visitor's browser
+     calling Cloudflare and failing. -->
+<script>
+  (function () {
+    var CF_BEACON_TOKEN = "";              /* <- paste the token here */
+    if (!/^[0-9a-f]{32}$/i.test(CF_BEACON_TOKEN)) return;
+    var s = document.createElement("script");
+    s.defer = true;
+    s.src = "https://static.cloudflareinsights.com/beacon.min.js";
+    s.setAttribute("data-cf-beacon", JSON.stringify({ token: CF_BEACON_TOKEN }));
+    document.head.appendChild(s);
+  })();
+</script>
 </head>
 <body>
-
-<nav class="topnav">
+<script>
+  (function () {
+    try {
+      var s = localStorage.getItem("zikrTheme");
+      var t = (s === "light" || s === "dark") ? s
+            : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) { document.documentElement.setAttribute("data-theme", "dark"); }
+  })();
+</script>
+<div class="topbar">
+<nav class="topnav wrap">
   <div class="brand"><img src="favicon-32.png" alt="" width="24" height="24">Zikr</div>
+  <div class="theme-switch" role="group" id="theme-switch">
+    <button type="button" data-theme-set="dark" aria-pressed="true" title="Dark">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+      <span class="sr-only" data-i18n="themeDark"></span>
+    </button>
+    <button type="button" data-theme-set="light" aria-pressed="false" title="Light">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4.1" stroke="currentColor" stroke-width="1.7"/><path d="M12 2.6v2.2M12 19.2v2.2M21.4 12h-2.2M4.8 12H2.6M18.6 5.4l-1.6 1.6M7 17l-1.6 1.6M18.6 18.6 17 17M7 7 5.4 5.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      <span class="sr-only" data-i18n="themeLight"></span>
+    </button>
+  </div>
   <div class="lang-switch" role="group" aria-label="Language">
     <button type="button" data-lang="en">EN</button>
     <button type="button" data-lang="bn">বাংলা</button>
     <button type="button" data-lang="ar">العربية</button>
   </div>
 </nav>
+</div>
 
 <header class="hero">
   <div class="wrap hero-inner">
-    <img class="crescent" src="favicon-512.png" width="132" height="132" alt="Zikr app icon: a crescent moon and star">
     <div class="hero-copy">
-      <span class="eyebrow" data-i18n="eyebrow"></span>
       <h1 data-i18n="h1"></h1>
       <p class="tagline" data-i18n="tagline"></p>
       <div class="cta-row">
@@ -411,7 +647,7 @@
           <span>macOS 14+</span>
         </a>
         <a class="platform-badge" role="listitem" href="https://github.com/shamsbd71/zikr/releases/latest">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.5c1.9 0 3.4 1.7 3.4 4 0 1.1-.4 2.1-1 2.8 2.3 2 3.7 5.9 3.1 9.6-.2 1.4-1.6 1.9-2.6 1-.6-.5-.7-1.3-1.4-1.6-.5 1-1.4 1.6-2.5 1.6s-2-.6-2.5-1.6c-.7.3-.8 1.1-1.4 1.6-1 .9-2.4.4-2.6-1-.6-3.7.8-7.6 3.1-9.6-.6-.7-1-1.7-1-2.8 0-2.3 1.5-4 3.4-4z"/><circle cx="10.3" cy="7.2" r="1" fill="#093D30"/><circle cx="13.7" cy="7.2" r="1" fill="#093D30"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.5c1.9 0 3.4 1.7 3.4 4 0 1.1-.4 2.1-1 2.8 2.3 2 3.7 5.9 3.1 9.6-.2 1.4-1.6 1.9-2.6 1-.6-.5-.7-1.3-1.4-1.6-.5 1-1.4 1.6-2.5 1.6s-2-.6-2.5-1.6c-.7.3-.8 1.1-1.4 1.6-1 .9-2.4.4-2.6-1-.6-3.7.8-7.6 3.1-9.6-.6-.7-1-1.7-1-2.8 0-2.3 1.5-4 3.4-4z"/><circle cx="10.3" cy="7.2" r="1" fill="var(--hero-from)"/><circle cx="13.7" cy="7.2" r="1" fill="var(--hero-from)"/></svg>
           <span>Linux</span>
         </a>
         <a class="platform-badge" role="listitem" href="https://github.com/shamsbd71/zikr/releases/latest">
@@ -419,10 +655,27 @@
           <span>Windows 10+</span>
         </a>
         <a class="platform-badge" role="listitem" href="https://github.com/shamsbd71/zikr/releases/latest">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 10.5V15a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-4.5a5.5 5.5 0 0 0-11 0z"/><line x1="8" y1="5.5" x2="6.8" y2="4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><line x1="16" y1="5.5" x2="17.2" y2="4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="9.3" cy="9.8" r="0.9" fill="#093D30"/><circle cx="14.7" cy="9.8" r="0.9" fill="#093D30"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 10.5V15a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-4.5a5.5 5.5 0 0 0-11 0z"/><line x1="8" y1="5.5" x2="6.8" y2="4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><line x1="16" y1="5.5" x2="17.2" y2="4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="9.3" cy="9.8" r="0.9" fill="var(--hero-from)"/><circle cx="14.7" cy="9.8" r="0.9" fill="var(--hero-from)"/></svg>
           <span>Android 8+</span>
         </a>
       </div>
+    </div>
+
+    <div class="live" id="live-card">
+      <span class="live-status"><span class="live-dot"></span><span data-i18n="liveNow"></span></span>
+      <div class="live-text" id="live-text">
+        <div class="live-arabic" id="live-arabic"></div>
+        <div class="live-translit" id="live-translit"></div>
+        <p class="live-meaning" id="live-meaning"></p>
+      </div>
+      <div class="live-controls">
+        <button type="button" class="play-btn" id="live-play" data-playing="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="ico-play"><path fill="currentColor" d="M8 5.4v13.2c0 .8.9 1.3 1.6.9l10.2-6.6c.6-.4.6-1.4 0-1.8L9.6 4.5c-.7-.4-1.6.1-1.6.9z"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="ico-stop" hidden><rect x="6" y="5.5" width="4.2" height="13" rx="1.2" fill="currentColor"/><rect x="13.8" y="5.5" width="4.2" height="13" rx="1.2" fill="currentColor"/></svg>
+          <span id="live-play-label" data-i18n="heroHear"></span>
+        </button>
+      </div>
+      <div class="live-progress" aria-hidden="true"><span id="live-bar"></span></div>
     </div>
   </div>
 </header>
@@ -443,9 +696,16 @@
       </div>
       <div class="sig-col yes">
         <h3 data-i18n="sigYesTitle"></h3>
-        <p data-i18n="sigYesText"></p>
+        <p class="sig-yes-text" data-i18n="sigYesText"></p>
       </div>
     </div>
+  </section>
+
+  <section id="zikr-list" aria-labelledby="zikr-heading">
+    <h2 class="section-title" id="zikr-heading" data-i18n="listenTitle"></h2>
+    <p class="section-lede" data-i18n="listenLede"></p>
+    <div class="zikr-list" id="zikr-list-rows"></div>
+    <p class="zikr-note" data-i18n-html="listenNote"></p>
   </section>
 
   <section id="features" aria-labelledby="features-heading">
@@ -467,33 +727,6 @@
       <div class="step"><span class="num">2</span><h3 data-i18n="s2h"></h3><p data-i18n="s2p"></p></div>
       <div class="step"><span class="num">3</span><h3 data-i18n="s3h"></h3><p data-i18n="s3p"></p></div>
     </div>
-  </section>
-
-  <section id="zikr-list" aria-labelledby="zikr-heading">
-    <h2 class="section-title" id="zikr-heading" data-i18n="sampleTitle"></h2>
-    <div class="zikr-grid">
-      <div class="zikr-card">
-        <div class="arabic">سُبْحَانَ اللَّهِ</div>
-        <div class="translit">SubhanAllah</div>
-        <div class="meaning" data-i18n="m1"></div>
-      </div>
-      <div class="zikr-card">
-        <div class="arabic">الْحَمْدُ لِلَّهِ</div>
-        <div class="translit">Alhamdulillah</div>
-        <div class="meaning" data-i18n="m2"></div>
-      </div>
-      <div class="zikr-card">
-        <div class="arabic">اللَّهُ أَكْبَرُ</div>
-        <div class="translit">Allahu Akbar</div>
-        <div class="meaning" data-i18n="m3"></div>
-      </div>
-      <div class="zikr-card">
-        <div class="arabic">لَا إِلَٰهَ إِلَّا اللَّهُ</div>
-        <div class="translit">La ilaha illallah</div>
-        <div class="meaning" data-i18n="m4"></div>
-      </div>
-    </div>
-    <p class="zikr-note" data-i18n-html="sampleNote"></p>
   </section>
 
   <section id="about" class="about" aria-labelledby="about-heading">
@@ -551,6 +784,25 @@
 (function () {
   var STRINGS = {
     en: {
+      themeDark: "Dark",
+      themeLight: "Light",
+      liveNow: "Live",
+      heroHear: "Hear it",
+      heroPlaying: "Playing",
+      playLabel: "Play",
+      stopLabel: "Stop",
+      tagEvening: "evening",
+      listenTitle: "Hear it before you install it",
+      listenLede: "These are the actual recordings the app plays — a real reciter, not a synthesised voice. Press play on any of them.",
+      listenNote: "Eight of the 49 adhkar Zikr ships with. The morning, evening and night ones are weighted toward the hour they belong to. <a href=\"https://github.com/shamsbd71/zikr/blob/main/data/zikr.json\">See the full list</a>.",
+      zm1: "Glory be to Allah",
+      zm2: "All praise is due to Allah",
+      zm3: "Allah is the Greatest",
+      zm22: "In the name of Allah",
+      zm5: "I seek forgiveness from Allah",
+      zm7: "Glory be to Allah, and praise be to Him",
+      zm6: "There is no power nor strength except with Allah",
+      zm26: "O Ever-Living, O Sustainer, by Your mercy I seek help. Set right all my affairs, and do not leave me to myself for even the blink of an eye.",
       eyebrow: "A reminder that asks nothing of you",
       h1: "You don't need to remember, this app reminds you itself.",
       tagline: "No taps. No counting. Nothing to open or check. Zikr just speaks a remembrance aloud, at a moment you didn't choose, and lets you go back to what you were doing. You only have to listen.",
@@ -578,7 +830,7 @@
       f3h: "Notification or full-screen flash", f3p: "Show it as a normal macOS notification, or a soft full-screen flash that fades after a duration you choose.",
       f4h: "Random, not routine", f4p: "Fires at an unpredictable moment inside a range you set, so it never becomes background noise you tune out.",
       f5h: "Launch at login", f5p: "Optional, using Apple's current SMAppService API — no LaunchAgent files, no background scripts.",
-      f6h: "Private & light", f6p: "No accounts, no analytics, no network calls except an update check you trigger yourself. Tiny memory footprint.",
+      f6h: "Private & light", f6p: "No accounts, no analytics in the app, no network calls except an update check you trigger yourself. Tiny memory footprint.",
 
       howTitle: "How it works",
       s1h: "Install", s1p: "Download the latest release, unzip, and drag Zikr into Applications.",
@@ -599,7 +851,7 @@
       q2: "Does Zikr need an internet connection?", a2: "No, once installed it runs entirely offline. It only reaches the network if you click Check for Updates.",
       q3: "Does Zikr play Adhan or show prayer times?", a3: "No. Zikr is intentionally scoped to one thing only: random dhikr reminders. It does not include Adhan, prayer times, Qibla, or any other feature.",
       q4: "Which zikr phrases are included?", a4: "A curated set of general, anytime adhkar from the well-known Hisnul Muslim (Fortress of the Muslim) collection, including SubhanAllah, Alhamdulillah, Allahu Akbar, La ilaha illallah, Astaghfirullah, and others.",
-      q5: "Does Zikr collect any data?", a5: "No. There is no analytics, telemetry, or account system. Settings are stored locally on your device.",
+      q5: "Does Zikr collect any data?", a5: "The app collects nothing \u2014 no analytics, no telemetry, no account \u2014 and your settings never leave your device. The website is separate: it counts anonymous page views through Cloudflare Web Analytics, with no cookies and nothing that identifies you.",
       q6: "macOS says it can't verify the developer — is that normal?", a6: "Yes. Zikr is signed ad-hoc (no paid Apple Developer account behind a hobby project), so the first launch needs an override: right-click the app → Open, or allow it in System Settings → Privacy & Security. You only need to do this once.",
 
       footerText: "Zikr is free and open source under the <a href=\"https://github.com/shamsbd71/zikr/blob/main/LICENSE\">MIT license</a>. Source, issues, and releases on <a href=\"https://github.com/shamsbd71/zikr\">GitHub</a>. Recitation audio from Hisn al-Muslim, published by <a href=\"https://dua.gtaf.org/\">dua.gtaf.org</a>.",
@@ -607,6 +859,25 @@
     },
 
     bn: {
+      themeDark: "ডার্ক",
+      themeLight: "লাইট",
+      liveNow: "লাইভ",
+      heroHear: "শুনুন",
+      heroPlaying: "বাজছে",
+      playLabel: "বাজান",
+      stopLabel: "থামান",
+      tagEvening: "সন্ধ্যা",
+      listenTitle: "ইনস্টল করার আগেই শুনে নিন",
+      listenLede: "এগুলো অ্যাপে যে তিলাওয়াত বাজে ঠিক সেই আসল রেকর্ডিং — কোনো যান্ত্রিক কণ্ঠ নয়। যেকোনো একটিতে চাপ দিন।",
+      listenNote: "Zikr-এর ৪৯টি যিকিরের মধ্যে আটটি। সকাল, সন্ধ্যা ও রাতের যিকিরগুলো সেই সময়েই বেশি আসে। <a href=\"https://github.com/shamsbd71/zikr/blob/main/data/zikr.json\">সম্পূর্ণ তালিকা দেখুন</a>।",
+      zm1: "আল্লাহ পবিত্র",
+      zm2: "সমস্ত প্রশংসা আল্লাহর",
+      zm3: "আল্লাহ সর্বশ্রেষ্ঠ",
+      zm22: "আল্লাহর নামে",
+      zm5: "আমি আল্লাহর কাছে ক্ষমা চাই",
+      zm7: "আল্লাহ পবিত্র, এবং সমস্ত প্রশংসা তাঁরই",
+      zm6: "আল্লাহ ছাড়া কোনো শক্তি বা সামর্থ্য নেই",
+      zm26: "হে চিরঞ্জীব, হে সর্বনিয়ন্তা, আপনার রহমতের ওসিলায় সাহায্য চাই। আমার সব বিষয় ঠিক করে দিন, এক পলকের জন্যও আমাকে আমার নিজের কাছে ছেড়ে দেবেন না।",
       eyebrow: "যে রিমাইন্ডার আপনার কাছে কিছুই চায় না",
       h1: "আপনাকে মনে রাখতে হবে না, এই অ্যাপটি নিজেই আপনাকে মনে করিয়ে দেবে।",
       tagline: "কোনো ট্যাপ নেই। গোনাগুনতি নেই। খোলা বা চেক করার কিছু নেই। Zikr শুধু একটি অনির্ধারিত মুহূর্তে জোরে একটি স্মরণ উচ্চারণ করে, আর আপনি আবার নিজের কাজে ফিরে যান। আপনাকে শুধু শুনতে হবে।",
@@ -634,7 +905,7 @@
       f3h: "নোটিফিকেশন অথবা ফুল-স্ক্রিন ফ্ল্যাশ", f3p: "সাধারণ macOS নোটিফিকেশন হিসেবে দেখান, অথবা আপনার নির্ধারিত সময় পর মিলিয়ে যাওয়া একটি নরম ফুল-স্ক্রিন ফ্ল্যাশ।",
       f4h: "এলোমেলো, রুটিন নয়", f4p: "আপনার নির্ধারিত সীমার মধ্যে অনির্দিষ্ট মুহূর্তে আসে, তাই এটি কখনো উপেক্ষা করার মতো পটভূমি শব্দ হয়ে ওঠে না।",
       f5h: "লগইনে চালু হয়", f5p: "ঐচ্ছিক, Apple-এর বর্তমান SMAppService API ব্যবহার করে — কোনো LaunchAgent ফাইল বা ব্যাকগ্রাউন্ড স্ক্রিপ্ট নেই।",
-      f6h: "ব্যক্তিগত ও হালকা", f6p: "কোনো অ্যাকাউন্ট নেই, কোনো অ্যানালিটিক্স নেই, আপনি নিজে না চাইলে কোনো নেটওয়ার্ক কল নেই। মেমোরি ব্যবহার খুবই সামান্য।",
+      f6h: "ব্যক্তিগত ও হালকা", f6p: "কোনো অ্যাকাউন্ট নেই, অ্যাপে কোনো অ্যানালিটিক্স নেই, আপনি নিজে না চাইলে কোনো নেটওয়ার্ক কল নেই। মেমোরি ব্যবহার খুবই সামান্য।",
 
       howTitle: "যেভাবে এটি কাজ করে",
       s1h: "ইনস্টল করুন", s1p: "সর্বশেষ রিলিজ ডাউনলোড করুন, আনজিপ করুন, এবং Zikr-কে Applications-এ টেনে আনুন।",
@@ -655,7 +926,7 @@
       q2: "Zikr-এর কি ইন্টারনেট সংযোগ প্রয়োজন?", a2: "না, একবার ইনস্টল করার পর এটি সম্পূর্ণ অফলাইনে চলে। আপনি নিজে Check for Updates-এ ক্লিক করলে তবেই এটি নেটওয়ার্কে যায়।",
       q3: "Zikr কি আজান বাজায় বা নামাজের সময় দেখায়?", a3: "না। Zikr ইচ্ছাকৃতভাবে একটি বিষয়ে সীমাবদ্ধ: এলোমেলো জিকির স্মরণ করানো। এতে আজান, নামাজের সময়, কিবলা বা অন্য কোনো ফিচার নেই।",
       q4: "কোন কোন জিকির অন্তর্ভুক্ত?", a4: "সুপরিচিত হিসনুল মুসলিম (ফোরট্রেস অফ দ্য মুসলিম) সংকলন থেকে বাছাই করা সাধারণ, যেকোনো সময়ের জিকির — সুবহানাল্লাহ, আলহামদুলিল্লাহ, আল্লাহু আকবার, লা ইলাহা ইল্লাল্লাহ, আস্তাগফিরুল্লাহ এবং আরও অনেক কিছু।",
-      q5: "Zikr কি কোনো তথ্য সংগ্রহ করে?", a5: "না। কোনো অ্যানালিটিক্স, টেলিমেট্রি বা অ্যাকাউন্ট সিস্টেম নেই। সেটিংস আপনার ডিভাইসে স্থানীয়ভাবে সংরক্ষিত হয়।",
+      q5: "Zikr কি কোনো তথ্য সংগ্রহ করে?", a5: "অ্যাপটি কিছুই সংগ্রহ করে না — কোনো অ্যানালিটিক্স নেই, টেলিমেট্রি নেই, অ্যাকাউন্ট নেই — আর আপনার সেটিংস কখনোই আপনার ডিভাইস ছেড়ে যায় না। ওয়েবসাইটটি আলাদা: এটি Cloudflare Web Analytics দিয়ে নামহীনভাবে পেজ ভিউ গণনা করে, কোনো কুকি নেই, আপনাকে শনাক্ত করার মতো কিছুও নেই।",
       q6: "macOS বলছে ডেভেলপার যাচাই করা যায়নি — এটা কি স্বাভাবিক?", a6: "হ্যাঁ। Zikr অ্যাড-হক সাইন করা (একটি শখের প্রজেক্টের পেছনে পেইড Apple Developer অ্যাকাউন্ট নেই), তাই প্রথমবার চালু করতে একটি অনুমতি দিতে হয়: অ্যাপে রাইট-ক্লিক করে Open চাপুন, অথবা System Settings → Privacy & Security থেকে অনুমতি দিন। এটি শুধু একবারই করতে হবে।",
 
       footerText: "Zikr ফ্রি এবং <a href=\"https://github.com/shamsbd71/zikr/blob/main/LICENSE\">MIT লাইসেন্সের</a> অধীনে ওপেন সোর্স। সোর্স, ইস্যু এবং রিলিজ <a href=\"https://github.com/shamsbd71/zikr\">GitHub-এ</a>। তিলাওয়াতের অডিও হিসনুল মুসলিম থেকে, প্রকাশ করেছে <a href=\"https://dua.gtaf.org/\">dua.gtaf.org</a>।",
@@ -663,6 +934,25 @@
     },
 
     ar: {
+      themeDark: "داكن",
+      themeLight: "فاتح",
+      liveNow: "مباشر",
+      heroHear: "استمع",
+      heroPlaying: "يُشغّل",
+      playLabel: "تشغيل",
+      stopLabel: "إيقاف",
+      tagEvening: "المساء",
+      listenTitle: "استمع قبل أن تُثبّت التطبيق",
+      listenLede: "هذه هي التلاوة الحقيقية التي يشغّلها التطبيق، لا صوتًا آليًا. اضغط على أيّ منها.",
+      listenNote: "ثمانية من أصل ٩٤ ذكرًا يضمّها التطبيق. أذكار الصباح والمساء والنوم تأتي في أوقاتها. <a href=\"https://github.com/shamsbd71/zikr/blob/main/data/zikr.json\">القائمة الكاملة</a>.",
+      zm1: "تنزيه الله عن كل نقص",
+      zm2: "الثناء على الله بجميل صفاته",
+      zm3: "الله أكبر من كل شيء",
+      zm22: "الابتداء باسم الله",
+      zm5: "طلب المغفرة من الله",
+      zm7: "تنزيه الله مقرونًا بحمده",
+      zm6: "لا حول ولا قوة إلا بالله",
+      zm26: "دعاء أن يُصلح الله الشأن كله",
       eyebrow: "تذكيرٌ لا يطلب منك شيئًا",
       h1: "لا تحتاج أن تتذكّر — هذا التطبيق يذكّرك بنفسه.",
       tagline: "لا نقرات، لا عدّ، لا شيء تفتحه أو تتابعه. ينطق Zikr بذكرٍ بصوتٍ مسموع في لحظة لم تخترها، ثم يتركك تكمل ما كنت تفعله. كل ما عليك هو أن تستمع.",
@@ -690,7 +980,7 @@
       f3h: "إشعار أو ومضة كاملة الشاشة", f3p: "اعرضه كإشعار macOS عادي، أو كومضة هادئة تملأ الشاشة ثم تتلاشى بعد المدة التي تختارها.",
       f4h: "عشوائي لا روتيني", f4p: "يظهر في لحظة غير متوقعة ضمن نطاق تحدده، فلا يتحول أبدًا إلى ضجيج خلفي تتجاهله.",
       f5h: "التشغيل عند بدء الدخول", f5p: "اختياري، باستخدام واجهة SMAppService الحديثة من Apple — بلا ملفات LaunchAgent وبلا سكربتات خلفية.",
-      f6h: "خاص وخفيف", f6p: "بلا حسابات، بلا تحليلات، وبلا أي اتصال بالشبكة إلا عند طلبك التحقق من التحديثات بنفسك. بصمة ذاكرة ضئيلة جدًا.",
+      f6h: "خاص وخفيف", f6p: "بلا حسابات، وبلا تحليلات داخل التطبيق، وبلا أي اتصال بالشبكة إلا عند طلبك التحقق من التحديثات بنفسك. بصمة ذاكرة ضئيلة جدًا.",
 
       howTitle: "كيف يعمل",
       s1h: "التثبيت", s1p: "نزّل أحدث إصدار، فُك الضغط، واسحب Zikr إلى Applications.",
@@ -711,7 +1001,7 @@
       q2: "هل يحتاج Zikr إلى اتصال بالإنترنت؟", a2: "لا، بعد التثبيت يعمل بلا اتصال بالكامل. لا يتصل بالشبكة إلا إذا نقرت بنفسك على Check for Updates.",
       q3: "هل يشغّل Zikr الأذان أو يعرض مواقيت الصلاة؟", a3: "لا. صُمم Zikr عمدًا ليقوم بأمر واحد فقط: تذكيرات ذكر عشوائية. لا يتضمن أذانًا ولا مواقيت صلاة ولا قبلة ولا أي ميزة أخرى.",
       q4: "ما هي عبارات الذكر المضمّنة؟", a4: "مجموعة مختارة من الأذكار العامة لأي وقت من مجموعة حصن المسلم المعروفة، منها سبحان الله، الحمد لله، الله أكبر، لا إله إلا الله، أستغفر الله، وغيرها.",
-      q5: "هل يجمع Zikr أي بيانات؟", a5: "لا. لا تحليلات ولا تتبّع ولا نظام حسابات. تُحفظ الإعدادات محليًا على جهازك فقط.",
+      q5: "هل يجمع Zikr أي بيانات؟", a5: "التطبيق لا يجمع شيئًا — لا تحليلات ولا تتبّع ولا حسابات — وإعداداتك لا تغادر جهازك أبدًا. أمّا الموقع فمنفصل: يَعُدّ زيارات الصفحات بشكل مجهول عبر Cloudflare Web Analytics، بلا كوكيز وبلا ما يُعرّف بك.",
       q6: "يقول macOS إنه لا يمكن التحقق من المطوّر — هل هذا طبيعي؟", a6: "نعم. Zikr موقّع توقيعًا ذاتيًا (adhoc) إذ لا يوجد حساب Apple Developer مدفوع خلف مشروع شخصي، لذا يحتاج التشغيل الأول إلى تجاوز: انقر بزر الفأرة الأيمن على التطبيق ثم Open، أو اسمح به من System Settings → Privacy & Security. تفعل هذا مرة واحدة فقط.",
 
       footerText: "Zikr مجاني ومفتوح المصدر برخصة <a href=\"https://github.com/shamsbd71/zikr/blob/main/LICENSE\">MIT</a>. الشيفرة المصدرية والمشكلات والإصدارات على <a href=\"https://github.com/shamsbd71/zikr\">GitHub</a>. التسجيلات الصوتية من حصن المسلم، ينشرها موقع <a href=\"https://dua.gtaf.org/\">dua.gtaf.org</a>.",
@@ -721,13 +1011,195 @@
 
   var SUPPORTED = ["en", "bn", "ar"];
 
+  /* The eight adhkar the site can speak. Arabic and transliteration are
+     verbatim from data/zikr.json; `m` names the meaning string so it
+     follows the page language, and `s` is the measured clip length. */
+  var ZIKR = [
+    { id: 1,  ar: "سُبْحَانَ اللَّهِ", tr: "SubhanAllah", m: "zm1", s: 1.4 },
+    { id: 2,  ar: "الْحَمْدُ لِلَّهِ", tr: "Alhamdulillah", m: "zm2", s: 1.5 },
+    { id: 3,  ar: "اللَّهُ أَكْبَرُ", tr: "Allahu Akbar", m: "zm3", s: 1.6 },
+    { id: 22, ar: "بِسْمِ اللَّهِ", tr: "Bismillah", m: "zm22", s: 2.0 },
+    { id: 5,  ar: "أَسْتَغْفِرُ اللَّهَ", tr: "Astaghfirullah", m: "zm5", s: 2.0 },
+    { id: 7,  ar: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", tr: "SubhanAllahi wa bihamdihi", m: "zm7", s: 3.0 },
+    { id: 6,  ar: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ", tr: "La hawla wala quwwata illa billah", m: "zm6", s: 3.5 },
+    { id: 26, ar: "يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغيثُ أَصْلِحْ لِي شَأْنِيَ كُلَّهُ وَلاَ تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ",
+      tr: "Ya Hayyu ya Qayyumu birahmatika astagheeth…", m: "zm26", s: 11.7, tag: "tagEvening" }
+  ];
+
+  /* The hero card rotates only the short adhkar. The long one is four
+     times the height of "SubhanAllah", and cycling into it would shove
+     the whole page down mid-read; it stays playable in the library
+     below, where a tall row costs nothing. */
+  var LIVE_SET = ZIKR.filter(function (z) { return z.s <= 4; });
+
+  var lang = "en";
+  var audio = new Audio();
+  var playingId = null;
+  var liveIndex = 0;
+  var cycleTimer = null;
+  var CYCLE_MS = 7000;
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function t(key) {
+    var dict = STRINGS[lang] || STRINGS.en;
+    return dict[key] != null ? dict[key] : (STRINGS.en[key] || "");
+  }
+
+  /* ---------------- theme ---------------- */
+  function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    document.querySelectorAll("[data-theme-set]").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-theme-set") === theme));
+    });
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", theme === "light" ? "#F7EFDC" : "#0A0F0D");
+    try { localStorage.setItem("zikrTheme", theme); } catch (e) {}
+  }
+
+  function initialTheme() {
+    try {
+      var saved = localStorage.getItem("zikrTheme");
+      if (saved === "light" || saved === "dark") return saved;
+    } catch (e) {}
+    // Dark is this page's home key; only an explicit light preference
+    // moves it.
+    return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  }
+
+  /* ---------------- audio ---------------- */
+  function stopAudio() {
+    audio.pause();
+    audio.currentTime = 0;
+    var was = playingId;
+    playingId = null;
+    if (was != null) paintPlayState();
+  }
+
+  function play(z) {
+    if (playingId === z.id) { stopAudio(); return; }
+    stopAudio();
+    audio.src = "audio/" + z.id + ".mp3";
+    playingId = z.id;
+    paintPlayState();
+    audio.play().catch(function () {
+      // Autoplay policy or a missing file - fail back to silence rather
+      // than leaving a button stuck mid-state.
+      playingId = null;
+      paintPlayState();
+    });
+  }
+
+  function paintPlayState() {
+    var live = LIVE_SET[liveIndex];
+    var btn = document.getElementById("live-play");
+    var on = playingId != null && live && playingId === live.id;
+    btn.setAttribute("data-playing", String(on));
+    btn.querySelector(".ico-play").hidden = on;
+    btn.querySelector(".ico-stop").hidden = !on;
+    document.getElementById("live-play-label").textContent = on ? t("heroPlaying") : t("heroHear");
+
+    document.querySelectorAll(".zikr-row").forEach(function (row) {
+      var on2 = String(playingId) === row.getAttribute("data-id");
+      row.setAttribute("data-playing", String(on2));
+      var b = row.querySelector(".row-play");
+      b.querySelector(".ico-play").hidden = on2;
+      b.querySelector(".ico-stop").hidden = !on2;
+      b.setAttribute("aria-label", (on2 ? t("stopLabel") : t("playLabel")) + " — " + b.getAttribute("data-translit"));
+    });
+  }
+
+  audio.addEventListener("ended", function () { playingId = null; paintPlayState(); });
+  audio.addEventListener("timeupdate", function () {
+    var bar = document.getElementById("live-bar");
+    var live = LIVE_SET[liveIndex];
+    if (!bar || !live || playingId !== live.id || !audio.duration) return;
+    bar.style.width = (audio.currentTime / audio.duration * 100) + "%";
+  });
+
+  /* ---------------- the live card ---------------- */
+  function paintLive(animate) {
+    var z = LIVE_SET[liveIndex];
+    document.getElementById("live-arabic").textContent = z.ar;
+    document.getElementById("live-translit").textContent = z.tr;
+    document.getElementById("live-meaning").textContent = t(z.m);
+    document.getElementById("live-bar").style.width = "0%";
+    if (animate && !reduceMotion) {
+      var box = document.getElementById("live-text");
+      box.querySelectorAll("*").forEach(function (el) {
+        el.style.animation = "none";
+        void el.offsetWidth;          // restart the entrance
+        el.style.animation = "";
+      });
+    }
+    paintPlayState();
+  }
+
+  function advance() {
+    // Never cut a recitation short to change cards.
+    if (playingId != null) return;
+    liveIndex = (liveIndex + 1) % LIVE_SET.length;
+    paintLive(true);
+  }
+
+  function startCycle() {
+    if (cycleTimer) clearInterval(cycleTimer);
+    cycleTimer = setInterval(advance, CYCLE_MS);
+  }
+
+  /* ---------------- the library ---------------- */
+  function renderRows() {
+    var host = document.getElementById("zikr-list-rows");
+    host.innerHTML = "";
+    ZIKR.forEach(function (z) {
+      var row = document.createElement("div");
+      row.className = "zikr-row";
+      row.setAttribute("data-id", String(z.id));
+      row.setAttribute("data-playing", "false");
+
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "row-play";
+      btn.setAttribute("data-translit", z.tr);
+      btn.innerHTML =
+        '<svg viewBox="0 0 24 24" aria-hidden="true" class="ico-play"><path fill="currentColor" d="M8 5.4v13.2c0 .8.9 1.3 1.6.9l10.2-6.6c.6-.4.6-1.4 0-1.8L9.6 4.5c-.7-.4-1.6.1-1.6.9z"/></svg>' +
+        '<svg viewBox="0 0 24 24" aria-hidden="true" class="ico-stop" hidden><rect x="6" y="5.5" width="4.2" height="13" rx="1.2" fill="currentColor"/><rect x="13.8" y="5.5" width="4.2" height="13" rx="1.2" fill="currentColor"/></svg>';
+      btn.addEventListener("click", function () { play(z); });
+
+      var text = document.createElement("div");
+      text.className = "row-text";
+      var ar = document.createElement("div");
+      ar.className = "row-arabic"; ar.textContent = z.ar;
+      var tr = document.createElement("div");
+      tr.className = "row-translit"; tr.textContent = z.tr;
+      var me = document.createElement("div");
+      me.className = "row-meaning"; me.setAttribute("data-meaning-key", z.m); me.textContent = t(z.m);
+      text.appendChild(ar); text.appendChild(tr); text.appendChild(me);
+
+      var meta = document.createElement("div");
+      meta.className = "row-meta";
+      if (z.tag) {
+        var tag = document.createElement("span");
+        tag.className = "row-tag"; tag.setAttribute("data-tag-key", z.tag); tag.textContent = t(z.tag);
+        meta.appendChild(tag);
+      }
+      var dur = document.createElement("span");
+      dur.className = "row-dur"; dur.textContent = z.s.toFixed(1) + "s";
+      meta.appendChild(dur);
+
+      row.appendChild(btn); row.appendChild(text); row.appendChild(meta);
+      host.appendChild(row);
+    });
+    paintPlayState();
+  }
+
+  /* ---------------- language ---------------- */
   function detectPlatform() {
     var ua = (navigator.userAgent || "") + " " + (navigator.platform || "");
     if (/Android/i.test(ua)) return "android";
+    if (/Mac|iPhone|iPad/i.test(ua)) return "mac";
+    if (/Linux/i.test(ua)) return "linux";
     if (/Win/i.test(ua)) return "windows";
-    if (/Mac|iPhone|iPad|iPod/i.test(ua)) return "mac";
-    if (/Linux|X11/i.test(ua)) return "linux";
-    return "other";
+    return "generic";
   }
 
   function detectDefault() {
@@ -739,10 +1211,11 @@
     return SUPPORTED.indexOf(nav) !== -1 ? nav : "en";
   }
 
-  function applyLang(lang) {
+  function applyLang(next) {
+    lang = SUPPORTED.indexOf(next) !== -1 ? next : "en";
     var dict = STRINGS[lang] || STRINGS.en;
-    document.documentElement.setAttribute("lang", lang);
-    document.documentElement.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
 
     document.querySelectorAll("[data-i18n]").forEach(function (el) {
       var key = el.getAttribute("data-i18n");
@@ -752,26 +1225,46 @@
       var key = el.getAttribute("data-i18n-html");
       if (dict[key] != null) el.innerHTML = dict[key];
     });
-    document.querySelectorAll(".lang-switch button").forEach(function (btn) {
-      btn.classList.toggle("active", btn.getAttribute("data-lang") === lang);
+    document.querySelectorAll(".lang-switch button").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-lang") === lang));
     });
 
     var ctaKey = { mac: "ctaDownloadMac", linux: "ctaDownloadLinux", windows: "ctaDownloadWindows", android: "ctaDownloadAndroid" }[detectPlatform()] || "ctaDownloadGeneric";
     var ctaEl = document.getElementById("cta-download");
     if (ctaEl && dict[ctaKey] != null) ctaEl.textContent = dict[ctaKey];
 
+    // Content rendered from JS carries its own key, so it re-reads here
+    // rather than going stale in the previous language.
+    document.querySelectorAll("[data-meaning-key]").forEach(function (el) {
+      el.textContent = t(el.getAttribute("data-meaning-key"));
+    });
+    document.querySelectorAll("[data-tag-key]").forEach(function (el) {
+      el.textContent = t(el.getAttribute("data-tag-key"));
+    });
+    paintLive(false);
+
     try { localStorage.setItem("zikrLang", lang); } catch (e) {}
   }
 
-  document.querySelectorAll(".lang-switch button").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      applyLang(btn.getAttribute("data-lang"));
-    });
+  /* ---------------- wire up ---------------- */
+  applyTheme(initialTheme());
+  document.querySelectorAll("[data-theme-set]").forEach(function (b) {
+    b.addEventListener("click", function () { applyTheme(b.getAttribute("data-theme-set")); });
   });
 
+  document.querySelectorAll(".lang-switch button").forEach(function (btn) {
+    btn.addEventListener("click", function () { applyLang(btn.getAttribute("data-lang")); });
+  });
+
+  document.getElementById("live-play").addEventListener("click", function () {
+    play(LIVE_SET[liveIndex]);
+  });
+
+  renderRows();
   applyLang(detectDefault());
+  paintLive(false);
+  if (!reduceMotion) startCycle();
 })();
 </script>
-
 </body>
 </html>
