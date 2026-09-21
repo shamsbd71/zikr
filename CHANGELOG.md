@@ -4,6 +4,43 @@ All notable changes to Zikr are documented here. Dates are release dates
 (Asia/Dhaka). See [releases](https://github.com/shamsbd71/zikr/releases)
 for downloadable assets per version.
 
+## [Unreleased]
+
+### Fixed
+- Several adhkar in the list were fragments rather than whole
+  supplications, and were being spoken as such: "Rabbana atina
+  fid-dunya hasanah" stopped halfway through the verse, "Tawakkaltu
+  'alallah" was the middle clause of the dua for leaving home, and
+  "SubhanAllahil Azeem" was missing "wa bihamdihi". These now carry
+  their complete text.
+- The bundled recitations were systematically cut short. Measured
+  against the length each phrase's own text implies, the old clips ran
+  at a median of 0.92x — with 23 of 40 ending early and several at
+  0.62-0.67x, i.e. losing roughly a third of their words. Every clip
+  has been re-cut and now sits at a median of 1.19x, which is simply
+  the reciter being more measured than a synthesiser.
+- Three entries ("Ya Hayyu Ya Qayyum", "La ilaha illallah wahdahu la
+  sharika lah", "Allahumma salli 'ala Muhammad") were opening clauses
+  of adhkar already present in the list in full, so they have been
+  folded into those entries rather than kept as duplicates. The list
+  is now 49 entries, every one of them complete.
+
+### Added
+- Every zikr in the list now ships with a real recitation — 8 phrases
+  that previously fell back to the system voice have one for the first
+  time.
+
+### Changed
+- Recitations now come from the Hisn al-Muslim audio published by
+  [dua.gtaf.org](https://dua.gtaf.org/), which publishes each dua as
+  its own file with no narrator preamble and with its segments listed
+  as data. For 45 of the 49 entries the file simply is the phrase, so
+  the clip is a silence trim rather than a guess — the previous source
+  required locating the dhikr inside a longer track by matching it
+  against a synthesised reference, which shipped audibly wrong clips
+  twice. `tools/fetch_audio.py` now also rejects any clip that is not a
+  credible length for its own text instead of writing it.
+
 ## [1.8.0] — 2026-09-02
 
 ### Fixed

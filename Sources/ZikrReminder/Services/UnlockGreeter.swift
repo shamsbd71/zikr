@@ -7,12 +7,16 @@ import AppKit
 final class UnlockGreeter {
     static let shared = UnlockGreeter()
 
-    private let bismillah = Zikr(
-        id: 0,
-        arabic: "بِسْمِ اللَّهِ",
-        transliteration: "Bismillah",
-        translation: "In the name of Allah"
-    )
+    /// Taken from the bundled list rather than hardcoded, so the greeting
+    /// uses the recorded Bismillah (data/audio/22.mp3) like every other
+    /// zikr. The old inline Zikr had id 0, which matched no clip, so this
+    /// was always spoken by the synthesiser even once real audio shipped.
+    /// Falls back to the same inline text if the entry ever disappears.
+    private let bismillah: Zikr = ZikrLoader.all.first { $0.transliteration == "Bismillah" }
+        ?? Zikr(id: 0,
+                arabic: "بِسْمِ اللَّهِ",
+                transliteration: "Bismillah",
+                translation: "In the name of Allah")
 
     private init() {
         // sessionDidBecomeActiveNotification only reliably fires for fast

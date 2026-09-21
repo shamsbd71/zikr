@@ -1,0 +1,483 @@
+[
+  {
+    "id": 1,
+    "arabic": "سُبْحَانَ اللَّهِ",
+    "transliteration": "SubhanAllah",
+    "translation": "Glory be to Allah",
+    "windows": [],
+    "seconds": 1.4,
+    "source": "gtaf:241"
+  },
+  {
+    "id": 2,
+    "arabic": "الْحَمْدُ لِلَّهِ",
+    "transliteration": "Alhamdulillah",
+    "translation": "All praise is due to Allah",
+    "windows": [],
+    "seconds": 1.5,
+    "source": "gtaf:183#1"
+  },
+  {
+    "id": 3,
+    "arabic": "اللَّهُ أَكْبَرُ",
+    "transliteration": "Allahu Akbar",
+    "translation": "Allah is the Greatest",
+    "windows": [],
+    "seconds": 1.6,
+    "source": "gtaf:223"
+  },
+  {
+    "id": 4,
+    "arabic": "لَا إِلَٰهَ إِلَّا اللَّهُ",
+    "transliteration": "La ilaha illallah",
+    "translation": "There is no god but Allah",
+    "windows": [],
+    "seconds": 3.1,
+    "source": "gtaf:146"
+  },
+  {
+    "id": 5,
+    "arabic": "أَسْتَغْفِرُ اللَّهَ",
+    "transliteration": "Astaghfirullah",
+    "translation": "I seek forgiveness from Allah",
+    "windows": [],
+    "seconds": 2.0,
+    "source": "gtaf:63#1@0.25"
+  },
+  {
+    "id": 6,
+    "arabic": "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ",
+    "transliteration": "La hawla wala quwwata illa billah",
+    "translation": "There is no power nor strength except with Allah",
+    "windows": [],
+    "seconds": 3.5,
+    "source": "gtaf:243"
+  },
+  {
+    "id": 7,
+    "arabic": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
+    "transliteration": "SubhanAllahi wa bihamdihi",
+    "translation": "Glory be to Allah and praise be to Him",
+    "windows": [],
+    "seconds": 3.0,
+    "source": "gtaf:89"
+  },
+  {
+    "id": 8,
+    "arabic": "سُبْحَانَ اللَّهِ الْعَظِيمِ وَبِحَمْدِهِ",
+    "transliteration": "SubhanAllahil Azeemi wa bihamdihi",
+    "translation": "Glory be to Allah the Magnificent, and praise be to Him",
+    "windows": [],
+    "seconds": 3.1,
+    "source": "gtaf:242"
+  },
+  {
+    "id": 9,
+    "arabic": "لَا إِلَٰهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ",
+    "transliteration": "La ilaha illa anta subhanaka inni kuntu minaz-zalimin",
+    "translation": "There is no god but You, glory be to You, I was among the wrongdoers",
+    "windows": [],
+    "seconds": 10.2,
+    "source": "gtaf:120"
+  },
+  {
+    "id": 10,
+    "arabic": "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ",
+    "transliteration": "Hasbunallahu wa ni'mal wakeel",
+    "translation": "Allah is sufficient for us, and He is the best disposer of affairs",
+    "windows": [],
+    "seconds": 4.0,
+    "source": "gtaf:124"
+  },
+  {
+    "id": 12,
+    "arabic": "رَبِّ اغْفِرْ لِي، رَبِّ اغْفِرْ لِي",
+    "transliteration": "Rabbighfir li, Rabbighfir li",
+    "translation": "My Lord, forgive me. My Lord, forgive me",
+    "windows": [],
+    "seconds": 3.7,
+    "source": "gtaf:45"
+  },
+  {
+    "id": 14,
+    "arabic": "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
+    "transliteration": "Rabbana atina fid-dunya hasanah, wa fil-akhirati hasanah, wa qina 'adhaban-nar",
+    "translation": "Our Lord, give us good in this world and good in the Hereafter, and protect us from the punishment of the Fire",
+    "windows": [],
+    "seconds": 8.7,
+    "source": "gtaf:224"
+  },
+  {
+    "id": 15,
+    "arabic": "اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي",
+    "transliteration": "Allahumma innaka 'afuwwun tuhibbul 'afwa fa'fu 'anni",
+    "translation": "O Allah, You are Forgiving and love forgiveness, so forgive me",
+    "windows": [],
+    "seconds": 5.3,
+    "source": "gtaf:327"
+  },
+  {
+    "id": 17,
+    "arabic": "سُبْحَانَ رَبِّيَ الْعَظِيمِ",
+    "transliteration": "Subhana Rabbiyal Azeem",
+    "translation": "Glory be to my Lord, the Magnificent",
+    "windows": [],
+    "seconds": 2.4,
+    "source": "gtaf:30"
+  },
+  {
+    "id": 18,
+    "arabic": "سُبْحَانَ رَبِّيَ الْأَعْلَى",
+    "transliteration": "Subhana Rabbiyal A'la",
+    "translation": "Glory be to my Lord, the Most High",
+    "windows": [],
+    "seconds": 2.3,
+    "source": "gtaf:38"
+  },
+  {
+    "id": 19,
+    "arabic": "رَبِّ زِدْنِي عِلْمًا",
+    "transliteration": "Rabbi zidni ilma",
+    "translation": "My Lord, increase me in knowledge",
+    "windows": [],
+    "seconds": 3.3,
+    "source": "gtaf:291"
+  },
+  {
+    "id": 20,
+    "arabic": "بِسْمِ اللَّهِ، تَوَكَّلْتُ عَلَى اللَّهِ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ",
+    "transliteration": "Bismillah, tawakkaltu 'alallah, wa la hawla wa la quwwata illa billah",
+    "translation": "In the name of Allah, I place my trust in Allah; there is no might nor power except with Allah",
+    "windows": [],
+    "seconds": 6.5,
+    "source": "gtaf:17"
+  },
+  {
+    "id": 22,
+    "arabic": "بِسْمِ اللَّهِ",
+    "transliteration": "Bismillah",
+    "translation": "In the name of Allah",
+    "windows": [],
+    "seconds": 2.0,
+    "source": "gtaf:13"
+  },
+  {
+    "id": 23,
+    "arabic": "حَسْبِيَ اللَّهُ لاَ إِلَهَ إِلاَّ هُوَ عَلَيهِ تَوَكَّلتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ",
+    "transliteration": "Hasbiyallahu la ilaha illa huwa, 'alayhi tawakkaltu wa huwa Rabbul-'Arshil-'Azeem",
+    "translation": "Allah is sufficient for me; there is no god but Him. In Him I trust, and He is Lord of the Mighty Throne",
+    "windows": [
+      "morning",
+      "evening"
+    ],
+    "seconds": 8.8,
+    "source": "gtaf:81"
+  },
+  {
+    "id": 24,
+    "arabic": "بِسْمِ اللَّهِ الَّذِي لاَ يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلاَ فِي السّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+    "transliteration": "Bismillahil-ladhi la yadurru ma'asmihi shay'un fil-ardi wa la fis-sama'i wa Huwas-Sami'ul-'Aleem",
+    "translation": "In the name of Allah, with whose name nothing on earth or in heaven can cause harm; He is the All-Hearing, the All-Knowing",
+    "windows": [
+      "morning",
+      "evening"
+    ],
+    "seconds": 8.0,
+    "source": "gtaf:84"
+  },
+  {
+    "id": 25,
+    "arabic": "رَضِيتُ بِاللَّهِ رَبَّاً، وَبِالْإِسْلاَمِ دِيناً، وَبِمُحَمَّدٍ صلى الله عليه وسلم نَبِيّاً",
+    "transliteration": "Radeetu billahi Rabban, wa bil-Islami deenan, wa bi-Muhammadin nabiyyan",
+    "translation": "I am content with Allah as my Lord, Islam as my religion, and Muhammad as my Prophet",
+    "windows": [
+      "morning",
+      "evening"
+    ],
+    "seconds": 9.5,
+    "source": "gtaf:85"
+  },
+  {
+    "id": 26,
+    "arabic": "يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغيثُ أَصْلِحْ لِي شَأْنِيَ كُلَّهُ وَلاَ تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ",
+    "transliteration": "Ya Hayyu ya Qayyumu birahmatika astagheeth, aslih li sha'ni kullahu wa la takilni ila nafsi tarfata 'ayn",
+    "translation": "O Ever-Living, O Sustainer, by Your mercy I seek help. Set right all my affairs and do not leave me to myself for even the blink of an eye",
+    "windows": [
+      "morning",
+      "evening"
+    ],
+    "seconds": 11.7,
+    "source": "gtaf:86"
+  },
+  {
+    "id": 27,
+    "arabic": "لاَ إِلَهَ إِلاَّ اللَّهُ، وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+    "transliteration": "La ilaha illallahu wahdahu la sharika lah, lahul-mulku wa lahul-hamdu wa Huwa 'ala kulli shay'in Qadeer",
+    "translation": "There is no god but Allah alone, with no partner. His is the dominion and His the praise, and He is capable of all things",
+    "windows": [
+      "morning"
+    ],
+    "seconds": 11.2,
+    "source": "gtaf:90"
+  },
+  {
+    "id": 28,
+    "arabic": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ: عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ",
+    "transliteration": "SubhanAllahi wa bihamdihi, 'adada khalqihi, wa rida nafsihi, wa zinata 'arshihi, wa midada kalimatihi",
+    "translation": "Glory and praise be to Allah, as many as His creation, as pleases Him, as the weight of His Throne, and as endless as His words",
+    "windows": [
+      "morning"
+    ],
+    "seconds": 8.8,
+    "source": "gtaf:91"
+  },
+  {
+    "id": 29,
+    "arabic": "اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْماً نَافِعاً، وَرِزْقاً طَيِّباً، وَعَمَلاً مُتَقَبَّلاً",
+    "transliteration": "Allahumma inni as'aluka 'ilman nafi'an, wa rizqan tayyiban, wa 'amalan mutaqabbalan",
+    "translation": "O Allah, I ask You for beneficial knowledge, good provision, and deeds that are accepted",
+    "windows": [
+      "morning"
+    ],
+    "seconds": 8.3,
+    "source": "gtaf:70"
+  },
+  {
+    "id": 30,
+    "arabic": "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ",
+    "transliteration": "Astaghfirullaha wa atubu ilayh",
+    "translation": "I seek forgiveness from Allah and turn to Him in repentance",
+    "windows": [
+      "morning",
+      "evening"
+    ],
+    "seconds": 3.9,
+    "source": "gtaf:93"
+  },
+  {
+    "id": 31,
+    "arabic": "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
+    "transliteration": "A'udhu bikalimatillahit-tammati min sharri ma khalaq",
+    "translation": "I seek refuge in the perfect words of Allah from the evil of what He has created",
+    "windows": [
+      "evening"
+    ],
+    "seconds": 5.5,
+    "source": "gtaf:94"
+  },
+  {
+    "id": 32,
+    "arabic": "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبَيِّنَا مُحَمَّدٍ",
+    "transliteration": "Allahumma salli wa sallim 'ala nabiyyina Muhammad",
+    "translation": "O Allah, send blessings and peace upon our Prophet Muhammad",
+    "windows": [
+      "morning",
+      "evening"
+    ],
+    "seconds": 4.4,
+    "source": "gtaf:95"
+  },
+  {
+    "id": 33,
+    "arabic": "بِاسْمِكَ رَبِّي وَضَعْتُ جَنْبِي، وَبِكَ أَرْفَعُهُ، فَإِن أَمْسَكْتَ نَفْسِي فارْحَمْهَا، وَإِنْ أَرْسَلْتَهَا فَاحْفَظْهَا، بِمَا تَحْفَظُ بِهِ عِبَادَكَ الصَّالِحِينَ",
+    "transliteration": "Bismika Rabbi wada'tu janbi wa bika arfa'uh, fa'in amsakta nafsi farhamha, wa in arsaltaha fahfazha bima tahfazu bihi 'ibadakas-saliheen",
+    "translation": "In Your name my Lord I lay down my side, and by You I raise it. If You take my soul, have mercy on it; if You send it back, protect it as You protect Your righteous servants",
+    "windows": [
+      "night"
+    ],
+    "seconds": 13.6,
+    "source": "gtaf:99"
+  },
+  {
+    "id": 34,
+    "arabic": "اللَّهُمَّ إِنَّكَ خَلَقْتَ نَفْسِي وَأَنْتَ تَوَفَّاهَا، لَكَ مَمَاتُهَا وَمَحْياهَا، إِنْ أَحْيَيْتَهَا فَاحْفَظْهَا، وَإِنْ أَمَتَّهَا فَاغْفِرْ لَهَا. اللَّهُمَّ إِنِّي أَسْأَلُكَ العَافِيَةَ",
+    "transliteration": "Allahumma innaka khalaqta nafsi wa Anta tawaffaha, laka mamatuha wa mahyaha, in ahyaytaha fahfazha, wa in amattaha faghfir laha",
+    "translation": "O Allah, You created my soul and You take it back. To You belong its death and its life. If You keep it alive, protect it; if You take it, forgive it",
+    "windows": [
+      "night"
+    ],
+    "seconds": 17.8,
+    "source": "gtaf:100"
+  },
+  {
+    "id": 35,
+    "arabic": "اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ",
+    "transliteration": "Allahumma qini 'adhabaka yawma tab'athu 'ibadak",
+    "translation": "O Allah, protect me from Your punishment on the Day You raise Your servants",
+    "windows": [
+      "night"
+    ],
+    "seconds": 4.2,
+    "source": "gtaf:101"
+  },
+  {
+    "id": 36,
+    "arabic": "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا",
+    "transliteration": "Bismika Allahumma amutu wa ahya",
+    "translation": "In Your name, O Allah, I die and I live",
+    "windows": [
+      "night"
+    ],
+    "seconds": 4.2,
+    "source": "gtaf:102"
+  },
+  {
+    "id": 37,
+    "arabic": "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا، وَكَفَانَا، وَآوَانَا، فَكَمْ مِمَّنْ لاَ كَافِيَ لَهُ وَلاَ مُؤْوِيَ",
+    "transliteration": "Alhamdu lillahil-ladhi at'amana wa saqana, wa kafana wa awana",
+    "translation": "All praise is due to Allah, who fed us and gave us drink, sufficed us and sheltered us",
+    "windows": [
+      "night"
+    ],
+    "seconds": 11.3,
+    "source": "gtaf:105"
+  },
+  {
+    "id": 38,
+    "arabic": "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ غَضَبِهِ وَعِقَابِهِ، وَشَرِّ عِبَادِهِ، وَمِنْ هَمَزَاتِ الشَّياطِينِ وَأَنْ يَحْضُرُونِ",
+    "transliteration": "A'udhu bikalimatillahit-tammati min ghadabihi wa 'iqabihi, wa sharri 'ibadih",
+    "translation": "I seek refuge in the perfect words of Allah from His anger and His punishment, and from the evil of His servants",
+    "windows": [
+      "night"
+    ],
+    "seconds": 11.9,
+    "source": "gtaf:110"
+  },
+  {
+    "id": 39,
+    "arabic": "الْحَمْدُ لِلَّهِ الَّذِي عَافَانِي فِي جَسَدِي، وَرَدَّ عَلَيَّ رُوحِي، وَأَذِنَ لي بِذِكْرِهِ",
+    "transliteration": "Alhamdu lillahil-ladhi 'afani fi jasadi, wa radda 'alayya ruhi, wa adhina li bidhikrih",
+    "translation": "All praise is due to Allah, who restored my health, returned my soul, and allowed me to remember Him",
+    "windows": [
+      "morning"
+    ],
+    "seconds": 8.1,
+    "source": "gtaf:4"
+  },
+  {
+    "id": 40,
+    "arabic": "سُبْحانَكَ اللَّهُمَّ وَبِحَمْدِكَ، وَتَبارَكَ اسْمُكَ، وَتَعَالَى جَدُّكَ، وَلاَ إِلَهَ غَيْرُكَ",
+    "transliteration": "Subhanaka Allahumma wa bihamdika, wa tabarakasmuka, wa ta'ala jadduka, wa la ilaha ghayruk",
+    "translation": "How perfect You are, O Allah, and praise be to You. Blessed is Your name, exalted Your majesty, and there is no god but You",
+    "windows": [],
+    "seconds": 8.3,
+    "source": "gtaf:25"
+  },
+  {
+    "id": 41,
+    "arabic": "سُبْحَانَكَ اللَّهُمَّ رَبَّنَا وَبِحَمْدِكَ، اللَّهُمَّ اغْفِرْ لِي",
+    "transliteration": "Subhanaka Allahumma Rabbana wa bihamdika, Allahummaghfir li",
+    "translation": "How perfect You are, O Allah our Lord, and praise be to You. O Allah, forgive me",
+    "windows": [],
+    "seconds": 6.0,
+    "source": "gtaf:31"
+  },
+  {
+    "id": 42,
+    "arabic": "سُبُّوُحٌ، قُدُّوسٌ، رَبُّ المَلاَئِكَةِ وَالرُّوحِ",
+    "transliteration": "Subbuhun Quddusun, Rabbul-mala'ikati war-Ruh",
+    "translation": "Perfect and Holy, Lord of the angels and the Spirit",
+    "windows": [],
+    "seconds": 6.6,
+    "source": "gtaf:32"
+  },
+  {
+    "id": 43,
+    "arabic": "سُبْحَانَ ذِي الْجَبَرُوتِ، وَالْمَلَكُوتِ، وَالْكِبْرِيَاءِ، وَالْعَظَمَةِ",
+    "transliteration": "Subhana dhil-jabaruti wal-malakuti wal-kibriya'i wal-'azamah",
+    "translation": "Glory be to the Possessor of might, dominion, majesty and greatness",
+    "windows": [],
+    "seconds": 6.6,
+    "source": "gtaf:34"
+  },
+  {
+    "id": 44,
+    "arabic": "رَبَّنَا وَلَكَ الْحَمْدُ، حَمْداً كَثيراً طَيِّباً مُبارَكاً فِيهِ",
+    "transliteration": "Rabbana wa lakal-hamdu, hamdan katheeran tayyiban mubarakan feeh",
+    "translation": "Our Lord, to You is all praise - abundant, good and blessed",
+    "windows": [],
+    "seconds": 5.7,
+    "source": "gtaf:36"
+  },
+  {
+    "id": 45,
+    "arabic": "اللَّهُمَّ اغْفِرْ لِي، وَارْحَمْنِي، وَاهْدِنِي، وَاجْبُرْنِي، وَعَافِنِي، وَارْزُقْنِي، وَارْفَعْنِي",
+    "transliteration": "Allahummaghfir li, warhamni, wahdini, wajburni, wa 'afini, warzuqni, warfa'ni",
+    "translation": "O Allah, forgive me, have mercy on me, guide me, support me, protect me, provide for me, and raise me",
+    "windows": [],
+    "seconds": 8.7,
+    "source": "gtaf:46"
+  },
+  {
+    "id": 46,
+    "arabic": "اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ، وَشُكْرِكَ، وَحُسْنِ عِبادَتِكَ",
+    "transliteration": "Allahumma a'inni 'ala dhikrika wa shukrika wa husni 'ibadatik",
+    "translation": "O Allah, help me to remember You, thank You, and worship You well",
+    "windows": [],
+    "seconds": 6.6,
+    "source": "gtaf:56"
+  },
+  {
+    "id": 47,
+    "arabic": "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْجَنَّةَ وَأَعُوذُ بِكَ مِنَ النَّارِ",
+    "transliteration": "Allahumma inni as'alukal-jannata wa a'udhu bika minan-nar",
+    "translation": "O Allah, I ask You for Paradise and seek refuge in You from the Fire",
+    "windows": [],
+    "seconds": 6.6,
+    "source": "gtaf:58"
+  },
+  {
+    "id": 48,
+    "arabic": "اللَّهُ اللَّهُ رَبِّي لاَ أُشْرِكُ بِهِ شَيْئاً",
+    "transliteration": "Allahu Allahu Rabbi la ushriku bihi shay'a",
+    "translation": "Allah, Allah is my Lord; I associate nothing with Him",
+    "windows": [],
+    "seconds": 5.7,
+    "source": "gtaf:121"
+  },
+  {
+    "id": 49,
+    "arabic": "اللَّهُمَّ اكْفِنِي بِحَلاَلِكَ عَنْ حَرَامِكَ، وَأَغْنِنِي بِفَضْلِكِ عَمَّنْ سِوَاكَ",
+    "transliteration": "Allahummakfini bihalalika 'an haramik, wa aghnini bifadlika 'amman siwak",
+    "translation": "O Allah, suffice me with what is lawful against what is forbidden, and enrich me by Your grace from all besides You",
+    "windows": [],
+    "seconds": 8.4,
+    "source": "gtaf:131"
+  },
+  {
+    "id": 50,
+    "arabic": "قَدَرُ اللَّهُ وَمَا شَاءَ فَعَلَ",
+    "transliteration": "Qadarullahi wa ma sha'a fa'al",
+    "translation": "It is the decree of Allah, and He does what He wills",
+    "windows": [],
+    "seconds": 3.0,
+    "source": "gtaf:137"
+  },
+  {
+    "id": 51,
+    "arabic": "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ",
+    "transliteration": "A'udhu billahi minash-shaytanir-rajeem",
+    "translation": "I seek refuge in Allah from the accursed Satan",
+    "windows": [],
+    "seconds": 3.8,
+    "source": "gtaf:133"
+  },
+  {
+    "id": 52,
+    "arabic": "اللَّهُمَّ اجْعَلْنِي مِنَ التَّوَّابِينَ وَاجْعَلْنِي مِنَ الْمُتَطَهِّرِينَ",
+    "transliteration": "Allahummaj'alni minat-tawwabeena, waj'alni minal-mutatahhireen",
+    "translation": "O Allah, make me among those who turn to You in repentance, and among those who keep themselves pure",
+    "windows": [],
+    "seconds": 5.4,
+    "source": "gtaf:15"
+  },
+  {
+    "id": 53,
+    "arabic": "سُبْحَانَ الَّذِي يُسَبِّحُ الرَّعْدُ بِحَمْدِهِ وَالْمَلاَئِكةُ مِنْ خِيفَتِهِ",
+    "transliteration": "Subhanal-ladhi yusabbihur-ra'du bihamdihi wal-mala'ikatu min kheefatih",
+    "translation": "Glory be to Him whom the thunder glorifies with praise, and the angels too, in awe of Him",
+    "windows": [],
+    "seconds": 6.9,
+    "source": "gtaf:163"
+  }
+]

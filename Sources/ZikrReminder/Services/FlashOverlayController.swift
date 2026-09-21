@@ -16,8 +16,20 @@ final class FlashOverlayController {
         dismissWorkItem?.cancel()
         panel?.close()
 
-        let hosting = NSHostingView(rootView: FlashOverlayView(zikr: zikr))
-        hosting.frame = NSRect(origin: .zero, size: hosting.fittingSize)
+        let root = FlashOverlayView(zikr: zikr)
+
+        // fittingSize alone measures as if the text never wraps, so a long
+        // dua came out the right width but far too short and got clipped
+        // (768x290 instead of 768x555). Take the natural width from
+        // fittingSize, cap it, then ask SwiftUI for the height that width
+        // actually needs.
+        let natural = NSHostingView(rootView: root).fittingSize
+        let width = min(natural.width, FlashOverlayView.maxCardWidth)
+        let size = NSHostingController(rootView: root)
+            .sizeThatFits(in: CGSize(width: width, height: CGFloat.greatestFiniteMagnitude))
+
+        let hosting = NSHostingView(rootView: root)
+        hosting.frame = NSRect(origin: .zero, size: size)
 
         let panel = NSPanel(
             contentRect: hosting.frame,
