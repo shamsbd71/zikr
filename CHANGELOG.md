@@ -6,6 +6,23 @@ for downloadable assets per version.
 
 ## [Unreleased]
 
+### Changed
+- The site is rewritten as a calm catalogue page instead of a sales page.
+  It now tells the story (you want to remember Allah, then work takes
+  over, and Zikr reminds you by saying the zikr itself), includes a note
+  from the maker on daily use, and lists options and downloads in plain
+  tables, in all three languages.
+- The site's colours move to soft sage and mist, with light as the default
+  and a dusk teal dark theme behind the toggle.
+
+### Fixed
+- The site said the app only goes online when you click Check for Updates.
+  It also checks on launch and once a day, and the page now says so.
+- The site's Arabic text said Zikr has 94 adhkar. It has 49.
+- The site's install steps only covered macOS, and its features described
+  macOS only. Each platform now has its own steps, and each option names
+  the platforms it exists on.
+
 ## [1.11.0] — 2026-11-01
 
 ### Added
