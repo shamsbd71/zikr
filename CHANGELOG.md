@@ -4,6 +4,24 @@ All notable changes to Zikr are documented here. Dates are release dates
 (Asia/Dhaka). See [releases](https://github.com/shamsbd71/zikr/releases)
 for downloadable assets per version.
 
+## [Unreleased]
+
+### Added
+- Contributor docs for the public relaunch: `CONTRIBUTING.md` (scope,
+  per-platform setup, PR checklist, release steps), `AGENTS.md` (one
+  rulebook for any AI coding agent; `CLAUDE.md` now imports it),
+  `FORKING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, and GitHub issue
+  and pull request templates.
+- `tools/fork_setup.py owner/repo` points a fork's updaters, changelog
+  viewers, installer metadata, and site at the fork. Without it, a
+  fork's users would be offered upstream's releases, and macOS would
+  install them over the fork's build.
+
+### Fixed
+- The site's "full list on GitHub" link pointed at `ZikrList.swift`,
+  which no longer exists. It now points at `data/zikr.json` in all three
+  languages.
+
 ## [1.10.0] — 2026-09-21
 
 ### Added
