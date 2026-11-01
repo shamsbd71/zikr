@@ -1,0 +1,32 @@
+name: Dhikr text, audio, or translation
+description: Fix or add a dhikr, a translation, or site copy (English, Bangla, Arabic).
+labels: [content]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of change?
+      options:
+        - Correct an existing dhikr (Arabic, transliteration, or translation)
+        - Add a new dhikr
+        - Audio problem (wrong clip, cut off, poor quality)
+        - Website translation (Bangla or Arabic)
+    validations:
+      required: true
+  - type: input
+    id: id
+    attributes:
+      label: Dhikr id (if it already exists)
+      description: The "id" in data/zikr.json.
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: The current text and what it should be.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source
+      description: Hisn al-Muslim number, hadith reference, or a link. Required for new or corrected adhkar.

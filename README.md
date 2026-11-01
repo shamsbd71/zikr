@@ -1,6 +1,6 @@
 # Zikr
 
-A minimal system-tray app that surfaces a short dhikr (Subhanallah, Alhamdulillah, Allahu Akbar, La ilaha illallah, and 17 others from the general Hisnul Muslim collection) at random intervals throughout the day. Native builds for **macOS** (this README), **[Linux](linux/README.md)** (Python/GTK), **[Windows](windows/README.md)** (C#/.NET Framework + WinForms), and **[Android](android/README.md)** (Kotlin/Jetpack Compose, Phase 1 — ambient reminders only, sideloaded APK) — see those READMEs for why each is a separate implementation, not a recompile.
+A minimal system-tray app that surfaces a short dhikr (Subhanallah, Alhamdulillah, Allahu Akbar, La ilaha illallah, and 45 more from the Hisnul Muslim collection — morning, evening and night adhkar are weighted toward their hour) at random intervals throughout the day. Native builds for **macOS** (this README), **[Linux](linux/README.md)** (Python/GTK), **[Windows](windows/README.md)** (C#/.NET Framework + WinForms), and **[Android](android/README.md)** (Kotlin/Jetpack Compose, Phase 1 — ambient reminders only, sideloaded APK) — see those READMEs for why each is a separate implementation, not a recompile.
 
 Repo: https://github.com/shamsbd71/zikr · Site: https://shamsbd71.github.io/zikr/ · License: [MIT](LICENSE)
 
@@ -34,30 +34,27 @@ Requires macOS 14+ and the Swift toolchain (Xcode Command Line Tools are enough 
 
 ## Releasing
 
-Push a tag matching `vX.Y.Z` and `.github/workflows/release.yml` builds both platforms in parallel — the macOS app on a macOS runner, the Linux `.deb` on an Ubuntu runner (with a headless smoke test before packaging) — and publishes one GitHub Release with both assets attached:
-
-```sh
-git tag v1.1.1
-git push origin v1.1.1
-```
+Push a tag matching `vX.Y.Z` and `.github/workflows/release.yml` re-runs the full test suite, then builds all four platforms in parallel and publishes one GitHub Release with the macOS zip, Linux `.deb`, Windows installer, and Android APK attached. The full checklist is in [CONTRIBUTING.md](CONTRIBUTING.md#releasing-maintainer).
 
 The macOS in-app updater compares its own `CFBundleShortVersionString` against the latest release tag, so the version in that tag is what users will be offered. Linux and Windows show the same update dialog but never install in place by design — see [linux/README.md](linux/README.md) and [windows/README.md](windows/README.md).
 
 ## Project layout
 
 ```
-Sources/ZikrReminder/
-  ZikrReminderApp.swift       — MenuBarExtra + Settings scene entry point
-  Models/                     — Zikr struct + the bundled zikr list
-  Services/                   — scheduler, speech, notifications, flash overlay, login item, updater, unlock greeter
-  Views/                      — menu dropdown, settings form, flash overlay content
-  Support/                    — AppSettings (UserDefaults-backed), DisplayStyle enum
-Sources/IconGen/               — standalone tool that renders AppIcon
-Sources/BannerGen/             — standalone tool that renders docs/og-banner (social preview image)
-Resources/                     — generated icon assets (icon_1024.png, AppIcon.icns) — gitignored, rebuilt by build.sh
-docs/                          — GitHub Pages site (https://shamsbd71.github.io/zikr/)
-linux/                          — Linux build (Python/GTK) — see linux/README.md
-.github/workflows/release.yml  — tag-triggered build + GitHub Release publish (both platforms)
+Sources/ZikrReminder/          — macOS app (SwiftPM, no Xcode project)
+  Models/                      — Zikr struct, JSON loader, time-of-day selector
+  Services/                    — scheduler, speech, notifications, flash overlay, login item, updater, unlock greeter
+  Views/                       — menu dropdown, settings form, flash overlay, update dialog
+  Support/                     — AppSettings (UserDefaults-backed), DisplayStyle enum
+Sources/IconGen/               — renders the app icon from vector code
+Sources/BannerGen/             — renders docs/og-banner (social preview image)
+linux/                         — Linux app (Python/GTK3) + .deb packaging — see linux/README.md
+windows/                       — Windows app (C#/WinForms) + tests + installer — see windows/README.md
+android/                       — Android app (Kotlin/Compose, Phase 1) — see android/README.md
+data/                          — zikr.json + recitation audio, shared by every platform
+tools/                         — audio fetch/convert, release stats, fork setup
+docs/                          — GitHub Pages site (https://shamsbd71.github.io/zikr/) + design specs
+.github/workflows/             — test.yml (CI, all platforms) + release.yml (tag-triggered release)
 build.sh                       — macOS build, icon regen, .app bundling, ad-hoc signing, install
 ```
 
@@ -68,3 +65,7 @@ swift run BannerGen docs/og-banner.png
 sips -s format jpeg -s formatOptions 82 docs/og-banner.png --out docs/og-banner.jpg
 rm docs/og-banner.png
 ```
+
+## Contributing
+
+Bug reports, fixes, translations, and careful platform work are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md). It covers what's in scope, how to build each platform, and the PR checklist. If you're using an AI coding agent, point it at [AGENTS.md](AGENTS.md). To ship your own builds from a fork, see [FORKING.md](FORKING.md). Please also read the [Code of Conduct](CODE_OF_CONDUCT.md), and report security issues privately as described in [SECURITY.md](SECURITY.md).

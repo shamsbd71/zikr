@@ -1,0 +1,38 @@
+name: Feature idea
+description: Suggest a change to Zikr.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Zikr is small on purpose: it speaks a dhikr at random times and **the user does nothing**.
+        Ideas that need the user to open the app, tap, count, or keep a streak, and Islamic-app features
+        like Adhan, prayer times, or Qibla, are out of scope. See [CONTRIBUTING.md](https://github.com/shamsbd71/zikr/blob/main/CONTRIBUTING.md).
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like to happen?
+    validations:
+      required: true
+  - type: checkboxes
+    id: platforms
+    attributes:
+      label: Which platforms?
+      options:
+        - label: macOS
+        - label: Linux
+        - label: Windows
+        - label: Android
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: This works without the user opening or tapping anything.
+          required: true
