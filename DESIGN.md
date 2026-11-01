@@ -6,76 +6,53 @@ aren't *this* brief's choice.
 
 ## Direction
 
-An illuminated manuscript at night. Jewel-tone emerald and luminous gold
-on near-black, serif type in three scripts, restrained ornament (a
-drifting diamond lattice, gold hairlines) rather than photos or
-icons-as-decoration.
+A quiet catalogue entry, in the colours of an early morning: soft sage and
+mist on near-white, a muted teal accent, a little warm sand. Serif type in
+three scripts. Nothing on the page should raise its voice.
 
-**Dark is the default** because the hour people actually reach for dhikr
-is a dark one, and gold only reads as *illumination* when there is
-something to illuminate. The earlier parchment world is preserved intact
-as the light theme — nothing was thrown away, it moved behind a toggle.
+**This is a catalogue, not a sales page.** Zikr is free, so the page's job
+is to tell its story and describe it accurately: what it does, what it
+sets, what it needs, where it falls short. Plain tables carry the facts.
+Avoid urgency, comparison panels and big gradient CTAs.
 
-The page's central idea: **it performs the product rather than
-describing it.** The hero holds a live card that cycles adhkar on its
-own timer, exactly as the app does, and will speak one aloud on request.
-A visitor learns what Zikr is by watching it happen.
+**Light is the default** (a dusk teal dark theme sits behind a toggle).
+
+The page's central idea stays: **it performs the product rather than only
+describing it.** The header holds a live card that cycles adhkar on its
+own timer and will speak one aloud on request.
 
 ## Themes
 
 Two, switched by `data-theme` on `<html>`:
 
-- Saved choice wins, then `prefers-color-scheme`, then dark.
+- Saved choice wins, then `prefers-color-scheme`, then light.
 - The choice is written to `localStorage` under `zikrTheme`.
-- An inline script in `<head>` sets the attribute **before first paint**,
-  so a light-theme visitor never sees the dark world flash past.
+- An inline script at the top of `<body>` sets the attribute **before first
+  paint**, so a dark-theme visitor never sees the light page flash past.
 
 ## Color
 
-Named tokens live in `:root` (dark) and `html[data-theme="light"]`.
-Don't hardcode hex values in new rules — reference the token.
+Named tokens live in `:root` (light) and `html[data-theme="dark"]`.
+Don't hardcode hex values in new rules, reference the token. Every text
+pair below measures at least 5:1 (WCAG AA).
 
-| Token | Dark | Light | Use |
+| Token | Light | Dark | Use |
 |---|---|---|---|
-| `--bg` | `#0A0F0D` | `#F7EFDC` | page background |
-| `--bg-deep` | `#060A09` | `#F1E6CE` | scrollbar track, recesses |
-| `--panel` | `#121B17` | `#FCF7EB` | cards, rows |
-| `--panel-raised` | `#17231D` | `#FFFDF6` | hover / active card |
-| `--ink` | `#EFE6D5` | `#29231D` | body text |
-| `--ink-dim` | `#A6997F` | `#6B6053` | secondary text |
-| `--emerald` | `#34A77F` | `#0E6B52` | links, primary accents |
-| `--emerald-deep` | `#0C3A2D` | `#093D30` | play buttons, pressed states |
-| `--emerald-bright` | `#47C79A` | `#16855F` | link hover, live dot |
-| `--gold` | `#D6A63C` | `#B8892E` | eyebrow-free accents, tags |
-| `--gold-bright` | `#F2D184` | `#8A6416` | emphasis **on the page surface** |
-| `--terracotta` | `#D9714F` | `#B7472A` | the struck-through "no" column |
+| `--bg` | `#F2F6F3` | `#151F1F` | page background |
+| `--bg-deep` | `#E6EEEA` | `#0F1818` | scrollbar track |
+| `--panel` | `#FAFCFA` | `#1C2929` | library rows |
+| `--panel-raised` | `#FFFFFF` | `#233232` | live card, hover / active row |
+| `--ink` | `#22322E` | `#E4ECE7` | body text |
+| `--ink-dim` | `#52645E` | `#A2B3AC` | secondary text |
+| `--accent` | `#2C6E63` | `#8FCABB` | links, primary button, focus |
+| `--accent-strong` | `#235A51` | `#A9DACD` | Arabic text, hover, text on `--tint` |
+| `--tint` | `#DDEBE6` | `#27403C` | soft fills: play buttons, maker note |
+| `--sand` | `#7A6840` | `#CFBC90` | time-of-day tag |
+| `--on-accent` | `#F7FBF8` | `#12201D` | text on `--accent` |
+| `--hero-from` | `#DFECEE` | `#1B2C2E` | top of the header's fade into `--bg` |
 
-### Inverted surfaces — read this before touching the hero
-
-The hero and the signature "what Zikr asks of you" panel are **dark
-emerald in both themes**. Their foregrounds therefore must not flip with
-the theme, and these tokens hold the same value in both:
-
-| Token | Value | Use |
-|---|---|---|
-| `--on-dark` | `#F3EADA` | text on the hero / yes-panel |
-| `--gold-on-dark` | `#F2D184` | gold on the hero / yes-panel |
-| `--gold-on-dark-deep` | `#D6A63C` | the CTA gradient's far end |
-| `--lattice-on-dark` | `rgba(242,209,132,0.17)` | the hero lattice |
-
-This is not theory. Using the theme-flipping `--gold-bright` on the hero
-dropped the primary CTA to **1.21:1** against its own label in light
-mode — invisible — because light mode darkens that token for parchment.
-If an element sits on a surface that is dark in both themes, it takes an
-`-on-dark` token.
-
-The related trap: **`a` selectors outrank component colors.** The CTAs
-and platform badges are anchors, so a bare
-`html[data-theme="light"] a { color: … }` (specificity 0,1,2) beat
-`.btn-secondary` (0,1,0) and painted every hero control emerald on dark
-emerald. The link rules are scoped `a:not(.btn):not(.platform-badge)`
-for that reason — keep any new link rule scoped the same way, or give
-the component a rule that outranks it.
+Link rules stay scoped `a:not(.btn)`: a bare `a` selector outranks the
+buttons' own colour.
 
 ## Type
 
@@ -95,21 +72,32 @@ per page direction — `start` resolves to the right inside an rtl box,
 which in an LTR layout flings the Arabic away from the transliteration
 beneath it and makes the two read as unrelated.
 
-**No eyebrows or kickers above headings.** The previous design used
-uppercase gold eyebrows; they are gone and should not come back. The
-heading carries its own weight.
+**No eyebrows or kickers above headings.** The heading carries its own
+weight.
 
 ## Layout concept
 
-- **Hero as demonstration**: headline states the USP beside a live card
-  that cycles adhkar and speaks on request.
-- **Signature element**: the "what most reminder apps ask of you" vs.
-  "what Zikr asks of you" panel. Structural, not decorative — it answers
-  the FAQ's first question. Don't add a second competing signature.
-- **The library**: eight adhkar, each playable, with real durations and
-  a tag on the time-of-day one. Proof, not decoration.
-- Everything else (features, 3-step how-it-works, FAQ) is deliberately
-  plain: generous whitespace, no competing ornament.
+In order: header with live card, the story, at-a-glance spec table, the
+library, options table, downloads table, FAQ.
+
+- **The story is the signature.** It is the one section allowed to run
+  long, and ends with the maker's own note. Keep that note in first person
+  and true: it reports real use, so don't embellish it.
+- **The tables are the catalogue.** Options name the platforms they exist
+  on, because parity is not total (see AGENTS.md). If a setting's platforms
+  or default changes, this table changes with it. File sizes are rounded
+  ("about 6 MB") so they survive small releases.
+- **The library**: eight adhkar, each playable, with real durations.
+
+## Copy
+
+Written to the copywriting skill's rules: plain, specific, checkable. Say
+what happens instead of listing absences, keep em dashes out of short copy,
+and state limits honestly (a sleeping computer stays silent).
+
+Claims about the app must match the code. In particular the update check
+runs on launch and daily, so don't write that it only goes online when
+asked. Make no claim about religious reward.
 
 ## Audio on the site
 
@@ -132,19 +120,17 @@ fine.
 
 One authored moment, not scattered effects:
 
-- **The dhikr arrives out of soft focus** — each line of the live card
+- **The dhikr arrives out of soft focus**: each line of the live card
   animates in on a blur + translate, staggered ~70ms, on an exponential
   ease-out (`--ease: cubic-bezier(0.16, 1, 0.3, 1)`).
-- **The lattice drifts** behind the hero, 48s linear, infinite. Ambient
-  texture, not an entrance.
-- The live dot pulses; the progress bar tracks real playback time.
-- Everything else is hover-only and subtle: 0.15–0.2s, 1–2px lifts.
+- The dot breathes slowly; the progress bar tracks real playback time.
+- Everything else is a hover colour change. Nothing lifts or bounces.
 
-Do not add a generic scroll-reveal to every section — one identical
+Do not add a generic scroll-reveal to every section: one identical
 entrance repeated is the opposite of an authored moment.
 
-`prefers-reduced-motion` stops the lattice, the pulse, the card
-entrance, *and* the auto-cycling (the card holds one dhikr instead).
+`prefers-reduced-motion` stops the pulse, the card entrance, *and* the
+auto-cycling (the card holds one dhikr instead).
 
 ## Browser surfaces
 
@@ -165,21 +151,18 @@ stale.
 flips `dir="rtl"` on `<html>`; check new layout in Arabic before
 shipping, since `flex-direction` and margins don't auto-mirror.
 
-## Platform badges
+## Platform icons
 
-One pill per OS, icon + label, linking to the latest release. Icons are
-hand-drawn inline SVG, single-color, ~15px, and deliberately evoke each
-platform by convention rather than tracing an official logo — a plain
-apple silhouette with no bite notch, a Tux-inspired penguin, a generic
-2×2 pane grid, a simple robot head. If a fifth platform ships, follow
-the same rule.
-
-Note the badge SVGs use `fill="var(--hero-from)"` for cut-out details so
-they track the hero background in both themes.
+The downloads table marks each OS with a hand-drawn inline SVG,
+single-colour, ~16px, evoking the platform by convention rather than
+tracing an official logo: a plain apple silhouette with no bite notch, a
+Tux-inspired penguin, a generic 2x2 pane grid, a simple robot head. Cut-out
+details use `fill="var(--bg)"`. If a fifth platform ships, follow the same
+rule.
 
 ## Platform-aware CTA
 
-The primary hero button's label swaps on `navigator.userAgent`
+The primary header button's label swaps on `navigator.userAgent`
 (`detectPlatform()`), all pointing at the same `releases/latest` URL.
 Update the `STRINGS[lang].ctaDownload*` keys in all three languages
 together if you touch this.
