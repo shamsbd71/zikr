@@ -12,10 +12,26 @@ set -euo pipefail
 
 D="$HOME/.zikr-signing"
 K="$D/zikr-release.jks"
-KEYTOOL="${KEYTOOL:-keytool}"
-if ! command -v "$KEYTOOL" >/dev/null 2>&1; then
-  KEYTOOL="/Applications/Android Studio.app/Contents/jbr/Contents/Home/bin/keytool"
+# macOS ships a /usr/bin/keytool stub that only works when a JDK is
+# installed, so "is it on PATH" isn't enough - pick the first one that
+# actually runs. Android Studio's bundled JDK is the usual answer.
+KEYTOOL=""
+for k in "${KEYTOOL_PATH:-}" \
+         "${JAVA_HOME:+$JAVA_HOME/bin/keytool}" \
+         "/Applications/Android Studio.app/Contents/jbr/Contents/Home/bin/keytool" \
+         "$HOME/Applications/Android Studio.app/Contents/jbr/Contents/Home/bin/keytool" \
+         keytool; do
+  [ -n "$k" ] || continue
+  if "$k" -help >/dev/null 2>&1; then KEYTOOL="$k"; break; fi
+done
+if [ -z "$KEYTOOL" ]; then
+  echo "No working keytool found. Install a JDK or Android Studio, or set KEYTOOL_PATH." >&2
+  exit 1
 fi
+command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1 || {
+  echo "GitHub CLI isn't logged in - run: gh auth login" >&2
+  exit 1
+}
 
 mkdir -p "$D"; chmod 700 "$D"
 if [ -f "$K" ]; then
