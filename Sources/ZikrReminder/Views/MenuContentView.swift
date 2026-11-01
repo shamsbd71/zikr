@@ -3,9 +3,18 @@ import AppKit
 
 struct MenuContentView: View {
     @ObservedObject private var settings = AppSettings.shared
+    @ObservedObject private var updateStatus = UpdateStatus.shared
     @Environment(\.openSettings) private var openSettings
 
     var body: some View {
+        if let update = updateStatus.available {
+            Button("Update to v\(update.version)…") {
+                NSApp.activate(ignoringOtherApps: true)
+                UpdateFlow.installNow(update)
+            }
+            Divider()
+        }
+
         Toggle("Active", isOn: $settings.isEnabled)
 
         Button("Test Zikr (Speak + Flash)") {

@@ -7,6 +7,19 @@ for downloadable assets per version.
 ## [Unreleased]
 
 ### Added
+- macOS, Linux, Windows: when an update exists, an **Update to vX…**
+  item appears at the top of the tray/menu-bar menu, and one click
+  installs it. It shows even for a version whose popup you skipped.
+- Android: the same notice as a banner at the top of the app, with an
+  **Update now** button. The daily background check's notification
+  now opens the app on that banner.
+- Windows: Install Update downloads the release's installer and runs it
+  silently. It closes Zikr, updates it, and starts it again. No admin
+  prompt, same per-user install.
+- Linux: Install Update downloads the release's `.deb` and installs it
+  through `pkexec apt-get` (your desktop asks for your password), then
+  restarts Zikr. Without `pkexec`, the `.deb` opens in your software
+  installer. A source checkout still gets the release page.
 - Contributor docs for the public relaunch: `CONTRIBUTING.md` (scope,
   per-platform setup, PR checklist, release steps), `AGENTS.md` (one
   rulebook for any AI coding agent; `CLAUDE.md` now imports it),
@@ -18,6 +31,23 @@ for downloadable assets per version.
   install them over the fork's build.
 
 ### Fixed
+- Android: tapping update now actually updates. After the download
+  finished, the install prompt was launched from the background, which
+  Android 10+ blocks, so nothing happened. The update now downloads
+  inside the app with a progress bar and opens the installer from the
+  screen you're looking at. The first time, it walks you through
+  allowing Zikr to install updates.
+- Android: release APKs are now signed with one permanent key and get a
+  real versionCode (1.10.2 → 11002). Previously each release was signed
+  with a different throwaway key and versionCode 1, so Android refused
+  every update ("App not installed"). **If you're on Android v1.10.0 or
+  older, uninstall Zikr once and install the new APK.** Updates after
+  that install in place.
+- macOS: after installing an update, the new version could fail to
+  start. The relaunch ran while the old copy was still quitting. It now
+  waits for the old process to exit.
+- macOS: a failed update showed no message. The dialog now says what
+  went wrong.
 - The site's "full list on GitHub" link pointed at `ZikrList.swift`,
   which no longer exists. It now points at `data/zikr.json` in all three
   languages.

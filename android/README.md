@@ -74,26 +74,37 @@ rather than just navigating to a settings page - this is the actual
 "ask for background running permission" prompt. The Settings screen
 also shows a banner with a button to re-request it if declined.
 
-## In-app update checker
+## In-app updates
 
-Unlike Linux/Windows/macOS (which deliberately don't self-update — see
-their own READMEs), Android *can* do this without Play Store: the app
-checks GitHub Releases for a newer tag (on launch, once a day
-piggybacked on the reminder alarm, or on demand via Settings → Updates
-→ "Check for Updates"), and if found, downloads the APK with
-`DownloadManager` and hands it to the system installer
-(`ACTION_VIEW` on a `FileProvider` URI). Android still requires the
-user to explicitly confirm the install — there's no way around that
-without root/MDM — but there's no separate "open a browser, find the
-download, tap it" dance either. Same GitHub Releases source as every
-other platform's manual download link.
+The app checks GitHub Releases for a newer tag on launch, once a day
+(piggybacked on the reminder alarm), and on demand via Settings →
+Updates → "Check for Updates". A newer release shows as a banner at the
+top of the app. **Update now** downloads the APK inside the app with a
+progress bar, checks that it really is Zikr, and opens the system
+installer from the foreground activity. The first time, Android asks
+you to allow Zikr to install apps, and the install continues when you
+come back. Android always asks you to confirm the install itself.
+
+The once-a-day background check also posts a notification, and tapping
+it opens the app on the banner. The download doesn't run in the
+background, because Android 10+ blocks a background receiver from
+opening the installer. The old DownloadManager flow failed silently
+for exactly that reason.
+
+**Signing.** Android only installs an update over an app signed with
+the same key. Release APKs are signed with Zikr's release key, which
+lives in GitHub Actions secrets (`tools/android_signing_setup.sh`).
+`versionCode` is derived from the version (1.10.2 → 11002), so every
+release is strictly newer. Releases up to v1.10.0 were debug builds
+signed with a throwaway CI key and versionCode 1, so they can't update
+in place. Uninstall that version once, then install the new one.
 
 ## Install
 
 Download `Zikr-<version>.apk` from
 [releases](https://github.com/shamsbd71/zikr/releases/latest), open
 it on your device, and allow "install from unknown sources" if
-prompted (this is a debug-signed build — no Play Store listing yet).
+prompted (no Play Store listing yet).
 On first launch, Android will ask for notification permission and then
 "let Zikr always run in the background" - allow both, or reminders may
 not show/fire reliably.

@@ -57,11 +57,19 @@ tell your app apart from upstream's.
 
 ## 4. Code signing
 
-Upstream ships ad-hoc-signed macOS builds, an unsigned Windows
-installer, and a debug-signed APK built in CI. If you add
-real signing (Apple Developer ID, Authenticode, an Android upload key),
-store the credentials as Actions secrets in your fork. Never commit
-them.
+Upstream ships ad-hoc-signed macOS builds and an unsigned Windows
+installer. The Android APK is signed with a release key kept in Actions
+secrets.
+
+**Android needs your own key** if you publish APKs, because Android only
+installs an update over an app signed with the same key. Run
+`tools/android_signing_setup.sh` once in your fork. It creates a key in
+`~/.zikr-signing` (back it up) and sets the `ZIKR_KEYSTORE_*` secrets on
+your fork. Without them, your release APKs fall back to the debug key,
+which changes between CI runs, so in-app updates won't install.
+
+If you add other signing (Apple Developer ID, Authenticode), store
+those credentials as Actions secrets too. Never commit them.
 
 ## 5. Staying in sync
 

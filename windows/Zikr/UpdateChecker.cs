@@ -9,12 +9,10 @@ namespace Zikr
 {
     /// <summary>
     /// Checks GitHub Releases for a newer tag than the running app's
-    /// version. No in-place self-updater, same decision as the Linux
-    /// build and for the same reason: installs vary (Inno Setup to
-    /// Program Files, a portable extraction, a future winget/choco
-    /// package), so silently overwriting files isn't a sound default.
-    /// "Check for Updates" surfaces what changed and opens the releases
-    /// page for you to download and reinstall.
+    /// version, and finds that release's installer. Zikr never overwrites
+    /// its own files: UpdateInstaller downloads the release's own Inno
+    /// Setup installer and runs it, which is the same path a fresh install
+    /// takes.
     /// </summary>
     public static class UpdateChecker
     {
@@ -28,6 +26,9 @@ namespace Zikr
             public Status Status;
             public string Version;
             public string Message;
+            /// <summary>The release's ZikrSetup-*.exe, or null if the
+            /// release has none (then the update opens the release page).</summary>
+            public string InstallerUrl;
         }
 
         /// <summary>Reads the MSBuild `Version` property verbatim, as
@@ -64,7 +65,15 @@ namespace Zikr
                     string latest = tag.StartsWith("v") ? tag.Substring(1) : tag;
                     string current = CurrentVersion;
                     if (CompareVersions(latest, current) > 0)
-                        return new CheckResult { Status = Status.Available, Version = latest };
+                    {
+                        var assets = data.TryGetValue("assets", out var a) ? a as System.Collections.ArrayList : null;
+                        return new CheckResult
+                        {
+                            Status = Status.Available,
+                            Version = latest,
+                            InstallerUrl = FindInstallerUrl(assets),
+                        };
+                    }
                     return new CheckResult { Status = Status.UpToDate, Version = current };
                 }
             }
@@ -97,6 +106,25 @@ namespace Zikr
                 if (va != vb) return va < vb ? -1 : 1;
             }
             return 0;
+        }
+
+        /// <summary>Picks the Windows installer out of a release's
+        /// assets (each a name/browser_download_url dictionary). Pure,
+        /// unit-tested.</summary>
+        public static string FindInstallerUrl(System.Collections.IEnumerable assets)
+        {
+            if (assets == null) return null;
+            foreach (var item in assets)
+            {
+                if (!(item is IDictionary<string, object> asset)) continue;
+                string name = asset.TryGetValue("name", out var n) ? Convert.ToString(n) : "";
+                string url = asset.TryGetValue("browser_download_url", out var u) ? Convert.ToString(u) : "";
+                if (name.StartsWith("ZikrSetup", StringComparison.OrdinalIgnoreCase)
+                    && name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)
+                    && url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                    return url;
+            }
+            return null;
         }
 
         public static void OpenReleasesPage()

@@ -1,4 +1,14 @@
 import AppKit
+import Combine
+
+/// The newest release found by any check, so the menu can show
+/// "Update to vX…" inside the app — even for a version whose popup the
+/// user skipped. Nil when up to date.
+final class UpdateStatus: ObservableObject {
+    static let shared = UpdateStatus()
+    @Published var available: UpdateChecker.UpdateInfo?
+    private init() {}
+}
 
 /// Decides *when* to bother the user about an update, on top of
 /// UpdateChecker's plain check/install primitives:
@@ -12,6 +22,7 @@ import AppKit
 enum UpdateFlow {
     static func checkManually() {
         UpdateChecker.checkForUpdate { result in
+            record(result)
             switch result {
             case .upToDate(let version):
                 presentAlert("You're up to date (v\(version)).")
@@ -25,6 +36,7 @@ enum UpdateFlow {
 
     static func checkAutomatically() {
         UpdateChecker.checkForUpdate { result in
+            record(result)
             guard case .available(let info) = result else { return }
             if info.version == AppSettings.shared.skippedUpdateVersion { return }
 
@@ -36,11 +48,25 @@ enum UpdateFlow {
         }
     }
 
-    private static func presentDialog(for info: UpdateChecker.UpdateInfo) {
+    /// The menu's "Update to vX…": opens the update window already
+    /// downloading, so one click updates and the progress is visible.
+    static func installNow(_ info: UpdateChecker.UpdateInfo) {
+        presentDialog(for: info, startInstalling: true)
+    }
+
+    private static func record(_ result: UpdateChecker.CheckResult) {
+        switch result {
+        case .available(let info): UpdateStatus.shared.available = info
+        case .upToDate: UpdateStatus.shared.available = nil
+        case .error: break
+        }
+    }
+
+    private static func presentDialog(for info: UpdateChecker.UpdateInfo, startInstalling: Bool = false) {
         let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0"
         ChangelogFetcher.fetch { entries in
             let body = entries.first(where: { $0.version == info.version })?.body ?? ""
-            UpdateAvailableController.shared.present(currentVersion: currentVersion, info: info, changelogBody: body)
+            UpdateAvailableController.shared.present(currentVersion: currentVersion, info: info, changelogBody: body, startInstalling: startInstalling)
         }
     }
 

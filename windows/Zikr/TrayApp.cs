@@ -25,6 +25,12 @@ namespace Zikr
         private readonly Control _uiMarshal = new Control();
         private readonly Timer _updateTimer = new Timer { Interval = 24 * 60 * 60 * 1000 };
         private ToolStripMenuItem _activeItem;
+        // "Update to vX…" at the top of the menu: the in-app notice that a
+        // release exists, hidden until a check finds one.
+        private ToolStripMenuItem _updateItem;
+        private ToolStripSeparator _updateSeparator;
+        private UpdateChecker.CheckResult _available;
+        private UpdateAvailableForm _updateForm;
 
         public TrayApp()
         {
@@ -64,6 +70,12 @@ namespace Zikr
         private ContextMenuStrip BuildMenu()
         {
             var menu = new ContextMenuStrip();
+
+            _updateItem = new ToolStripMenuItem("Update available") { Visible = false, Font = new Font(SystemFonts.MenuFont, FontStyle.Bold) };
+            _updateItem.Click += (s, e) => { if (_available != null) ShowUpdateForm(_available, installNow: true); };
+            menu.Items.Add(_updateItem);
+            _updateSeparator = new ToolStripSeparator { Visible = false };
+            menu.Items.Add(_updateSeparator);
 
             _activeItem = new ToolStripMenuItem("Active") { CheckOnClick = true, Checked = _settings.Enabled };
             _activeItem.CheckedChanged += (s, e) =>
@@ -149,12 +161,32 @@ namespace Zikr
 
             if (result.Status == UpdateChecker.Status.UpToDate)
             {
+                _available = null;
+                _updateItem.Visible = false;
+                _updateSeparator.Visible = false;
                 if (force) MessageBox.Show($"You're up to date (v{result.Version}).", "Zikr Update");
                 return;
             }
 
-            // Available
+            // Available: always light up the menu item, even for a skipped
+            // version - skipping only silences the automatic popup.
+            _available = result;
+            _updateItem.Text = $"Update to v{result.Version}…";
+            _updateItem.Visible = true;
+            _updateSeparator.Visible = true;
+
             if (!force && result.Version == _settings.SkippedUpdateVersion) return;
+            ShowUpdateForm(result, installNow: false);
+        }
+
+        private void ShowUpdateForm(UpdateChecker.CheckResult result, bool installNow)
+        {
+            if (_updateForm != null && !_updateForm.IsDisposed)
+            {
+                _updateForm.Activate();
+                if (installNow) _updateForm.StartInstall();
+                return;
+            }
 
             System.Threading.Tasks.Task.Run(() =>
             {
@@ -162,11 +194,17 @@ namespace Zikr
                 string body = entries.Find(en => en.Version == result.Version)?.Body ?? "";
                 _uiMarshal.BeginInvoke(new Action(() =>
                 {
-                    new UpdateAvailableForm(UpdateChecker.CurrentVersion, result.Version, body, onSkip: () =>
-                    {
-                        _settings.SkippedUpdateVersion = result.Version;
-                        _settings.Save();
-                    }).Show();
+                    _updateForm = new UpdateAvailableForm(UpdateChecker.CurrentVersion, result.Version, body,
+                        result.InstallerUrl,
+                        onSkip: () =>
+                        {
+                            _settings.SkippedUpdateVersion = result.Version;
+                            _settings.Save();
+                        },
+                        exitApp: ExitApp);
+                    _updateForm.FormClosed += (s, e) => _updateForm = null;
+                    _updateForm.Show();
+                    if (installNow) _updateForm.StartInstall();
                 }));
             });
         }

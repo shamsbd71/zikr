@@ -9,7 +9,7 @@ enum UpdateChecker {
     static let repo = "shamsbd71/zikr"
     private static let apiURL = URL(string: "https://api.github.com/repos/\(repo)/releases/latest")!
 
-    struct UpdateInfo {
+    struct UpdateInfo: Equatable {
         let version: String
         let downloadURL: URL
     }
@@ -97,12 +97,17 @@ enum UpdateChecker {
         }.resume()
     }
 
+    /// Starts the new copy only after this process has exited. Calling
+    /// `open` while the old instance is still running can just re-activate
+    /// it (same bundle id), and once it quits nothing is left running —
+    /// the update looks like it closed the app.
     private static func relaunch(at appURL: URL) {
+        let pid = ProcessInfo.processInfo.processIdentifier
         let task = Process()
-        task.executableURL = URL(fileURLWithPath: "/usr/bin/open")
-        task.arguments = [appURL.path]
+        task.executableURL = URL(fileURLWithPath: "/bin/sh")
+        task.arguments = ["-c", "while /bin/kill -0 \(pid) 2>/dev/null; do /bin/sleep 0.2; done; /usr/bin/open \"$0\"", appURL.path]
         try? task.run()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             NSApp.terminate(nil)
         }
     }

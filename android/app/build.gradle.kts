@@ -3,6 +3,17 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+// Release signing comes from the environment (GitHub Actions secrets in
+// release.yml), never from the repo. Android only installs an update
+// over an existing app if both are signed with the same key - releases
+// used to be debug builds signed with whatever throwaway key each CI
+// runner generated, so in-app updates failed with "App not installed".
+// A fork without these secrets falls back to the debug key, so its
+// builds still install; they just can't update across machines.
+val releaseKeystore: String? = System.getenv("ZIKR_KEYSTORE_FILE")?.takeIf { it.isNotBlank() && file(it).exists() }
+
+val appVersionName: String = (project.findProperty("versionNameOverride") as String?) ?: "0.0.0-dev"
+
 android {
     namespace = "com.abu.zikr"
     compileSdk = 34
@@ -11,18 +22,36 @@ android {
         applicationId = "com.abu.zikr"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
+        // Derived from the version so every release is a strictly
+        // higher versionCode than the last (1.10.0 -> 11000).
+        versionCode = versionCodeFor(appVersionName)
         // Stamped at release-build time via -PversionNameOverride= so the
         // running app knows its own version - see release.yml. Never
         // hand-edit this expecting it to track a release; it went stale
         // for multiple releases on the Windows/Linux builds before that
         // was caught, see CLAUDE.md.
-        versionName = (project.findProperty("versionNameOverride") as String?) ?: "0.0.0-dev"
+        versionName = appVersionName
+    }
+
+    signingConfigs {
+        if (releaseKeystore != null) {
+            create("release") {
+                storeFile = file(releaseKeystore)
+                storePassword = System.getenv("ZIKR_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("ZIKR_KEY_ALIAS")
+                keyPassword = System.getenv("ZIKR_KEY_PASSWORD")
+            }
+        }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = if (releaseKeystore != null) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
     }
 
@@ -98,4 +127,13 @@ dependencies {
     // real pure-JVM implementation of the same package so ZikrData.parse
     // is genuinely unit-testable rather than always throwing "Stub!".
     testImplementation("org.json:json:20240303")
+}
+
+/** "1.10.2" -> 11002. Each part gets two digits, which is plenty for
+ * this project's minor/patch numbers. Non-numeric builds ("0.0.0-dev")
+ * map to 1. */
+fun versionCodeFor(version: String): Int {
+    val parts = version.substringBefore('-').split('.').map { it.toIntOrNull() ?: 0 }
+    val code = parts.getOrElse(0) { 0 } * 10000 + parts.getOrElse(1) { 0 } * 100 + parts.getOrElse(2) { 0 }
+    return if (code > 0) code else 1
 }

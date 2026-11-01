@@ -1,13 +1,15 @@
 """GTK dialogs for update notifications and the in-app changelog.
 Mirrors UpdateAvailableView.swift / UpdateAvailableForm.cs: Skip This
-Version / Remind Me Later / Download Update, with a changelog preview.
+Version / Remind Me Later / Install Update, with a changelog preview.
+Installing itself is driven by app.py through updater.py; this module
+only draws the windows.
 """
 import webbrowser
 
 import gi
 
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk  # noqa: E402
+from gi.repository import GLib, Gtk  # noqa: E402
 
 RELEASES_URL = "https://github.com/shamsbd71/zikr/releases/latest"
 
@@ -26,12 +28,13 @@ def show_message(title, text):
     dialog.destroy()
 
 
-def show_update_available(current_version, new_version, changelog_body, on_skip):
+def show_update_available(current_version, new_version, changelog_body, on_skip, on_install):
     dialog = Gtk.Dialog(title="Zikr Update")
     dialog.set_default_size(440, 320)
     dialog.add_button("Skip This Version", _SKIP)
     dialog.add_button("Remind Me Later", _REMIND)
-    dialog.add_button("Download Update", _DOWNLOAD)
+    dialog.add_button("Install Update", _DOWNLOAD)
+    dialog.set_default_response(_DOWNLOAD)
 
     box = dialog.get_content_area()
     box.set_spacing(10)
@@ -42,7 +45,7 @@ def show_update_available(current_version, new_version, changelog_body, on_skip)
 
     subtitle = Gtk.Label(
         label=f"Zikr {new_version} is now available — you have {current_version}. "
-              "Would you like to download it now?",
+              "Would you like to install it now?",
         xalign=0,
     )
     subtitle.set_line_wrap(True)
@@ -66,7 +69,7 @@ def show_update_available(current_version, new_version, changelog_body, on_skip)
     if response == _SKIP:
         on_skip()
     elif response == _DOWNLOAD:
-        _open_releases()
+        on_install()
     # _REMIND, or the window closed some other way: no-op
 
 
@@ -111,6 +114,53 @@ def show_whats_new(entries):
 
     win.show_all()
     _whatsnew_window = win
+
+
+class InstallProgress:
+    """Small window shown while an update downloads and installs."""
+
+    def __init__(self, version):
+        self.win = Gtk.Window(title="Zikr Update")
+        self.win.set_default_size(380, -1)
+        self.win.set_border_width(16)
+        self.win.set_resizable(False)
+        self.win.set_position(Gtk.WindowPosition.CENTER)
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.win.add(box)
+        box.pack_start(Gtk.Label(label=f"<b>Updating to Zikr {version}</b>", use_markup=True, xalign=0), False, False, 0)
+        self.bar = Gtk.ProgressBar()
+        box.pack_start(self.bar, False, False, 0)
+        self.label = Gtk.Label(label="Downloading…", xalign=0)
+        self.label.set_line_wrap(True)
+        box.pack_start(self.label, False, False, 0)
+        self.win.show_all()
+        self._pulse = GLib.timeout_add(120, self._tick)
+        self._determinate = False
+
+    def _tick(self):
+        if not self._determinate:
+            self.bar.pulse()
+        return True
+
+    def set_progress(self, pct):
+        if pct < 0:
+            self._determinate = False
+            return
+        self._determinate = True
+        self.bar.set_fraction(pct / 100)
+        self.label.set_text(f"Downloading… {pct}%")
+
+    def set_text(self, text):
+        self._determinate = False
+        self.label.set_text(text)
+
+    def close(self):
+        GLib.source_remove(self._pulse)
+        self.win.destroy()
+
+
+def open_releases():
+    _open_releases()
 
 
 def _open_releases():

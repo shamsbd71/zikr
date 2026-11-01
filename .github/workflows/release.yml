@@ -135,14 +135,39 @@ jobs:
         id: version
         run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
 
-      - name: Build debug APK
+      # Every release must be signed with the same key, or Android
+      # refuses to install the update over the previous version. The key
+      # lives in repo secrets (tools/android_signing_setup.sh). Upstream
+      # fails loudly without it; a fork without secrets falls back to the
+      # debug key so it still gets an installable APK.
+      - name: Restore release keystore
+        env:
+          KEYSTORE_B64: ${{ secrets.ZIKR_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/zikr-release.jks"
+            echo "ZIKR_KEYSTORE_FILE=$RUNNER_TEMP/zikr-release.jks" >> "$GITHUB_ENV"
+          elif [ "${{ github.repository }}" = "shamsbd71/zikr" ]; then
+            echo "::error::ZIKR_KEYSTORE_BASE64 secret is missing - run tools/android_signing_setup.sh"
+            exit 1
+          else
+            echo "::warning::No release keystore; signing with the debug key (fork build)"
+          fi
+
+      - name: Build release APK
         working-directory: android
-        run: ./gradlew assembleDebug -PversionNameOverride=${{ steps.version.outputs.version }} --stacktrace
+        env:
+          ZIKR_KEYSTORE_PASSWORD: ${{ secrets.ZIKR_KEYSTORE_PASSWORD }}
+          ZIKR_KEY_ALIAS: ${{ secrets.ZIKR_KEY_ALIAS }}
+          ZIKR_KEY_PASSWORD: ${{ secrets.ZIKR_KEY_PASSWORD }}
+        run: ./gradlew assembleRelease -PversionNameOverride=${{ steps.version.outputs.version }} --stacktrace
 
       - name: Rename APK
         run: |
           mkdir -p dist
-          cp android/app/build/outputs/apk/debug/app-debug.apk "dist/Zikr-${{ steps.version.outputs.version }}.apk"
+          cp android/app/build/outputs/apk/release/app-release.apk "dist/Zikr-${{ steps.version.outputs.version }}.apk"
+          APKSIGNER="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)/apksigner"
+          "$APKSIGNER" verify --print-certs "dist/Zikr-${{ steps.version.outputs.version }}.apk" | head -3
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2

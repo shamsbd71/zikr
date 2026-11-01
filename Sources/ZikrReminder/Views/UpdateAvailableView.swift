@@ -64,6 +64,14 @@ struct UpdateAvailableView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
             } else {
+                if !viewModel.statusText.isEmpty {
+                    // A failed install lands here; without this line the
+                    // buttons just reappeared with no hint of what went wrong.
+                    Text(viewModel.statusText)
+                        .font(.system(size: 12))
+                        .foregroundStyle(.red)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
                 HStack {
                     Button("Skip This Version", action: onSkip)
                     Spacer()
