@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.abu.zikr.ui.SettingsScreen
 import com.abu.zikr.ui.theme.ZikrTheme
 import com.abu.zikr.update.UpdateFlow
+import com.abu.zikr.update.UpdateInstaller
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,5 +53,13 @@ class MainActivity : ComponentActivity() {
                 SettingsScreen()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Back from "Allow from this source": finish the install the
+        // banner started. Also tidies an APK left from a finished update.
+        UpdateFlow.resumePendingInstall(this)
+        UpdateInstaller.cleanUpIfInstalled(this, BuildConfig.VERSION_NAME)
     }
 }

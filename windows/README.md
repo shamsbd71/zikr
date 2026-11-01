@@ -28,16 +28,19 @@ macOS releases on Intel Macs (an arm64-only binary shipped as if it were
 universal), rather than relying on remembering to combine architectures
 correctly every release.
 
-## No in-place self-updater
+## Updates
 
-Same decision as Linux, for the same reason: installs vary (Inno Setup to
-`Program Files`, a future winget/choco package, a portable extraction),
-so silently overwriting arbitrary files isn't a sound default across all
-of them. "Check for Updates…" (and an automatic check on launch and
-every 24 hours) shows the same Skip / Remind Later / Download dialog as
-the other builds, with the changelog inline — "Download Update" just
-opens the GitHub releases page instead of installing. "What's New…"
-shows the changelog on its own, update available or not.
+Zikr never overwrites its own files. An automatic check runs on launch
+and every 24 hours, and "Check for Updates…" runs one on demand. When a
+new release exists, the tray menu gets an **Update to vX…** item at the
+top, and the Skip / Remind Later / Install Update dialog appears with
+the changelog inline. Installing downloads the release's
+`ZikrSetup-X.Y.Z.exe` and runs it with `/VERYSILENT /CLOSEAPPLICATIONS`.
+It's the same per-user installer as a fresh install, with no admin
+prompt. The installer closes Zikr, replaces it, and starts the new
+version (`UpdateInstaller.cs`, plus the `WizardSilent` entry in
+`ZikrSetup.iss`). If the download fails, it offers the release page.
+"What's New…" shows the changelog on its own, update available or not.
 
 ## Install
 

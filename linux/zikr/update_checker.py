@@ -1,8 +1,6 @@
-"""Checks GitHub Releases for a newer tag than the running version. No
-in-place self-update, same decision as Windows: installs vary too much
-across distros (.deb, a future AppImage/flatpak, a manual tarball) for
-one safe overwrite strategy. "Check for Updates" surfaces what changed
-and opens the release page for you to download and reinstall.
+"""Checks GitHub Releases for a newer tag than the running version, and
+finds that release's .deb. Installing it is updater.py's job - through
+apt, never by overwriting files.
 """
 import json
 import urllib.request
@@ -29,7 +27,7 @@ def compare_versions(a, b):
 
 
 def check_for_update(current_version, timeout=5):
-    """Returns {"status": "available", "version": "1.5.0"} |
+    """Returns {"status": "available", "version": "1.5.0", "deb_url": ...} |
     {"status": "up_to_date"} | {"status": "error", "message": "..."}."""
     try:
         req = urllib.request.Request(API_URL, headers={"Accept": "application/vnd.github+json"})
@@ -44,5 +42,6 @@ def check_for_update(current_version, timeout=5):
         return {"status": "error", "message": "Couldn't check for updates. Try again later."}
 
     if compare_versions(latest, current_version) > 0:
-        return {"status": "available", "version": latest}
+        from .updater import find_deb_url
+        return {"status": "available", "version": latest, "deb_url": find_deb_url(data.get("assets"))}
     return {"status": "up_to_date"}

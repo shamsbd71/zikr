@@ -12,7 +12,7 @@ Repo: https://github.com/shamsbd71/zikr · Site: https://shamsbd71.github.io/zik
 - Says "Bismillah" once at launch (covers login, if "Launch at login" is on) and again every time the screen is unlocked.
 - Optional "Launch at login" via `SMAppService` (Apple's current login-item API — no LaunchAgent plist needed).
 - Optional "Pause during calls (mic in use)" — skips a reminder rather than talking over a meeting, by checking whether any app (this one or another, e.g. Zoom or a browser tab) currently has the microphone open.
-- "Check for Updates…" and "What's New…" in the menu — checks run automatically on launch and every 24 hours too. The update dialog shows the changelog inline and installs itself in place (or opt into "Automatically download and install updates" to skip the dialog entirely).
+- "Check for Updates…" and "What's New…" in the menu — checks run automatically on launch and every 24 hours too. When an update exists, an "Update to vX…" item appears at the top of the menu. The update dialog shows the changelog inline and installs itself in place (or opt into "Automatically download and install updates" to skip the dialog entirely).
 - Settings, on/off, interval, style, and voice toggle are the only options. Nothing else — no azan, no prayer times, no accounts.
 
 ## Design notes
@@ -36,7 +36,7 @@ Requires macOS 14+ and the Swift toolchain (Xcode Command Line Tools are enough 
 
 Push a tag matching `vX.Y.Z` and `.github/workflows/release.yml` re-runs the full test suite, then builds all four platforms in parallel and publishes one GitHub Release with the macOS zip, Linux `.deb`, Windows installer, and Android APK attached. The full checklist is in [CONTRIBUTING.md](CONTRIBUTING.md#releasing-maintainer).
 
-The macOS in-app updater compares its own `CFBundleShortVersionString` against the latest release tag, so the version in that tag is what users will be offered. Linux and Windows show the same update dialog but never install in place by design — see [linux/README.md](linux/README.md) and [windows/README.md](windows/README.md).
+Every app compares its own version against the latest release tag (on macOS, `CFBundleShortVersionString`), so the version in that tag is what users will be offered. When there's a newer release, each app shows an **Update to vX…** item in its menu (a banner on Android), and one click installs it: macOS swaps its own bundle, Windows runs the release's installer silently, Linux installs the `.deb` through apt, and Android opens the system installer. See [linux/README.md](linux/README.md), [windows/README.md](windows/README.md), and [android/README.md](android/README.md).
 
 ## Project layout
 

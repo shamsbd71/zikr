@@ -18,17 +18,18 @@ full-screen flash with adjustable duration, speak-aloud toggle, launch at
 login, pause during calls), same bundled-audio-overrides-system-voice
 behavior.
 
-**One real difference: no in-place self-updater.** The macOS build
-replaces its own `.app` bundle because that's a well-established, safe
-pattern for a single signed bundle. Linux installs are far more varied
-(apt-installed dist-packages, a `~/.local` user install, someone's own
-venv...) — silently overwriting arbitrary files across those isn't a
-sound default. "Check for Updates…" (and an automatic check on launch
-and every 24 hours) still shows the same Skip / Remind Later / Download
-dialog as the other builds, with the changelog inline — "Download
-Update" just opens the GitHub releases page instead of installing, so
-you grab the new `.deb` (or re-run `install.sh`) yourself. "What's
-New…" shows the changelog on its own, update available or not.
+**Updates install through apt, never by overwriting files.** An
+automatic check runs on launch and every 24 hours, and "Check for
+Updates…" runs one on demand. When a new release exists, the tray menu
+gets an **Update to vX…** item at the top, and the Skip / Remind Later /
+Install Update dialog appears with the changelog inline. Installing
+downloads the release's `.deb` and runs
+`pkexec apt-get install` on it (your desktop asks for your password),
+then restarts Zikr. If `pkexec` isn't available, the `.deb` opens in
+your software installer instead. If Zikr isn't running from the `.deb`
+(a source checkout, a venv), there's nothing for apt to upgrade, so it
+opens the release page. All of this lives in `zikr/updater.py`.
+"What's New…" shows the changelog on its own, update available or not.
 
 ## Install
 

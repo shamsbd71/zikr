@@ -45,8 +45,11 @@ Shared data, read by every platform (never duplicate it per platform):
 3. **Desktop parity.** A feature added to one of macOS/Linux/Windows
    goes into all three unless there is a documented reason not to. Same
    setting key (in each platform's naming style), same default, same
-   menu wording, same placement in Settings. Example of a documented
-   exception: only macOS self-installs updates.
+   menu wording, same placement in Settings. Updates are a good example
+   of parity done natively: all three show "Update to vX…" in the menu
+   and install in one click, but macOS swaps its `.app`, Windows runs
+   the release's Inno Setup installer silently, and Linux installs the
+   `.deb` through `pkexec apt-get`.
 4. **Android is Phase 1 on purpose.** Ambient random reminders only — no
    mic-pause, no changelog viewer, no launch-at-login. Its smaller
    feature set is not drift to "fix". Ask before porting a desktop
@@ -91,7 +94,14 @@ source of truth.
   WorkManager looked correct in every static review and in `dumpsys
   jobscheduler` and still never fired once the process was frozen — the
   scheduler uses `AlarmManager.setExactAndAllowWhileIdle` for that
-  reason. Don't switch it back.
+  reason. Don't switch it back. The same goes for updates: the APK is
+  downloaded in the app and the installer opened from the foreground
+  activity, because Android 10+ blocks a background receiver from
+  opening it.
+- **Android release signing**: every release must be signed with the
+  same key (Actions secrets, created by `tools/android_signing_setup.sh`)
+  or Android refuses the update. `versionCode` is derived from the
+  version. Never ship a debug-signed APK as a release.
 - **Android emulator tips**: get tap coordinates from
   `adb shell uiautomator dump` bounds, not by eyeballing a screenshot.
   Use `adb exec-out screencap -p > shot.png`. A "System UI isn't

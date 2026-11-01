@@ -13,7 +13,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.abu.zikr.R
 import com.abu.zikr.data.ZikrItem
-import com.abu.zikr.update.UpdateActionReceiver
+import com.abu.zikr.MainActivity
 import com.abu.zikr.update.UpdateInfo
 
 // "_v2": Android locks a channel's sound once created, so an app can
@@ -103,9 +103,8 @@ object NotificationHelper {
         NotificationManagerCompat.from(context).cancel(CONTROL_NOTIFICATION_ID)
     }
 
-    /** "Download & Install" still requires the user to confirm the
-     * actual system install prompt - Android never skips that for a
-     * sideloaded app - but this is the one-tap trigger for it. */
+    /** Posted only by the passive once-a-day check. Tapping it opens the
+     * app, whose banner downloads and installs the update. */
     fun showUpdateAvailable(context: Context, info: UpdateInfo) {
         ensureChannel(context)
         if (!hasNotificationPermission(context)) return
@@ -113,10 +112,10 @@ object NotificationHelper {
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle("Zikr ${info.version} is available")
-            .setContentText("Tap Download & Install to update.")
+            .setContentText("Tap to open Zikr and update.")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
-            .addAction(R.drawable.ic_notification, "Download & Install", downloadInstallPendingIntent(context, info.apkDownloadUrl))
+            .setContentIntent(openAppPendingIntent(context))
             .build()
 
         NotificationManagerCompat.from(context).notify(UPDATE_NOTIFICATION_ID, notification)
@@ -152,11 +151,18 @@ object NotificationHelper {
         )
     }
 
-    private fun downloadInstallPendingIntent(context: Context, apkUrl: String): PendingIntent {
-        val intent = UpdateActionReceiver.downloadIntent(context, apkUrl)
-        return PendingIntent.getBroadcast(
+    /** Opens the app, where the update banner does the actual work -
+     * a background download can't launch the installer on Android 10+. */
+    private fun openAppPendingIntent(context: Context): PendingIntent {
+        val intent = Intent(context, MainActivity::class.java)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        return PendingIntent.getActivity(
             context, UPDATE_REQUEST_CODE, intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
+    }
+
+    fun clearUpdateNotification(context: Context) {
+        NotificationManagerCompat.from(context).cancel(UPDATE_NOTIFICATION_ID)
     }
 }

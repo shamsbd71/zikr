@@ -31,3 +31,19 @@ class UpdateCheckerTest {
         assertEquals(0, UpdateChecker.compareVersions("0.0.0-test", "0.0.0-test"))
     }
 }
+
+class UpdateInstallerProgressTest {
+    @Test
+    fun unknownLengthIsIndeterminate() {
+        assertEquals(-1, UpdateInstaller.progressPercent(500, -1))
+        assertEquals(-1, UpdateInstaller.progressPercent(500, 0))
+    }
+
+    @Test
+    fun percentIsClamped() {
+        assertEquals(0, UpdateInstaller.progressPercent(0, 1000))
+        assertEquals(50, UpdateInstaller.progressPercent(500, 1000))
+        assertEquals(100, UpdateInstaller.progressPercent(1000, 1000))
+        assertEquals(100, UpdateInstaller.progressPercent(2000, 1000))
+    }
+}

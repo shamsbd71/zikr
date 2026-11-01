@@ -30,7 +30,7 @@ except (ImportError, ValueError):
         AppIndicator3 = None
 
 from . import __version__ as CURRENT_VERSION
-from . import changelog, scheduler as scheduler_mod, update_checker
+from . import changelog, scheduler as scheduler_mod, update_checker, updater
 from .settings import Settings
 from .ui import settings_window, update_dialog
 
@@ -57,6 +57,15 @@ class ZikrApp:
 
     def _build_menu(self):
         menu = Gtk.Menu()
+
+        # "Update to vX…": the in-app notice that a release exists,
+        # hidden until a check finds one. One click installs it.
+        self._available = None
+        self._update_item = Gtk.MenuItem(label="Update available")
+        self._update_item.connect("activate", lambda *_: self._available and self._install_update(self._available))
+        menu.append(self._update_item)
+        self._update_separator = Gtk.SeparatorMenuItem()
+        menu.append(self._update_separator)
 
         active_item = Gtk.CheckMenuItem(label="Active")
         active_item.set_active(self.settings.enabled)
@@ -88,6 +97,8 @@ class ZikrApp:
         menu.append(quit_item)
 
         menu.show_all()
+        self._update_item.hide()
+        self._update_separator.hide()
         return menu
 
     def _build_tray(self):
@@ -144,29 +155,97 @@ class ZikrApp:
             return False
 
         if status == "up_to_date":
+            self._available = None
+            self._update_item.hide()
+            self._update_separator.hide()
             if force:
                 update_dialog.show_message("Zikr Update", f"You're up to date (v{CURRENT_VERSION}).")
             return False
 
         version = result["version"]
+        # Always light up the menu item, even for a skipped version -
+        # skipping only silences the automatic popup.
+        self._available = result
+        self._update_item.set_label(f"Update to v{version}…")
+        self._update_item.show()
+        self._update_separator.show()
         if not force and version == self.settings.skipped_update_version:
             return False
 
         def worker():
             entries = changelog.fetch()
             body = next((e["body"] for e in entries if e["version"] == version), "")
-            GLib.idle_add(self._show_update_dialog, version, body)
+            GLib.idle_add(self._show_update_dialog, result, body)
 
         threading.Thread(target=worker, daemon=True).start()
         return False
 
-    def _show_update_dialog(self, version, body):
+    def _show_update_dialog(self, result, body):
+        version = result["version"]
+
         def on_skip():
             self.settings.skipped_update_version = version
 
         update_dialog.show_update_available(
             current_version=CURRENT_VERSION, new_version=version, changelog_body=body, on_skip=on_skip,
+            on_install=lambda: self._install_update(result),
         )
+        return False
+
+    def _install_update(self, result):
+        """Download the release's .deb and install it with apt (pkexec
+        password prompt), then restart. Falls back to the desktop's
+        package installer, then to the release page - see updater.py."""
+        if getattr(self, "_installing", False):
+            return
+        version, deb_url = result["version"], result.get("deb_url")
+        method = updater.install_method(deb_url)
+        if method == "browser":
+            update_dialog.open_releases()
+            return
+
+        self._installing = True
+        progress = update_dialog.InstallProgress(version)
+
+        def fail(message):
+            progress.close()
+            self._installing = False
+            update_dialog.show_message("Zikr Update", message)
+            update_dialog.open_releases()
+            return False
+
+        def worker():
+            try:
+                path = updater.download(deb_url, version, lambda p: GLib.idle_add(progress.set_progress, p))
+            except Exception:
+                GLib.idle_add(fail, "The update couldn't be downloaded. Opening the releases page instead.")
+                return
+            if method == "open-deb":
+                GLib.idle_add(self._finish_open_deb, progress, path)
+                return
+            GLib.idle_add(progress.set_text, "Installing… enter your password if asked.")
+            if updater.install_deb_with_apt(path):
+                GLib.idle_add(self._finish_installed, progress)
+            else:
+                GLib.idle_add(fail, "The update wasn't installed (cancelled or apt failed). Opening the releases page instead.")
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def _finish_open_deb(self, progress, path):
+        progress.close()
+        self._installing = False
+        updater.open_with_desktop(path)
+        return False
+
+    def _finish_installed(self, progress):
+        progress.set_text("Updated. Restarting Zikr…")
+        updater.relaunch()
+        GLib.timeout_add(800, self._quit)
+        return False
+
+    def _quit(self):
+        self.scheduler.stop()
+        Gtk.main_quit()
         return False
 
     def _show_whats_new(self):
