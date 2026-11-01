@@ -6,6 +6,8 @@ for downloadable assets per version.
 
 ## [Unreleased]
 
+## [1.11.0] — 2026-11-01
+
 ### Added
 - macOS, Linux, Windows: when an update exists, an **Update to vX…**
   item appears at the top of the tray/menu-bar menu, and one click
