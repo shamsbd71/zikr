@@ -23,12 +23,16 @@ final class FlashOverlayController {
         // (768x290 instead of 768x555). Take the natural width from
         // fittingSize, cap it, then ask SwiftUI for the height that width
         // actually needs.
+        // Proposing an unbounded height to sizeThatFits stopped working on
+        // newer macOS: it came back thousands of points tall (768x7728), so
+        // the card was centred far off-screen and nothing appeared. Pin the
+        // width instead and let fittingSize measure the wrapped height, capped
+        // to the screen.
         let natural = NSHostingView(rootView: root).fittingSize
         let width = min(natural.width, FlashOverlayView.maxCardWidth)
-        let size = NSHostingController(rootView: root)
-            .sizeThatFits(in: CGSize(width: width, height: CGFloat.greatestFiniteMagnitude))
-
-        let hosting = NSHostingView(rootView: root)
+        let hosting = NSHostingView(rootView: root.frame(width: width))
+        let maxHeight = (NSScreen.main?.visibleFrame.height ?? 900) - 40
+        let size = CGSize(width: width, height: min(hosting.fittingSize.height, maxHeight))
         hosting.frame = NSRect(origin: .zero, size: size)
 
         let panel = NSPanel(

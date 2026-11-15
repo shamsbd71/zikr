@@ -6,6 +6,11 @@ for downloadable assets per version.
 
 ## [Unreleased]
 
+### Fixed
+- macOS: the flash display style showed nothing on newer macOS. The card
+  was measured thousands of points tall and placed off-screen. It now
+  takes its height from the wrapped text, capped to the screen.
+
 ## [1.12.0] — 2026-11-15
 
 ### Added
