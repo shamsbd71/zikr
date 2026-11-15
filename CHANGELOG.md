@@ -6,6 +6,8 @@ for downloadable assets per version.
 
 ## [Unreleased]
 
+## [1.12.1] — 2026-11-15
+
 ### Fixed
 - macOS: the flash display style showed nothing on newer macOS. The card
   was measured thousands of points tall and placed off-screen. It now
