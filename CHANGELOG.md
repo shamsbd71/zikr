@@ -6,6 +6,15 @@ for downloadable assets per version.
 
 ## [Unreleased]
 
+### Added
+- Two duas asking for Allah's mercy join the reminders: "Allahumma
+  rahmataka arju…" (when in distress) and Adam's dua "Rabbana zalamna
+  anfusana…" (7:23). Both have real recitations.
+- The unlock greeting on macOS and Android sometimes says "Call upon Me,
+  I will respond to you" (Quran 40:60) instead of Bismillah, about one
+  time in three, as a reminder to make dua. It is used only as the
+  greeting and never comes up as a random reminder.
+
 ### Changed
 - The site is rewritten as a calm catalogue page instead of a sales page.
   It now tells the story (you want to remember Allah, then work takes

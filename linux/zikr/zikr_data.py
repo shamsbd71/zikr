@@ -23,7 +23,14 @@ def _load():
     raise FileNotFoundError("zikr.json not found in any known location")
 
 
-ALL = _load()
+def reminders(entries):
+    """Entries marked `greeting` are only ever the unlock greeting on
+    macOS/Android, never a random reminder - and this build has no
+    unlock greeting, so it never says them."""
+    return [z for z in entries if not z.get("greeting")]
+
+
+ALL = reminders(_load())
 
 
 def random_zikr():

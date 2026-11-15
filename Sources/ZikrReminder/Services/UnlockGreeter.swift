@@ -2,7 +2,8 @@ import AppKit
 
 /// Speaks "Bismillah" once at app launch (covers login, since the app can
 /// launch at login) and again every time the screen is unlocked / the
-/// session becomes active. Respects the same "Speak zikr aloud" toggle as
+/// session becomes active. Now and then it says a greeting-only verse
+/// instead (see `ZikrSelector.greeting`). Respects the same "Speak zikr aloud" toggle as
 /// regular reminders — no separate setting needed.
 final class UnlockGreeter {
     static let shared = UnlockGreeter()
@@ -44,6 +45,6 @@ final class UnlockGreeter {
 
     @objc private func speak() {
         guard AppSettings.shared.speakAloud else { return }
-        ZikrSpeaker.shared.speak(bismillah)
+        ZikrSpeaker.shared.speak(ZikrSelector.greeting(bismillah: bismillah, from: ZikrLoader.all))
     }
 }

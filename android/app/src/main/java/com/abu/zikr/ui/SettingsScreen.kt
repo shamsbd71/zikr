@@ -186,7 +186,8 @@ fun SettingsScreen() {
             SettingsSection(title = "System") {
                 ToggleRow(
                     title = "Bismillah on unlock",
-                    subtitle = "Say Bismillah once each time you unlock your phone. Only works " +
+                    subtitle = "Say Bismillah once each time you unlock your phone, and now and " +
+                        "then \"Call upon Me, I will respond to you\" (40:60). Only works " +
                         "while Zikr's background process is alive, which reminders keep fresh.",
                     checked = bismillahOnUnlock,
                     onCheckedChange = { value -> scope.launch { settings.setBismillahOnUnlock(value) } },

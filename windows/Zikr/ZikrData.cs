@@ -8,9 +8,10 @@ using System.Web.Script.Serialization;
 namespace Zikr
 {
     /// <summary>
-    /// Loads the bundled zikr list. Same 21 general adhkar as the macOS
-    /// build's ZikrList.swift and the Linux build's data/zikr.json (kept
-    /// in sync by hand).
+    /// Loads the bundled zikr list: the repo-root data/zikr.json every
+    /// platform reads. Entries marked "greeting" are only the unlock
+    /// greeting on macOS/Android, which this build doesn't have, so they
+    /// are left out here.
     /// </summary>
     public static class ZikrData
     {
@@ -29,17 +30,28 @@ namespace Zikr
         private static List<ZikrItem> Load()
         {
             string path = ResolveDataPath();
-            string json = File.ReadAllText(path, System.Text.Encoding.UTF8);
+            return Parse(File.ReadAllText(path, System.Text.Encoding.UTF8));
+        }
+
+        /// <summary>Pure so it can be tested without the file.</summary>
+        public static List<ZikrItem> Parse(string json)
+        {
             var serializer = new JavaScriptSerializer();
             var raw = serializer.Deserialize<List<Dictionary<string, object>>>(json);
 
-            return raw.Select(d => new ZikrItem
+            return raw.Where(d => !IsGreeting(d)).Select(d => new ZikrItem
             {
                 Id = Convert.ToInt32(d["id"]),
                 Arabic = (string)d["arabic"],
                 Transliteration = (string)d["transliteration"],
                 Translation = (string)d["translation"],
             }).ToList();
+        }
+
+        private static bool IsGreeting(Dictionary<string, object> d)
+        {
+            object value;
+            return d.TryGetValue("greeting", out value) && value is bool && (bool)value;
         }
 
         private static string ResolveDataPath()

@@ -21,6 +21,11 @@ rather than something inferred from the waveform.
     gtaf:<dua>#<n>          the n-th spoken burst
     gtaf:<dua>#<n>@<gap>    ... splitting on <gap> seconds of quiet,
                             for a dua recited as several repetitions
+    quran:<surah>:<ayah>    a Quran verse that is not itself a dua, so
+                            Hisn al-Muslim does not have it: Mishary
+                            Alafasy's per-ayah recitation from
+                            everyayah.com. Takes the same #<n>@<gap>
+                            suffix, for keeping only up to a waqf.
 
 Every clip is then checked against a duration synthesised from the
 shipped Arabic, and a clip that is not a credible length for its own
@@ -50,14 +55,21 @@ WINDOW = 0.05             # 50ms envelope resolution
 GATE_BELOW_PEAK = 22      # dB below peak counts as speech
 MIN_GAP = 0.45            # s of quiet that separates utterances
 PAD = 0.18                # s kept either side
-TOLERANCE = (0.6, 2.2)    # credible speech/expected duration ratio
+TOLERANCE = (0.6, 2.3)    # credible speech/expected duration ratio. The
+                          # top was 2.2 until Al-A'raf 7:23 measured
+                          # x2.21: Quran recitation draws out its madd
+                          # far past the synthesiser, and three reciters
+                          # (gtaf, Alafasy, Minshawy) all took 15-17s.
 SLACK = 1.0               # s of absolute leeway, which is what saves the
                           # shortest phrases: a reciter enunciating two
                           # words takes about twice as long as the
                           # synthesiser does, so their ratio is extreme
                           # while the gap is still under a second.
 
-SOURCE_RE = re.compile(r"^gtaf:(\d+)(?:#(\d+)(?:@([\d.]+))?)?$")
+SOURCE_RE = re.compile(
+    r"^(?:gtaf:(?P<dua>\d+)|quran:(?P<surah>\d+):(?P<ayah>\d+))"
+    r"(?:#(?P<nth>\d+)(?:@(?P<gap>[\d.]+))?)?$")
+QURAN_RECITER = "Alafasy_128kbps"
 
 
 def audio_number(dua):
@@ -76,11 +88,25 @@ def audio_number(dua):
     return dua if dua >= 250 else dua - 1
 
 
-def download(dua, dest):
-    n = audio_number(dua)
-    if n is None:
-        raise ValueError(f"dua {dua} has no recording")
-    url = f"https://static.gtaf.org/files/v1/audio/hisnul-muslim/n{n}.mp3"
+def remote(m):
+    """(cache name, URL) of the whole recording a parsed source points at.
+
+    Cached per publisher: dua numbering differs between them, and a flat
+    cache would happily hand back another source's file for the same key.
+    """
+    if m.group("dua"):
+        dua = int(m.group("dua"))
+        n = audio_number(dua)
+        if n is None:
+            raise ValueError(f"dua {dua} has no recording")
+        return (f"gtaf/{dua}.mp3",
+                f"https://static.gtaf.org/files/v1/audio/hisnul-muslim/n{n}.mp3")
+    key = f"{int(m.group('surah')):03d}{int(m.group('ayah')):03d}"
+    return (f"everyayah-{QURAN_RECITER}/{key}.mp3",
+            f"https://everyayah.com/data/{QURAN_RECITER}/{key}.mp3")
+
+
+def download(url, dest):
     req = urllib.request.Request(url, headers=UA)
     dest.write_bytes(urllib.request.urlopen(req, timeout=60).read())
 
@@ -168,7 +194,7 @@ def span_for(entry, raw):
     m = SOURCE_RE.match(entry["source"])
     if not m:
         raise ValueError(f"unparseable source {entry['source']!r}")
-    _, nth, gap = m.group(1), m.group(2), m.group(3)
+    nth, gap = m.group("nth"), m.group("gap")
     gap = float(gap) if gap else MIN_GAP
     found = bursts(envelope(raw), gap)
     if not found:
@@ -214,11 +240,7 @@ def main():
     wanted = {int(x) for x in args.only.split(",")} if args.only else None
 
     AUDIO_DIR.mkdir(parents=True, exist_ok=True)
-    # Namespaced by source: dua numbering differs between publishers, and a
-    # flat cache would happily hand back the previous source's file for the
-    # same number.
-    work = AUDIO_DIR / ".raw" / "gtaf"
-    work.mkdir(parents=True, exist_ok=True)
+    work = AUDIO_DIR / ".raw"
 
     changed, skipped, failed = 0, 0, 0
     for entry in entries:
@@ -234,7 +256,6 @@ def main():
             print(f"  {zid:>3}  FAIL      unparseable source {source!r}")
             failed += 1
             continue
-        dua = int(m.group(1))
         out = AUDIO_DIR / f"{zid}.mp3"
 
         if args.check:
@@ -251,14 +272,15 @@ def main():
                 failed += 1
             continue
 
-        if args.dry_run:
-            print(f"  {zid:>3}  would fetch {source} -> n{audio_number(dua)}.mp3")
-            continue
-
-        raw = work / f"{dua}.mp3"
         try:
+            name, url = remote(m)
+            if args.dry_run:
+                print(f"  {zid:>3}  would fetch {source} -> {url}")
+                continue
+            raw = work / name
             if not raw.exists():
-                download(dua, raw)
+                raw.parent.mkdir(parents=True, exist_ok=True)
+                download(url, raw)
             start, end = span_for(entry, raw)
             encode(raw, out, start, end)
             secs = round(duration(out), 1)

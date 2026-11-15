@@ -17,7 +17,7 @@ from pathlib import Path
 # import time to compute where its config file lives.
 os.environ.setdefault("XDG_CONFIG_HOME", tempfile.mkdtemp(prefix="zikr-test-config-"))
 
-from zikr.zikr_data import ALL, random_zikr  # noqa: E402
+from zikr.zikr_data import ALL, random_zikr, reminders  # noqa: E402
 from zikr.scheduler import pick_delay_seconds, is_within_quiet_hours  # noqa: E402
 from zikr.mic_monitor import _parse_alsa_status, _parse_pactl_source_outputs  # noqa: E402
 from zikr.update_checker import compare_versions  # noqa: E402
@@ -26,8 +26,14 @@ from zikr.changelog import parse as parse_changelog  # noqa: E402
 
 class TestZikrData(unittest.TestCase):
     def test_expected_count(self):
-        # Keep in sync with Sources/ZikrReminder/Models/ZikrList.swift.
-        self.assertEqual(len(ALL), 49)
+        # data/zikr.json has 52 entries; one (id 54) is greeting-only.
+        self.assertEqual(len(ALL), 51)
+
+    def test_greeting_only_entries_are_not_reminders(self):
+        self.assertFalse(any(z.get("greeting") for z in ALL))
+        self.assertNotIn(54, [z["id"] for z in ALL])
+        entries = [{"id": 1}, {"id": 2, "greeting": True}, {"id": 3, "greeting": False}]
+        self.assertEqual([z["id"] for z in reminders(entries)], [1, 3])
 
     def test_ids_unique(self):
         ids = [z["id"] for z in ALL]

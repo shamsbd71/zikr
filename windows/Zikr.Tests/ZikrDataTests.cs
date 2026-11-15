@@ -11,7 +11,8 @@ namespace Zikr.Tests
         {
             // The one repo-root data/zikr.json every platform reads;
             // this project links it rather than keeping a copy.
-            Assert.AreEqual(49, ZikrData.All.Count);
+            // data/zikr.json has 52 entries; one (id 54) is greeting-only.
+            Assert.AreEqual(51, ZikrData.All.Count);
         }
 
         [TestMethod]
@@ -30,6 +31,17 @@ namespace Zikr.Tests
                 Assert.IsFalse(string.IsNullOrWhiteSpace(z.Transliteration));
                 Assert.IsFalse(string.IsNullOrWhiteSpace(z.Translation));
             }
+        }
+
+        [TestMethod]
+        public void GreetingOnlyEntriesAreNotReminders()
+        {
+            Assert.IsFalse(ZikrData.All.Any(z => z.Id == 54));
+            var parsed = ZikrData.Parse(
+                "[{\"id\":1,\"arabic\":\"a\",\"transliteration\":\"t\",\"translation\":\"m\"}," +
+                "{\"id\":2,\"arabic\":\"a\",\"transliteration\":\"t\",\"translation\":\"m\",\"greeting\":true}," +
+                "{\"id\":3,\"arabic\":\"a\",\"transliteration\":\"t\",\"translation\":\"m\",\"greeting\":false}]");
+            CollectionAssert.AreEqual(new[] { 1, 3 }, parsed.Select(z => z.Id).ToArray());
         }
 
         [TestMethod]
