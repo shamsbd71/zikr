@@ -6,6 +6,8 @@ for downloadable assets per version.
 
 ## [Unreleased]
 
+## [1.12.0] — 2026-11-15
+
 ### Added
 - Two duas asking for Allah's mercy join the reminders: "Allahumma
   rahmataka arju…" (when in distress) and Adam's dua "Rabbana zalamna
