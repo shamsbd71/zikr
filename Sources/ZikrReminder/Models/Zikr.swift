@@ -14,8 +14,13 @@ struct Zikr: Identifiable, Hashable, Decodable {
     /// "longer adhkar" opt-in; also a fair estimate for the TTS fallback.
     let seconds: Double
 
+    /// Said only as the login/unlock greeting, never as a random reminder.
+    /// For a verse that invites remembrance rather than being a phrase of
+    /// it, such as "Call upon Me, I will respond to you" (40:60).
+    let greeting: Bool
+
     private enum CodingKeys: String, CodingKey {
-        case id, arabic, transliteration, translation, windows, seconds
+        case id, arabic, transliteration, translation, windows, seconds, greeting
     }
 
     init(from decoder: Decoder) throws {
@@ -25,6 +30,7 @@ struct Zikr: Identifiable, Hashable, Decodable {
         transliteration = try c.decode(String.self, forKey: .transliteration)
         translation = try c.decode(String.self, forKey: .translation)
         seconds = try c.decodeIfPresent(Double.self, forKey: .seconds) ?? 0
+        greeting = try c.decodeIfPresent(Bool.self, forKey: .greeting) ?? false
         // Unknown window names are dropped rather than failing the whole
         // load: a future data file should degrade to "anytime", not stop
         // the app from starting.
@@ -33,13 +39,14 @@ struct Zikr: Identifiable, Hashable, Decodable {
     }
 
     init(id: Int, arabic: String, transliteration: String, translation: String,
-         windows: [ZikrWindow] = [], seconds: Double = 0) {
+         windows: [ZikrWindow] = [], seconds: Double = 0, greeting: Bool = false) {
         self.id = id
         self.arabic = arabic
         self.transliteration = transliteration
         self.translation = translation
         self.windows = windows
         self.seconds = seconds
+        self.greeting = greeting
     }
 }
 

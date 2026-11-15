@@ -13,6 +13,11 @@ enum ZikrSelector {
     /// arriving unannounced is intrusive in a way a short phrase is not.
     static let longZikrThreshold = 5.0
 
+    /// How often the unlock greeting is one of the greeting-only verses
+    /// instead of Bismillah. Bismillah stays the usual greeting; the verse
+    /// is meant to arrive now and then, not to replace it.
+    static let greetingVerseChance = 1.0 / 3.0
+
     static func eligible(_ zikr: Zikr, allowLong: Bool) -> Bool {
         allowLong || zikr.seconds <= longZikrThreshold
     }
@@ -32,7 +37,9 @@ enum ZikrSelector {
     static func pick(from list: [Zikr], allowLong: Bool, at date: Date = Date(),
                      excluding lastID: Int? = nil) -> Zikr? {
         let m = minutesSinceMidnight(date)
-        var pool = list.filter { eligible($0, allowLong: allowLong) && weight(for: $0, minutesSinceMidnight: m) > 0 }
+        var pool = list.filter {
+            !$0.greeting && eligible($0, allowLong: allowLong) && weight(for: $0, minutesSinceMidnight: m) > 0
+        }
         if pool.count > 1, let lastID { pool.removeAll { $0.id == lastID } }
         guard !pool.isEmpty else { return nil }
 
@@ -43,6 +50,17 @@ enum ZikrSelector {
             if roll < 0 { return zikr }
         }
         return pool.last
+    }
+
+    /// The login/unlock greeting: Bismillah, or with `greetingVerseChance`
+    /// one of the greeting-only entries. `roll` is in [0, 1) and picks
+    /// both whether and which, so the whole choice is one number.
+    static func greeting(bismillah: Zikr, from list: [Zikr],
+                         roll: Double = Double.random(in: 0..<1)) -> Zikr {
+        let verses = list.filter(\.greeting)
+        guard !verses.isEmpty, roll < greetingVerseChance else { return bismillah }
+        let index = Int(roll / greetingVerseChance * Double(verses.count))
+        return verses[min(index, verses.count - 1)]
     }
 
     static func minutesSinceMidnight(_ date: Date) -> Int {

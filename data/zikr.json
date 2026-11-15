@@ -479,5 +479,33 @@
     "windows": [],
     "seconds": 6.9,
     "source": "gtaf:163"
+  },
+  {
+    "id": 54,
+    "arabic": "وَقَالَ رَبُّكُمُ ادْعُونِي أَسْتَجِبْ لَكُمْ",
+    "transliteration": "Wa qala Rabbukumud'uni astajib lakum",
+    "translation": "Your Lord has said: Call upon Me, I will respond to you",
+    "windows": [],
+    "seconds": 6.2,
+    "source": "quran:40:60#1@0.3",
+    "greeting": true
+  },
+  {
+    "id": 55,
+    "arabic": "اللَّهُمَّ رَحْمَتَكَ أَرْجُو، فَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ، وَأَصْلِحْ لِي شَأْنِي كُلَّهُ، لَا إِلَٰهَ إِلَّا أَنْتَ",
+    "transliteration": "Allahumma rahmataka arju, fala takilni ila nafsi tarfata 'ayn, wa aslih li sha'ni kullahu, la ilaha illa ant",
+    "translation": "O Allah, it is Your mercy that I hope for, so do not leave me to myself even for the blink of an eye, and set right all my affairs. There is no god but You",
+    "windows": [],
+    "seconds": 12.6,
+    "source": "gtaf:119"
+  },
+  {
+    "id": 56,
+    "arabic": "رَبَّنَا ظَلَمْنَا أَنْفُسَنَا وَإِنْ لَمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ الْخَاسِرِينَ",
+    "transliteration": "Rabbana zalamna anfusana wa in lam taghfir lana wa tarhamna lanakunanna minal-khasirin",
+    "translation": "Our Lord, we have wronged ourselves, and if You do not forgive us and have mercy on us, we will surely be among the losers",
+    "windows": [],
+    "seconds": 16.1,
+    "source": "gtaf:268"
   }
 ]

@@ -12,8 +12,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
- * Says Bismillah once each time the screen is unlocked, mirroring
- * UnlockGreeter.swift on macOS.
+ * Says Bismillah once each time the screen is unlocked - or now and
+ * then a greeting-only verse instead - mirroring UnlockGreeter.swift on
+ * macOS.
  *
  * ACTION_USER_PRESENT can only be received via a dynamically registered
  * receiver - Android has forbidden declaring it (and most other
@@ -35,7 +36,7 @@ class UnlockReceiver : BroadcastReceiver() {
                 val settings = Settings(context)
                 val snapshot = settings.snapshot()
                 if (snapshot.bismillahOnUnlock) {
-                    val zikr = ZikrData.bismillah(context)
+                    val zikr = ZikrData.unlockGreeting(context)
                     NotificationHelper.show(context, zikr)
                     if (snapshot.speakAloud) {
                         Speech.speak(context, zikr, snapshot.selectedVoiceName)
